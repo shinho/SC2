@@ -1,0 +1,3 @@
+- Don't refresh stamp stripes when renaming last item of last serie
+- After adding a first stamp, without closing the window, adding a new stamp wont refresh the stripes
+- Dont update decades when updating year information

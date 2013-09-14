@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<language>
+  <phrase id="0" desc="BottomMenu_btAddFirst" label="add first stamp"/>
+  <phrase id="1" desc="BottomMenu_btChangeCountry" label="change country"/>
+  <phrase id="2" desc="BottomMenu_btStatistics" label="statistics"/>
+  <phrase id="3" desc="COUNTRYSELECTOR_TITLE" label="Select Country"/>
+  <phrase id="4" desc="COUNTRYSELECTOR_TYPEHERE" label="type here"/>
+  <phrase id="5" desc="StatsBox_title" label="Country Stats"/>
+  <phrase id="6" desc="StatsBox_Number" label="Total Number of Owned Stamps"/>
+  <phrase id="7" desc="StatsBox_Cost" label="Total Cost / Value of Stamps"/>
+  <phrase id="8" desc="StatsBox_Average" label="Average Cost | Value per Stamp"/>
+  <phrase id="9" desc="XMLImporter_title" label="XML Data Importer"/>
+  <phrase id="10" desc="XMLImporter_legend1" label="Contry"/>
+  <phrase id="11" desc="XMLImporter_legend2" label="Number of Stamps in XML"/>
+  <phrase id="12" desc="XMLImporter_legend3" label="Progress"/>
+  <phrase id="13" desc="XMLImporter_legend1_done" label="DONE!!!"/>
+  <phrase id="14" desc="XMLImporter_legend2_done" label="Stamps Added"/>
+  <phrase id="15" desc="XMLImporter_legend3_done" label="Stamps Skipped"/>  
+  <phrase id="16" desc="ImportMethod_title" label="Import XML Method"/>
+  <phrase id="17" desc="ImportMethod_legend1" label="Full Recovery"/>
+  <phrase id="18" desc="ImportMethod_legend2" label="Import Stamp Data"/>
+  <phrase id="19" desc="ImportMethod_legend3" label="Fill-in Information (Slower)"/>
+  <phrase id="20" desc="ExportXML_title" label="Export XML"/>
+  <phrase id="21" desc="ExportXML_labelCountry" label="Country"/>
+  <phrase id="22" desc="ExportXML_labelFilename" label="Filename"/>
+  <phrase id="23" desc="ExportXML_labelProgress" label="Progress"/>
+  <phrase id="24" desc="ExportXML_save_msg" label="SAVED!"/>
+  <phrase id="25" desc="NativeMenu_" label="Import XML"/>  
+  <phrase id="26" desc="NativeMenu_" label="Export XML"/>  
+  <phrase id="27" desc="NativeMenu_" label="About"/>  
+  <phrase id="28" desc="NativeMenu_" label=""/>  
+  <phrase id="29" desc="NativeMenu_" label=""/>  
+  <phrase id="30" desc="NativeMenu_" label=""/>  
+  <phrase id="31" desc="StampInfo_country" label="COUNTRY"/> 
+  <phrase id="32" desc="StampInfo_serie" label="SERIE"/> 
+  <phrase id="33" desc="StampInfo_year" label="YEAR"/> 
+  <phrase id="34" desc="StampInfo_catalog" label="CATALOG"/> 
+  <phrase id="35" desc="StampInfo_type" label="TYPE"/> 
+  <phrase id="36" desc="StampInfo_printType" label="PRINT TYPE"/> 
+  <phrase id="37" desc="StampInfo_color" label="COLOR"/> 
+  <phrase id="38" desc="StampInfo_value" label="FACE VALUE"/> 
+  <phrase id="39" desc="StampInfo_printedOn" label="PRINTED ON"/> 
+  <phrase id="40" desc="StampInfo_paper" label="PAPER"/> 
+  <phrase id="41" desc="StampInfo_design" label="DESIGN"/> 
+  <phrase id="42" desc="StampInfo_perforation" label="PERFORATION"/> 
+  <phrase id="43" desc="StampInfo_textDisplayes" label="TEX DISPLAYED"/> 
+  <phrase id="44" desc="StampInfo_watermark" label="WATERMARK"/> 
+  <phrase id="45" desc="StampInfo_value" label="VALUE"/> 
+  <phrase id="46" desc="StampInfo_cost" label="COST"/> 
+  <phrase id="47" desc="StampInfo_spares" label="SPARES"/> 
+  <phrase id="48" desc="StampInfo_owned" label="OWNED"/> 
+  <phrase id="49" desc="StampInfo_condition" label="CONDITION"/> 
+  <phrase id="50" desc="StampInfo_mint" label="MINT"/> 
+  <phrase id="51" desc="StampInfo_hinge" label="HINGE"/> 
+  <phrase id="52" desc="StampInfo_centering" label="CENTERING"/> 
+  <phrase id="53" desc="StampInfo_gum" label="GUM"/> 
+  <phrase id="54" desc="StampInfo_added" label="ADDED"/> 
+  <phrase id="55" desc="StampInfo_grade" label="GRADE"/> 
+  <phrase id="56" desc="StampInfo_seller" label="SELLER"/> 
+  <phrase id="57" desc="StampInfo_comments" label="COMMENTS"/> 
+  <phrase id="58" desc="StampInfo_cancel" label="CANCEL"/> 
+  <phrase id="59" desc="StampInfo_faults" label="FAULTS"/> 
+  <phrase id="60" desc="StampInfo_" label=""/> 
+</language>
