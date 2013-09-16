@@ -19,7 +19,7 @@ package com.shinho.commands {
 			trace("default command executed . "+event.typeBox);
 			var msgbox:MessageBox = new MessageBox(event.typeBox);
 			contextView.addChild(msgbox);
-			if (event.typeBox == MessageBox.YES_NO) {
+			if (event.typeBox == MessageBox.TYPE_YES_NO) {
 				msgbox.setTitleQuestion(event.title, event.question);			
 			}
 			msgbox.display();	

@@ -81,7 +81,7 @@ package
 			commandMap.mapEvent(StatsBoxEvents.LOAD_BOARD, StatsLoad, StatsBoxEvents);
 			commandMap.mapEvent(MenuEvents.IMPORT_XML, ChooseImportXMLMethod, MenuEvents);
 			commandMap.mapEvent(StampsDatabaseEvents.ADD_STAMP, AddStampCommand, StampsDatabaseEvents);
-
+            // mediators
 			mediatorMap.createMediator(contextView);
 			mediatorMap.mapView(ApplicationMainView, ApplicationMediator);
 			mediatorMap.mapView(SeriesStripeView, PictureStripeMediator);
@@ -95,7 +95,7 @@ package
 			mediatorMap.mapView(XMLimportView, XMLimportMediator);
 			mediatorMap.mapView(Thumb, ThumbMediator);
 			mediatorMap.mapView(TypesMenu, TypesMenuMediator);
-
+            // models
 			injector.mapSingleton(PreferencesModel);
 			injector.mapSingleton(LanguageModel);
 			injector.mapSingleton(StampDatabase);

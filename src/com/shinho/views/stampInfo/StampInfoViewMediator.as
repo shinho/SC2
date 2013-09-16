@@ -97,11 +97,11 @@ package com.shinho.views.stampInfo
 			view.catalogs = stamps.catalogs;
 			view.printers = stamps.printers;
 			view.stamptypes = stamps.stamptypes;
-			view.countries = stamps.allcountries;
-			view.allseries = stamps.allseries;
-			view.alldesigners = stamps.alldesigners;
-			view.allpapers = stamps.allpapers;
-			view.allcolors = stamps.allcolors;
+			view.countries = stamps.allCountries;
+			view.allseries = stamps.allSeries;
+			view.alldesigners = stamps.allDesigners;
+			view.allpapers = stamps.allPapers;
+			view.allcolors = stamps.allColors;
 		}
 
 

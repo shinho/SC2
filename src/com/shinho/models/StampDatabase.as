@@ -27,22 +27,19 @@ import org.osflash.signals.Signal;
 import org.robotlegs.mvcs.Actor;
 
 
-// ------------------------------------------------------------------------------------- ROBOTLEGS
-// ------------------------------------------------------------------------------------- FRAMEWORK
 public class StampDatabase extends Actor
 {
 
     public var StampInfoChangedState:uint;
     // ------------------------------------------------------------------------------------- SQL
     public var StampInfoUpdateState:String;
-    public var allcolors:Array = new Array();
+    public var allColors:Array = [];
     // ------------------------------------------------------------------------------------- BOOLEAN
-    public var allcountries:Array = new Array();
-    public var alldesigners:Array = new Array();
-    public var allpapers:Array = new Array();
-    public var allseries:Array = new Array();
-    // ------------------------------------------------------------------------------------- ARRAY
-    public var catalogs:Array = new Array();
+    public var allCountries:Array = [];
+    public var allDesigners:Array = [];
+    public var allPapers:Array = [];
+    public var allSeries:Array = [];
+    public var catalogs:Array = [];
     public var currentCountry:int = -1;
     public var currentDecade:int = 0;
     public var currentSerieName:String;
@@ -51,34 +48,30 @@ public class StampDatabase extends Actor
     public var currentType:int = 0;
     public var currentYear:String;
     public var databaseConnectedSignal:Signal = new Signal();
-    public var decades:Array = new Array();
+    public var decades:Array = [];
     public var doAllCalculations:Boolean = false;
     public var importMethod:uint;
-    public var oldCountries:Array = new Array();
+    public var oldCountries:Array = [];
     public var ownedStamps:int;
-    public var printTypes:Array = new Array();
-    public var printers:Array = new Array();
-    // ------------------------------------------------------------------------------------- INT
-    public var sellers:Array = new Array();
-    public var stampArray:Array = new Array();
+    public var printTypes:Array = [];
+    public var printers:Array = [];
+    public var sellers:Array = [];
+    public var stampArray:Array = [];
     public var stampInfoChanged:Boolean;
     public var stampUpdatedSignal:Signal = new Signal( StampDTO );
     public var stampsInCurrentSerie:int;
-    public var stamptypes:Array = new Array();
+    public var stamptypes:Array = [];
     public var totalCost:Number;
     public var totalStamps:int;
     public var totalValue:Number;
-    // ------------------------------------------------------------------------------------- STRING
-    public var types:Array = new Array();
+    public var types:Array = [];
     public static const id:int = 0;
     public static const number:int = 1;
     public static const year:int = 2;
     public static const serie:int = 3;
     public static const inscription:int = 4;
     public static const perforation:int = 5;
-    // ------------------------------------------------------------------------------------- MOVIECLIP
     public static const printer:int = 6;
-    // ------------------------------------------------------------------------------------- INDEXES
     public static const paper:int = 7;
     public static const designer:int = 8;
     public static const history:int = 9;
@@ -122,7 +115,6 @@ public class StampDatabase extends Actor
     public static const NUMBER_UPDATED:String = 'number_updated';
     public static const TYPE_UPDATED:String = 'type_updated';
 //	public var originalData:Array = new Array();
-    // ------------------------------------------------------------------------------------- CONSTANTS
 //	public var originalSerieName:String;
 //	public var originalYear:String;
     public static const COUNTRY_UPDATED:String = 'country_updated';
@@ -138,15 +130,11 @@ public class StampDatabase extends Actor
     public static const YEAR_CHANGED:uint = 4;
     public static const TYPE_CHANGED:uint = 8;
     public static const COUNTRY_CHANGED:uint = 16;
-    private var SQLconn:SQLConnection = new SQLConnection();
+    private var SQLConn:SQLConnection = new SQLConnection();
     private var dbFile:File;
     private var forwardDelete:Boolean = false;
-    // ------------------------------------------------------------------------------------- FILE
     private var stampExists:Boolean = false;
-    // -------------------------------------------------------------
-    // SIGNALS
-    // -------------------------------------------------------------
-    private var stampdata:StampDTO;
+    private var stampData:StampDTO;
     private var statement:SQLStatement = new SQLStatement();
 
     // ------------------------------------------------------------------------------------- CONSTRUCTOR
@@ -157,8 +145,8 @@ public class StampDatabase extends Actor
 
     public function OpenDatabase():void
     {
-        SQLconn.addEventListener( SQLEvent.OPEN, dbConnected );
-        SQLconn.addEventListener( SQLErrorEvent.ERROR, getSQLError );
+        SQLConn.addEventListener( SQLEvent.OPEN, dbConnected );
+        SQLConn.addEventListener( SQLErrorEvent.ERROR, getSQLError );
         dbFile = File.documentsDirectory.resolvePath( DIR_HOME );
         if ( !dbFile.exists )
         {
@@ -180,7 +168,7 @@ public class StampDatabase extends Actor
             dbFile.createDirectory();
         }
         dbFile = File.documentsDirectory.resolvePath( DIR_HOME + File.separator + DATABASE_NAME );
-        SQLconn.open( dbFile );
+        SQLConn.open( dbFile );
     }
 
     //refactored
@@ -194,14 +182,14 @@ public class StampDatabase extends Actor
 
     public function addStamp( stampData:StampDTO ):void
     {
-        this.stampdata = stampData;
-        stampExists = checkStampID( stampdata.country, stampdata.number, stampdata.type );
+        this.stampData = stampData;
+        stampExists = checkStampID( stampData.country, stampData.number, stampData.type );
         if ( stampExists )
         {
             //ask confirmation from user for replacement
             var title:String = "Overwrite Stamp Information?";
             var question:String = "A stamp with that number already exists. Do you want to overwrite stamp data?";
-            eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.YES_NO, title,
+            eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.TYPE_YES_NO, title,
                     question ) );
             eventMap.mapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, overwriteOnAdd );
         }
@@ -286,14 +274,14 @@ public class StampDatabase extends Actor
 
     public function deleteStamp( stampData:StampDTO, askConfirmation:Boolean = false ):void
     {
-        this.stampdata = stampData;
-        currentSerieName = stampdata.serie;
-        currentYear = stampdata.year;
+        this.stampData = stampData;
+        currentSerieName = stampData.serie;
+        currentYear = stampData.year;
         if ( askConfirmation )
         {
             var title:String = "Delete Stamp?";
             var question:String = "This will delete stamp information from database and no recovery is possible. Are you sure you want to do this?";
-            eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.YES_NO, title,
+            eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.TYPE_YES_NO, title,
                     question ) );
             eventMap.mapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, deleteAnswer );
         }
@@ -353,7 +341,7 @@ public class StampDatabase extends Actor
 
     public function getFieldsEntries( field:String ):Array
     {
-        statement.sqlConnection = SQLconn;
+        statement.sqlConnection = SQLConn;
         statement.text = "SELECT DISTINCT " + field + " AS entry FROM stampDatabase ORDER BY " + field + " asc";
         statement.itemClass = IndexesDTO;
         statement.execute();
@@ -491,10 +479,10 @@ public class StampDatabase extends Actor
     public function startUpdateProcess( stampData:StampDTO ):void
     {
         trace( "startUpdateProcess" );
-        this.stampdata = stampData;
+        this.stampData = stampData;
         if ( StampInfoUpdateState != StampDatabase.NONE_UPDATED )
         {
-            stampExists = checkStampID( stampdata.country, stampdata.number, types.currentType );
+            stampExists = checkStampID( stampData.country, stampData.number, types.currentType );
             if ( stampExists )
             {
                 //ask confirmation from user for replacement
@@ -506,7 +494,7 @@ public class StampDatabase extends Actor
                 {
                     var title:String = "Overwrite Stamp Information?";
                     var question:String = "A stamp with that number already exists. Do you want to overwrite stamp data?";
-                    eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.YES_NO,
+                    eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.TYPE_YES_NO,
                             title, question ) );
                     eventMap.mapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, overwriteAnswer );
                 }
@@ -617,7 +605,7 @@ public class StampDatabase extends Actor
     private function createCountryImageDir():void
     {
         var fs:String = File.separator;
-        var dir:File = File.applicationStorageDirectory.resolvePath( "images" + fs + stampdata.country + fs + stampdata.type );
+        var dir:File = File.applicationStorageDirectory.resolvePath( "images" + fs + stampData.country + fs + stampData.type );
         if ( !dir.exists )
         {
             dir.createDirectory();
@@ -628,13 +616,13 @@ public class StampDatabase extends Actor
     private function deleteStep2():void
     {
         var sql:String = "DELETE FROM stampDatabase WHERE ";
-        sql = sql + "country='" + stampdata[country] + "' AND type='" + types[currentType] + "'";
-        sql = sql + " AND number='" + stampdata[number] + "'";
+        sql = sql + "country='" + stampData[country] + "' AND type='" + types[currentType] + "'";
+        sql = sql + " AND number='" + stampData[number] + "'";
         statement.text = sql;
         statement.execute();
         if ( forwardDelete )
         {
-            stampdata[number] = stampdata[id];
+            stampData[number] = stampData[id];
             updateOriginalStamp();
             forwardDelete = false;
         }
@@ -705,25 +693,25 @@ public class StampDatabase extends Actor
 
     private function insertStampData():void
     {
-        var tempDecade:String = String( stampdata.year );
+        var tempDecade:String = String( stampData.year );
         tempDecade = tempDecade.substr( 0, 3 ) + "0";
         currentDecade = int( tempDecade );
-        currentSerieName = stampdata.serie;
-        currentStampID = stampdata.number;
-        currentYear = stampdata.year;
+        currentSerieName = stampData.serie;
+        currentStampID = stampData.number;
+        currentYear = stampData.year;
         // check to see if current type is a new one
         var newOne:Boolean = true;
         for ( var i:int = 0; i < types.length; i++ )
         {
             var typename:String = types[i];
-            if ( stampdata.type == typename )
+            if ( stampData.type == typename )
             {
                 newOne = false;
             }
         }
         if ( newOne == true )
         {
-            types.push( stampdata.type );
+            types.push( stampData.type );
             currentType = types.length - 1;
         }
         // check to see if current country is a new one
@@ -731,17 +719,17 @@ public class StampDatabase extends Actor
         for ( var j:int = 0; j < oldCountries.length; j++ )
         {
             var countryName:String = oldCountries[j];
-            if ( stampdata.country == countryName )
+            if ( stampData.country == countryName )
             {
                 newOne = false;
             }
         }
         if ( newOne == true )
         {
-            oldCountries.push( stampdata.country );
+            oldCountries.push( stampData.country );
             currentCountry = oldCountries.length - 1;
         }
-        insertStampInDatabase( stampdata );
+        insertStampInDatabase( stampData );
         // TODO : loadIndexes();
 //			stampArray = getStampsForCountryAndType("", "");
 //			if (stampArray.length > 1)
@@ -808,9 +796,9 @@ public class StampDatabase extends Actor
 
     private function swapIDs():void
     {
-        var tempValue:String = stampdata[id];
-        stampdata[id] = stampdata[number];
-        stampdata[number] = tempValue;
+        var tempValue:String = stampData[id];
+        stampData[id] = stampData[number];
+        stampData[number] = tempValue;
     }
 
 
@@ -819,50 +807,50 @@ public class StampDatabase extends Actor
         trace( "updateOriginalStamp" );
         stampInfoChanged = true;
         var sql:String = "UPDATE stampDatabase ";
-        sql = sql + "SET number='" + stampdata.number + "', ";
-        sql = sql + "country='" + stampdata.country + "', ";
-        sql = sql + "type='" + stampdata.type + "', ";
-        sql = sql + "color='" + stampdata.color + "', ";
-        sql = sql + "denomination='" + stampdata.denomination + "', ";
-        sql = sql + "designer='" + stampdata.designer + "', ";
-        sql = sql + "inscription='" + stampdata.inscription + "', ";
-        sql = sql + "paper='" + stampdata.paper + "', ";
-        sql = sql + "serie='" + stampdata.serie + "', ";
-        sql = sql + "printer='" + stampdata.printer + "', ";
-        sql = sql + "perforation='" + stampdata.perforation + "', ";
-        sql = sql + "variety='" + stampdata.variety + "', ";
-        sql = sql + "watermark='" + stampdata.watermark + "', ";
-        sql = sql + "main_catalog='" + stampdata.main_catalog + "', ";
-        sql = sql + "history='" + stampdata.history + "', ";
-        sql = sql + "current_value='" + stampdata.current_value + "', ";
-        sql = sql + "cost='" + stampdata.cost + "', ";
-        sql = sql + "seller='" + stampdata.seller + "', ";
-        sql = sql + "purchase_year=" + stampdata.purchase_year + ", ";
-        sql = sql + "comments='" + stampdata.comments + "', ";
-        sql = sql + "cancel='" + stampdata.cancel + "', ";
-        sql = sql + "grade='" + stampdata.grade + "', ";
-        sql = sql + "faults='" + stampdata.faults + "', ";
-        sql = sql + "owned=" + stampdata.owned + ", ";
-        sql = sql + "used=" + stampdata.used + ", ";
-        sql = sql + "spares=" + stampdata.spares + ", ";
-        sql = sql + "condition_value=" + stampdata.condition_value + ", ";
-        sql = sql + "hinged_value=" + stampdata.hinged_value + ", ";
-        sql = sql + "centering_value=" + stampdata.centering_value + ", ";
-        sql = sql + "gum_value=" + stampdata.gum_value + ", ";
-        sql = sql + "year=" + stampdata.year + " ";
-        sql = sql + "WHERE id='" + stampdata.id + "'";
-        var tempDecade:String = String( stampdata.year );
+        sql = sql + "SET number='" + stampData.number + "', ";
+        sql = sql + "country='" + stampData.country + "', ";
+        sql = sql + "type='" + stampData.type + "', ";
+        sql = sql + "color='" + stampData.color + "', ";
+        sql = sql + "denomination='" + stampData.denomination + "', ";
+        sql = sql + "designer='" + stampData.designer + "', ";
+        sql = sql + "inscription='" + stampData.inscription + "', ";
+        sql = sql + "paper='" + stampData.paper + "', ";
+        sql = sql + "serie='" + stampData.serie + "', ";
+        sql = sql + "printer='" + stampData.printer + "', ";
+        sql = sql + "perforation='" + stampData.perforation + "', ";
+        sql = sql + "variety='" + stampData.variety + "', ";
+        sql = sql + "watermark='" + stampData.watermark + "', ";
+        sql = sql + "main_catalog='" + stampData.main_catalog + "', ";
+        sql = sql + "history='" + stampData.history + "', ";
+        sql = sql + "current_value='" + stampData.current_value + "', ";
+        sql = sql + "cost='" + stampData.cost + "', ";
+        sql = sql + "seller='" + stampData.seller + "', ";
+        sql = sql + "purchase_year=" + stampData.purchase_year + ", ";
+        sql = sql + "comments='" + stampData.comments + "', ";
+        sql = sql + "cancel='" + stampData.cancel + "', ";
+        sql = sql + "grade='" + stampData.grade + "', ";
+        sql = sql + "faults='" + stampData.faults + "', ";
+        sql = sql + "owned=" + stampData.owned + ", ";
+        sql = sql + "used=" + stampData.used + ", ";
+        sql = sql + "spares=" + stampData.spares + ", ";
+        sql = sql + "condition_value=" + stampData.condition_value + ", ";
+        sql = sql + "hinged_value=" + stampData.hinged_value + ", ";
+        sql = sql + "centering_value=" + stampData.centering_value + ", ";
+        sql = sql + "gum_value=" + stampData.gum_value + ", ";
+        sql = sql + "year=" + stampData.year + " ";
+        sql = sql + "WHERE id='" + stampData.id + "'";
+        var tempDecade:String = String( stampData.year );
         tempDecade = tempDecade.substr( 0, 3 ) + "0";
         currentDecade = int( tempDecade );
-        currentStampID = stampdata.number;
-        currentSerieName = stampdata.serie;
-        currentYear = stampdata.year;
+        currentStampID = stampData.number;
+        currentSerieName = stampData.serie;
+        currentYear = stampData.year;
         statement.text = sql;
         statement.itemClass = null;
         statement.execute();
 //		stampArray = getStampsForCountryAndType("", "");
 //
-        eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMPINFO_UPDATED, stampdata ) );
+        eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMPINFO_UPDATED, stampData ) );
         //eventDispatcher.dispatchEvent(new StampsDatabaseEvents(StampsDatabaseEvents.UPDATE_STRIPE));
         //eventDispatcher.dispatchEvent(new StampsDatabaseEvents(StampsDatabaseEvents.SHOW_BOARD_MESSAGE));
     }
@@ -870,7 +858,7 @@ public class StampDatabase extends Actor
 
     private function dbConnected( event:SQLEvent ):void
     {
-        statement.sqlConnection = SQLconn;
+        statement.sqlConnection = SQLConn;
         statement.text = "CREATE TABLE IF NOT EXISTS stampDatabase (id INTEGER PRIMARY KEY, number VARCHAR(15), main_catalog VARCHAR(20), type VARCHAR(70), country VARCHAR(80), year VARCHAR(4), issue_date DATE, serie VARCHAR(256), variety VARCHAR(100), perforation VARCHAR(20), printer VARCHAR(100), designer VARCHAR(150), circulation VARCHAR(50), amount VARCHAR(30), paper VARCHAR(30), denomination VARCHAR(20), color VARCHAR(30), watermark VARCHAR(15), inscription VARCHAR(150), history TEXT, format VARCHAR(40), condition VARCHAR(20), spares INTEGER, current_value FLOAT, date_purchased DATE, purchase_year INTEGER, seller VARCHAR(100), cost FLOAT, hinged VARCHAR(35), centering VARCHAR(35), gum VARCHAR(35), cancel VARCHAR(80), owned BOOLEAN, grade VARCHAR(100), comments TEXT, used BOOL, condition_value INTEGER, hinged_value INTEGER, centering_value INTEGER, gum_value INTEGER, faults VARCHAR(100))";
         statement.execute();
         databaseConnectedSignal.dispatch();
@@ -890,7 +878,7 @@ public class StampDatabase extends Actor
             case MessageBoxEvent.YES:
                 swapIDs();
                 forwardDelete = true;
-                deleteStamp( stampdata );
+                deleteStamp( stampData );
                 break;
         }
     }
@@ -902,7 +890,7 @@ public class StampDatabase extends Actor
         switch ( e.typeBox )
         {
             case MessageBoxEvent.YES:
-                stampdata[id] = stampdata[number];
+                stampData[id] = stampData[number];
                 updateOriginalStamp();
                 break;
         }

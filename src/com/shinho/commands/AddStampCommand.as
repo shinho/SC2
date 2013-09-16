@@ -1,52 +1,61 @@
 package com.shinho.commands
 {
-	import com.shinho.events.StampsDatabaseEvents;
-	import com.shinho.models.CountriesModel;
-	import com.shinho.models.CountryStampsModel;
-	import com.shinho.models.DecadeYearsModel;
-	import com.shinho.models.StampDatabase;
-	import com.shinho.models.dto.StampDTO;
-	import com.shinho.views.messageBox.MessageBox;
-	import com.shinho.views.messageBox.MessageBoxEvent;
+import com.shinho.events.StampsDatabaseEvents;
+import com.shinho.models.CountriesModel;
+import com.shinho.models.CountryStampsModel;
+import com.shinho.models.DecadeYearsModel;
+import com.shinho.models.StampDatabase;
+import com.shinho.models.dto.StampDTO;
+import com.shinho.views.messageBox.MessageBox;
+import com.shinho.views.messageBox.MessageBoxEvent;
 
-	import org.robotlegs.mvcs.Command;
-
-
-
-	public class AddStampCommand extends Command
-	{
-		[Inject]
-		public var countries:CountriesModel;
-		[Inject]
-		public var decades:DecadeYearsModel;
-		[Inject]
-		public var stamps:CountryStampsModel;
-		[Inject]
-		public var db:StampDatabase;
-		[Inject]
-		public var event:StampsDatabaseEvents;
+import org.robotlegs.mvcs.Command;
 
 
-
-		override public function execute():void {
-			trace("AddStampCommand command executed");
-			var stampData:StampDTO = event.body as StampDTO;
-			var stampExist = db.checkStampID(stampData.country, stampData.number as String, stampData.type);
-			if (stampExist)
-			{
-				//ask confirmation from user for replacement
-				var title:String = "Overwrite Stamp Information?";
-				var question:String = "A stamp with that number already exists. Do you want to overwrite stamp data?";
-				eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.YES_NO,
-				                                                    title,
-				                                                    question ) );
-//				eventMap.mapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, overwriteOnAdd );
-			}
-		}
+public class AddStampCommand extends Command
+{
+    [Inject]
+    public var countries:CountriesModel;
+    [Inject]
+    public var decades:DecadeYearsModel;
+    [Inject]
+    public var stamps:CountryStampsModel;
+    [Inject]
+    public var db:StampDatabase;
+    [Inject]
+    public var event:StampsDatabaseEvents;
 
 
+    override public function execute():void
+    {
+        trace( "AddStampCommand command executed" );
+        var stampData:StampDTO = event.body as StampDTO;
+        var stampExist:Boolean = db.checkStampID( stampData.country, stampData.number as String, stampData.type );
+        if ( stampExist )
+        {
+            var title:String = "Overwrite Stamp Information?";
+            var question:String = "A stamp with that number already exists. Do you want to overwrite stamp data?";
+            var msgBox:MessageBox = new MessageBox( MessageBox.TYPE_YES_NO, title, question );
+            contextView.addChild( msgBox );
+            msgBox.responseSignal.add( onResponse );
+            msgBox.display();
+//				//ask confirmation from user for replacement
+//				var title:String = "Overwrite Stamp Information?";
+//				var question:String = "A stamp with that number already exists. Do you want to overwrite stamp data?";
+//				eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD, MessageBox.YES_NO,
+//				                                                    title,
+//				                                                    question ) );
+////				eventMap.mapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, overwriteOnAdd );
+        }
 
-	}
+
+    }
+
+    private function onResponse(response:String):void
+    {
+
+    }
+}
 }
 
 //public function addStamp(stampData:StampDTO):void
@@ -67,7 +76,6 @@ package com.shinho.commands
 //		insertStampData();
 //	}
 //}
-
 
 
 //private function insertStampData():void
