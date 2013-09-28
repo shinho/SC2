@@ -144,7 +144,7 @@
 		}
 
 
-		public function setCurrentStripe():MovieClip
+		public function setCurrentStripe():SeriesStripeView
 		{
 			pictureStripeReference = this;
 			return pictureStripeReference;

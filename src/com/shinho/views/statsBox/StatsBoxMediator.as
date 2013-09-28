@@ -1,7 +1,7 @@
 package com.shinho.views.statsBox
 {
 	import com.shinho.events.StampsDatabaseEvents;
-	import com.shinho.models.CountryStampsModel;
+	import com.shinho.models.StampsModel;
 	import com.shinho.models.FlexLayout;
 	import com.shinho.models.LanguageModel;
 	import com.shinho.models.StampDatabase;
@@ -15,7 +15,7 @@ package com.shinho.views.statsBox
 	public class StatsBoxMediator extends Mediator
 	{
 		[Inject]
-		public var countryStamps:CountryStampsModel;
+		public var countryStamps:StampsModel;
 		[Inject]
 		public var lang:LanguageModel;
 		[Inject]

@@ -2,7 +2,7 @@ package com.shinho.commands {
 
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.CountriesModel;
-      import com.shinho.models.CountryStampsModel;
+      import com.shinho.models.StampsModel;
       import com.shinho.models.DecadeYearsModel;
       import com.shinho.models.StampDatabase;
       import com.shinho.models.dto.StampDTO;
@@ -16,7 +16,7 @@ package com.shinho.commands {
             [Inject]
             public var decades:DecadeYearsModel;
             [Inject]
-            public var stamps:CountryStampsModel;
+            public var stamps:StampsModel;
             [Inject]
             public var db:StampDatabase;
             [Inject]
