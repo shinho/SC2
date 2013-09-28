@@ -345,7 +345,7 @@ package com.shinho.views.stampInfo
 		}
 
 
-		public function isOkToSave():Boolean
+		public function checkNonOptionalData():Boolean
 		{
 			var nullFields:Boolean = true;
 			if (board.id.text == "" || board.serie.text == "")

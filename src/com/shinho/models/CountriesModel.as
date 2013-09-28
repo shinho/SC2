@@ -83,6 +83,18 @@ package com.shinho.models
 		{
 			return _hasCountries;
 		}
+
+        public function isCountryNew(country2Check:String):Boolean {
+            var found :Boolean = false;
+            for (var i:int = 0; i < _countriesList.length; i++) {
+                var countryName:Object = _countriesList[i];
+                if (countryName==country2Check)
+                {
+                    found = true;
+                }
+            }
+            return !found;
+        }
 	}
 
 }

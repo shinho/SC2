@@ -8,7 +8,7 @@ import org.robotlegs.mvcs.Mediator;
 
 public class MessageBoxMediator extends Mediator
 {
-    //---- inject VIEW dependancy
+    //---- inject VIEW dependency
     [Inject]
     public var view:MessageBox;
     //---- inject MODEL dependency
