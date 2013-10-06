@@ -488,7 +488,7 @@ package com.shinho.models
                   var checkStatesFlag:uint = StampDatabase.COUNTRY_CHANGED | StampDatabase.TYPE_CHANGED;
                   if ( checkChanges( StampInfoChangedState, checkStatesFlag ) )
                   {
-                        createCountryImageDir();
+                        createCountryImageDir(stampDetails.country, stampDetails.type);
                   }
             }
 
@@ -657,10 +657,10 @@ package com.shinho.models
             }
 
 
-            private function createCountryImageDir():void
+            private function createCountryImageDir(coutry:String, type:String):void
             {
                   var fs:String = File.separator;
-                  var dir:File = File.applicationStorageDirectory.resolvePath( "images" + fs + stampData.country + fs + stampData.type );
+                  var dir:File = File.applicationStorageDirectory.resolvePath( "images" + fs + country + fs + type );
                   if ( !dir.exists )
                   {
                         dir.createDirectory();

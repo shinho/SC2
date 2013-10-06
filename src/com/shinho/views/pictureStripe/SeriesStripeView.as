@@ -126,9 +126,9 @@
 		}
 
 
-		public function refreshStripe(data:Vector.<StampDTO>, currentStampNum:String, goDisplay:Boolean = true):void
+		public function refreshStripe(data:Vector.<StampDTO>,  goDisplay:Boolean = true):void
 		{
-			currentStampNumber = currentStampNum;
+//			currentStampNumber = currentStampNum;
 			destroyThumbs();
 			_thumbs = [];
 			_currentThumb = 0;

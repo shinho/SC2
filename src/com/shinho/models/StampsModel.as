@@ -8,7 +8,7 @@
 package com.shinho.models
 {
 
-      import com.shinho.models.dto.SerieDTO;
+      import com.shinho.models.dto.SeriesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.StringUtils;
       import com.shinho.views.pictureStripe.SeriesStripeView;
@@ -21,13 +21,13 @@ package com.shinho.models
             [Inject]
             public var db:StampDatabase;
 
-            public var currentStamp:StampDTO;
+            public var _currentStamp:StampDTO;
             public var selectedStripe: SeriesStripeView;
 
             private var _currentStampID:uint = 0;
             private var _hasStamps:Boolean = false;
             private var _numberOfStamps:uint = 0;
-            private var _stampSeries:Vector.<SerieDTO>;
+            private var _stampSeries:Vector.<SeriesDTO>;
             private var _stamps:Vector.<StampDTO>;
             private var _stampsOwned:uint;
             private var _totalCost:Number;
@@ -86,7 +86,7 @@ package com.shinho.models
                         _stamps = StringUtils.stripPaddedArray( stamps );
                         _numberOfStamps = _stamps.length;
                         _stampSeries = getSeries();
-                        serializeStamps();
+                        distributeInSeries();
                   }
                   calculateTotalsForOwnedStamps();
             }
@@ -108,9 +108,9 @@ package com.shinho.models
             }
 
 
-            private function getSeries():Vector.<SerieDTO>
+            private function getSeries():Vector.<SeriesDTO>
             {
-                  var serieNames:Vector.<SerieDTO> = Vector.<SerieDTO>( [] );
+                  var serieNames:Vector.<SeriesDTO> = Vector.<SeriesDTO>( [] );
                   for ( var i:int = 0; i < _numberOfStamps; i++ )
                   {
                         var found:Boolean = false;
@@ -126,19 +126,13 @@ package com.shinho.models
                         }
                         if ( !found )
                         {
-                              var serie:SerieDTO = new SerieDTO();
+                              var serie:SeriesDTO = new SeriesDTO();
                               serie.serieName = _stamps[i].serie;
                               serie.serieYear = _stamps[i].year;
                               serieNames.push( serie );
                         }
                   }
                   return serieNames;
-            }
-
-
-            private function onStampUpdated( stamp:StampDTO ):void
-            {
-                  // TODO : update country Model
             }
 
 
@@ -150,25 +144,26 @@ package com.shinho.models
                   _stamps = StringUtils.stripPaddedArray( stamps );
                   _numberOfStamps = _stamps.length;
                   _stampSeries = getSeries();
-                  serializeStamps();
+                  distributeInSeries();
             }
 
 
-            private function serializeStamps():void
+            private function distributeInSeries():void
             {
                   for ( var u:int = 0; u < _stamps.length; u++ )
                   {
                         var stamp:StampDTO = _stamps[u];
                         for ( var i:int = 0; i < _stampSeries.length; i++ )
                         {
-                              var serieDTO:SerieDTO = _stampSeries[i];
-                              if ( stamp.serie == serieDTO.serieName && stamp.year == serieDTO.serieYear )
+                              var series:SeriesDTO = _stampSeries[i];
+                              if ( stamp.serie == series.serieName && stamp.year == series.serieYear )
                               {
-                                    serieDTO.serieStamps.push( stamp );
+                                    series.serieStamps.push( stamp );
                               }
                         }
                   }
             }
+
 
 
             public function get hasStamps():Boolean
@@ -179,11 +174,11 @@ package com.shinho.models
 
             public function get stamps():Vector.<StampDTO>
             {
-                  return _stamps;
+                  return _stamps.concat();
             }
 
 
-            public function get stampSeries():Vector.<SerieDTO>
+            public function get stampSeries():Vector.<SeriesDTO>
             {
                   return _stampSeries;
             }
@@ -212,6 +207,15 @@ package com.shinho.models
                   return _totalCost;
             }
 
+            public function get currentStamp():StampDTO
+            {
+                  return _currentStamp;
+            }
+
+            public function set currentStamp(value:StampDTO):void
+            {
+                  _currentStamp = value;
+            }
 
             public function get totalValue():Number
             {

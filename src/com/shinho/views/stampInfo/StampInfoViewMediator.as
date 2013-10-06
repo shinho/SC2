@@ -1,6 +1,7 @@
 package com.shinho.views.stampInfo
 {
 
+      import com.shinho.controllers.StampsController;
       import com.shinho.events.ApplicationEvent;
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.CountriesModel;
@@ -16,7 +17,7 @@ package com.shinho.views.stampInfo
       public class StampInfoViewMediator extends Mediator
       {
             [Inject]
-            public var countryStamps:StampsModel;
+            public var stamps:StampsModel;
             [Inject]
             public var lang:LanguageModel;
             [Inject]
@@ -27,6 +28,8 @@ package com.shinho.views.stampInfo
             public var view:StampInfoView;
             [Inject]
             public var countries:CountriesModel;
+            [Inject]
+            public var controller:StampsController;
 
             private var currentBoardMessage:String;
             private var isAdding:Boolean = false;
@@ -61,7 +64,6 @@ package com.shinho.views.stampInfo
                   addViewListener(StampBoardEvent.PASTE_CLICKED, pasteImage);
                   addViewListener(StampBoardEvent.COPY_CLICKED, copyImage);
                   addViewListener(StampBoardEvent.CLEAR_IMAGE, clearImage);
-                  addViewListener(StampBoardEvent.KEEP_ORIGINAL_DATA, saveOriginalData);
                   db.stampUpdatedSignal.add(onStampUpdated);
                   db.stampAddedSignal.add(onStampUpdated);
                   addContextListener(StampsDatabaseEvents.STAMP_DELETED, stampDeleted);
@@ -80,7 +82,7 @@ package com.shinho.views.stampInfo
 
             private function displayStamp(e:PictureStripeEvents):void
             {
-                  view.displayBoard(countryStamps.currentStamp);
+                  view.displayBoard(stamps.currentStamp);
             }
 
 
@@ -99,14 +101,6 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function saveOriginalData(e:StampBoardEvent):void
-            {
-//			stamps.originalData = e.body;
-//			stamps.originalSerieName = e.body[0].seriename;
-//			stamps.originalYear = e.body[0].year;
-            }
-
-
             private function closeBoard(e:StampBoardEvent):void
             {
                   trace("close board");
@@ -118,7 +112,7 @@ package com.shinho.views.stampInfo
 
             private function editStampInfo(e:StampBoardEvent):void
             {
-                  view.keepOriginalData();
+                  controller.originalStripeData = view.keepOriginalData();
                   view.editStampInfo();
                   isEditing = true;
                   isAdding = false;
@@ -162,7 +156,6 @@ package com.shinho.views.stampInfo
                               var typeIsNew:Boolean = true;
                               if (addedFromMain)
                               {
-
                                     countryIsNew = countries.isCountryNew(stampData.country);
                                     var types:Array = db.types;
                                     for (var i:int = 0; i < types.length; i++)
@@ -202,7 +195,7 @@ package com.shinho.views.stampInfo
 
             private function onAddNewStamp():void
             {
-                  view.keepOriginalData();
+                  controller.originalStripeData = view.keepOriginalData();
                   view.clearFields();
                   view.editStampInfo();
                   isEditing = false;

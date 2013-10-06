@@ -3,7 +3,7 @@ package com.shinho.controllers
 
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.*;
-      import com.shinho.models.dto.SerieDTO;
+      import com.shinho.models.dto.SeriesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.models.dto.TypesDTO;
       import com.shinho.views.pictureStripe.SeriesStripeView;
@@ -17,17 +17,18 @@ package com.shinho.controllers
             [Inject]
             public var countries:CountriesModel;
             [Inject]
-            public var stamps:StampsModel;
+            public var stampsModel:StampsModel;
             [Inject]
             public var db:StampDatabase;
             [Inject]
             public var decadeYearsModel:DecadeYearsModel;
             [Inject]
-            public var fields:FieldEntriesModel;
+            public var fieldsModel:FieldEntriesModel;
             [Inject]
             public var types:TypesModel;
             // properties
             public var selectedSeriesStripe:SeriesStripeView;
+            public var originalStripeData:StampDTO;
             // signals
             private var _stampDataReadySignal:Signal = new Signal();
             private var _databaseIsEmptySignal:Signal = new Signal();
@@ -46,13 +47,13 @@ package com.shinho.controllers
 
             public function getCurrentStamp():StampDTO
             {
-                  return stamps.getCurrentStamp();
+                  return stampsModel.getCurrentStamp();
             }
 
 
             public function getCurrentStampID():uint
             {
-                  return stamps.currentStampID;
+                  return stampsModel.currentStampID;
             }
 
 
@@ -74,9 +75,9 @@ package com.shinho.controllers
             }
 
 
-            public function getSeries():Vector.<SerieDTO>
+            public function getSeries():Vector.<SeriesDTO>
             {
-                  return stamps.stampSeries;
+                  return stampsModel.stampSeries;
             }
 
 
@@ -88,7 +89,7 @@ package com.shinho.controllers
 
             public function getStamps():Vector.<StampDTO>
             {
-                  return stamps.stamps;
+                  return stampsModel.stamps.concat();
             }
 
 
@@ -110,7 +111,7 @@ package com.shinho.controllers
             public function loadStampsType():void
             {
                   decadeYearsModel.setDecadesForCountryType( currentCountryName, types.getCurrentTypeName() );
-                  stamps.getStamps( currentCountryName, types.getCurrentTypeName() );
+                  stampsModel.getStamps( currentCountryName, types.getCurrentTypeName() );
                   checkData();
             }
 
@@ -123,7 +124,7 @@ package com.shinho.controllers
 
             private function checkData():void
             {
-                  if ( stamps.hasStamps )
+                  if ( stampsModel.hasStamps )
                   {
                         _stampDataReadySignal.dispatch();
                   }
@@ -146,7 +147,7 @@ package com.shinho.controllers
                   if ( countriesList )
                   {
                         countries.setCountriesList( countriesList );
-                        fields.createEntriesIndexes();
+                        fieldsModel.createEntriesIndexes();
                         loadNewCountry();
                   } else
                   {
@@ -158,7 +159,7 @@ package com.shinho.controllers
 
             private function onStampAdded( stampData:StampDTO ):void
             {
-                 stamps.addStamp(stampData);
+                 stampsModel.addStamp(stampData);
             }
 
 

@@ -7,6 +7,8 @@ package com.shinho.views
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.FlexLayout;
       import com.shinho.models.StampDatabase;
+      import com.shinho.models.StampsModel;
+      import com.shinho.models.dto.SeriesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.SpriteUtils;
       import com.shinho.views.decades.DecadesEvents;
@@ -29,10 +31,12 @@ package com.shinho.views
             public var page:FlexLayout;
             [Inject]
             public var db:StampDatabase;
-//		[Inject]
-//		public var countries:CountriesModel;
+            [Inject]
+            public var stamps:StampsModel;
             [Inject]
             public var view:ApplicationMainView;
+
+            // properties
             private static var topMargin:int = 110;
             private static var baseMargin:int = 40;
             private static var marginLeft:int = 25;
@@ -114,11 +118,13 @@ package com.shinho.views
 
             private function updateSerie():void
             {
-//			var data:Array = db.getStampsOfSerie(db.currentSerieName, stamps.currentYear);
+
+                  trace( "update serie" );
 //			db.currentStripe.refreshStripe(data, db.currentStampID, false);
-//			view.serieChanged(db.stampArray, stamps.originalSerieName, db.originalYear, db.currentSerieName, db.currentYear);
+                  view.seriesChanged( stamps.stampSeries, controller.selectedSeriesStripe, controller.originalStripeData );
 //			view.moveStripeTop(db.currentSerieName, db.currentYear);
             }
+
 
 
             private function updateStripe():void
@@ -196,7 +202,7 @@ package com.shinho.views
             }
 
 
-            private function refreshAddedStamp(stampData:StampDTO):void
+            private function refreshAddedStamp( stampData:StampDTO ):void
             {
                   updateSerie();
             }

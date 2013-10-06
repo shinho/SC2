@@ -10,13 +10,13 @@ package com.shinho.models.dto {
 import com.shinho.events.StampsDatabaseEvents;
 
 
-public class SerieDTO {
+public class SeriesDTO {
 
 	public var serieName:String;
 	public var serieYear:String;
 	public var serieStamps:Vector.<StampDTO> = Vector.<StampDTO>([]) ;
 
-	public function SerieDTO()
+	public function SeriesDTO()
 	{
 	}
 }

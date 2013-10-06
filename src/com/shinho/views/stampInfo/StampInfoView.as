@@ -61,29 +61,29 @@ package com.shinho.views.stampInfo
             public static const DISPLAY_ALL:int = 1;
             public static const COLOR_BLUE:Number = 0x25cdea;
             public static const COLOR_RED:Number = 0xff1111;
-            private static var backLeft:Sprite;
-            private static var image:Bitmap;
-            private static var boardWidth:int = 950;
-            private static var boardHeight:int = 450;
-            private static var stampFrame:int = 5;
-            private static var bigStampFrame:int = 60;
-            private static var topFrame:int = 60;
-            private static var conditionGroup:BlackCheckBoxGroup;
-            private static var conditionLegends:Array = new Array("poor", "average", "fine", "very fine", "extra fine");
-            private static var hingedGroup:BlackCheckBoxGroup;
-            private static var hingedLegends:Array = new Array("no hinge", "remnant", "light", "hinged", "heavy");
-            private static var centeringGroup:BlackCheckBoxGroup;
-            private static var centeringLegends:Array = new Array("average", "fine", "fine-vf", "very fine", "extra fine",
+            private  var backLeft:Sprite;
+            private  var image:Bitmap;
+            private  var boardWidth:int = 950;
+            private  var boardHeight:int = 450;
+            private  var stampFrame:int = 5;
+            private  var bigStampFrame:int = 60;
+            private  var topFrame:int = 60;
+            private  var conditionGroup:BlackCheckBoxGroup;
+            private  var conditionLegends:Array = new Array("poor", "average", "fine", "very fine", "extra fine");
+            private  var hingedGroup:BlackCheckBoxGroup;
+            private  var hingedLegends:Array = new Array("no hinge", "remnant", "light", "hinged", "heavy");
+            private  var centeringGroup:BlackCheckBoxGroup;
+            private  var centeringLegends:Array = new Array("average", "fine", "fine-vf", "very fine", "extra fine",
                     "superb");
-            private static var gumGroup:BlackCheckBoxGroup;
-            private static var gumLegends:Array = new Array("original", "regummed", "no gum");
-            private static var ownedCheckBox:BlackCheckBoxGroup;
-            private static var mintCheckBox:BlackCheckBoxGroup;
-            private static var timer:Timer = new Timer(300);
-            private static var cli:CLibInit;
-            private static var loader:Loader = new Loader();
-            private static var fs:FileStream = new FileStream();
-            private static var clip:BitmapData
+            private  var gumGroup:BlackCheckBoxGroup;
+            private  var gumLegends:Array = new Array("original", "regummed", "no gum");
+            private  var ownedCheckBox:BlackCheckBoxGroup;
+            private  var mintCheckBox:BlackCheckBoxGroup;
+            private  var timer:Timer = new Timer(300);
+            private  var cli:CLibInit;
+            private  var loader:Loader = new Loader();
+            private  var fs:FileStream = new FileStream();
+            private  var clip:BitmapData ;
             private var _stamp:StampDTO;
             private var _bigStampIsDisplayed:Boolean = false;
             private var _delay:Number = 0.6;
@@ -221,7 +221,7 @@ package com.shinho.views.stampInfo
             public function displayBoard(stamp:StampDTO, isNew:Boolean = false):void
             {
                   _stamp = stamp;
-                  _tempData = stamp;
+                  _tempData = new StampDTO();
                   clearFields();
                   backLeft.visible = true;
                   board.visible = true;
@@ -295,7 +295,6 @@ package com.shinho.views.stampInfo
             {
                   this.stage.focus = board.comments;
                   var editedStamp:StampDTO = new StampDTO();
-                  editedStamp.id = _stamp.id;
                   editedStamp.number = board.id.text;
                   editedStamp.country = board.country.text;
                   editedStamp.type = board.type.text;
@@ -357,16 +356,17 @@ package com.shinho.views.stampInfo
             }
 
 
-            public function keepOriginalData():void
+            public function keepOriginalData():StampDTO
             {
-                  _originalID = StringUtils.isNull(board.id.text);
-                  _originalSerieName = StringUtils.isNull(board.serie.text);
-                  _originalYear = board.ano.value;
-                  _originalType = StringUtils.isNull(board.type.text);
-                  _originalCountry = StringUtils.isNull(board.country.text);
-                  var originalData:Array = new Array({id: _originalID, seriename: _originalSerieName, year: _originalYear, type: _originalType, country: _originalCountry});
-                  dispatchEvent(new StampBoardEvent(StampBoardEvent.KEEP_ORIGINAL_DATA, originalData));
+                  var originalData:StampDTO = new StampDTO();
+                  originalData.number = board.id.text;
+                  originalData.serie = StringUtils.isNull(board.serie.text);
+                  originalData.year = board.ano.value;
+                  originalData.type = StringUtils.isNull(board.type.text);
+                  originalData.country =StringUtils.isNull(board.country.text);
+                  return originalData;
             }
+
 
 
             public function lockFields():void
@@ -555,7 +555,8 @@ package com.shinho.views.stampInfo
             {
                   board.country.text = StringUtils.isNull(_stamp.country);
                   board.type.text = StringUtils.isNull(_stamp.type);
-                  board.id.text = StringUtils.isNull(_stamp.number);
+                  var n = StringUtils.isNull(_stamp.number);
+                  board.id.text = n;
                   board.color.text = StringUtils.isNull(_stamp.color);
                   board.designer.text = StringUtils.isNull(_stamp.designer);
                   board.history.text = StringUtils.isNull(_stamp.history);
@@ -589,7 +590,7 @@ package com.shinho.views.stampInfo
                   centeringGroup.setSelected(_stamp.centering_value);
                   gumGroup.setSelected(_stamp.gum_value);
 
-                  keepOriginalData();
+//                  keepOriginalData();
 
                   board.perc.text = NumberUtils.calculatePositivePercent(Number(board.cost.text),
                           Number(board.currentvalue.text));
