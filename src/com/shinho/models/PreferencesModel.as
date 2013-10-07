@@ -77,7 +77,7 @@ package com.shinho.models
 			}
 			else
 			{
-				trace("Preferences File Dont Exist");
+				trace("Preferences File Don't Exist");
 				stamps.init();
 				saveData();
 				dispatch(new ApplicationEvent(ApplicationEvent.PREFERENCES_LOADED));

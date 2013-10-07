@@ -8,7 +8,6 @@ package com.shinho.views.importer {
 
 	import flash.events.MouseEvent;
 	import org.robotlegs.mvcs.Mediator;
-	import com.shinho.views.importer.XMLimportView;
 	import com.shinho.models.XMLimported;
 	
 	public class XMLimportMediator extends Mediator {

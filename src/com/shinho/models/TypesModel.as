@@ -17,7 +17,6 @@ public class TypesModel extends Actor {
 	[Inject]
 	public var db:StampDatabase;
 	private var _currentTypeIndex:uint = 0;
-	private var _currentTypeName:String = "";
 	private var _hasTypes:Boolean = false;
 	private var _types:Vector.<TypesDTO>;
 

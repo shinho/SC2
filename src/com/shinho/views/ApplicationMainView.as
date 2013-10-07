@@ -226,33 +226,11 @@ package com.shinho.views
             }
 
 
-            public function refreshSerie( data:Vector.<StampDTO>, serieName:String, year:String ):void
-            {
-                  var foundIndex:int = -1;
-                  var found:Boolean = false;
-                  while ( !found && foundIndex <= _seriesStripes.length )
-                  {
-                        foundIndex++;
-                        if ( _seriesStripes[foundIndex].serieName == serieName && _seriesStripes[foundIndex].serieYear == year )
-                        {
-                              found = true;
-                        }
-                  }
-                  _seriesStripes[foundIndex].refreshStripe( data );
-            }
-
 
             public function seriesChanged( newSeries:Vector.<SeriesDTO>, selectedSerieName:SeriesStripeView, previousSeries:StampDTO ):void
             {
                   var diff:int = newSeries.length - _seriesStripes.length;
 
-//			var newSeries:Vector.<StampDTO> = Vector.<StampDTO>([]);
-                  var serieItems:Vector.<StampDTO>;
-//			var add:int = newSeries.length - _seriesStripes.length;
-//			if (add < -2)
-//			{
-//				trace("OOOOOOOOPPPPPPPPPSSSSSSSS");
-//			}
                   for ( var i:int = 0; i <= newSeries.length - 1; i++ )
                   {
                         var added:Boolean = false;
@@ -291,7 +269,7 @@ package com.shinho.views
                                     }
                               }
                               // --------------  check to update previous stripe
-                              if ( (stripe.serieName == previousSeries.serie && stripe.serieYear == previousSeries.year) || (stripe.serieName == selectedSerieName.serieName && stripe.serieYear == selectedSerieName.serieYear))
+                              if ( (stripe.serieName == previousSeries.serie && stripe.serieYear == previousSeries.year) || (stripe.serieName == selectedSerieName.serieName && stripe.serieYear == selectedSerieName.serieYear) )
                               {
                                     if ( !added )
                                     {
@@ -302,7 +280,7 @@ package com.shinho.views
                         }
                         catch ( e:Error )
                         {
-                              /// ignore error : no stripe pointer, add a new one
+                              /// if new series is bigger it's a new element at the end of existing stripes
                               if ( diff == 1 )
                               {
                                     insertNewStripe( newData, i );
@@ -310,11 +288,11 @@ package com.shinho.views
                               }
                         }
                   }
-//			while (_seriesStripes.length > newSeries.length)
-//			{
-//				deleteSerie(_seriesStripes.length - 1);
-//			}
-//			_totalStripes = newSeries.length;
+                  while ( _seriesStripes.length > newSeries.length )
+                  {
+                        deleteSerie( _seriesStripes.length - 1 );
+                  }
+                  _totalStripes = newSeries.length;
             }
 
 
@@ -378,20 +356,6 @@ package com.shinho.views
                         _seriesStripes[initIndex].y = _seriesStripes[initIndex].y - AppDesign.STRIPE_HEIGTH;
                         initIndex++;
                   }
-            }
-
-
-            private function getSerieItems( newStamps:Vector.<StampDTO>, serieName:String, year:String ):Vector.<StampDTO>
-            {
-                  var serieItems:Vector.<StampDTO> = Vector.<StampDTO>( [] );
-                  for ( var u:int = 0; u < newStamps.length; u++ )
-                  {
-                        if ( newStamps[u].serie == serieName && newStamps[u].year == year )
-                        {
-                              serieItems.push( newStamps[u] );
-                        }
-                  }
-                  return serieItems;
             }
 
 

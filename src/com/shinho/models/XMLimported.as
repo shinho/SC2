@@ -1,9 +1,5 @@
 package com.shinho.models {
 	import com.shinho.events.ApplicationEvent;
-	import flash.filesystem.File;
-	import flash.filesystem.FileMode;
-	import flash.filesystem.FileStream;
-	import flash.net.FileReference;
 	import org.robotlegs.mvcs.Actor;
 	
 	

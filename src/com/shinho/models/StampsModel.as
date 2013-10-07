@@ -11,7 +11,6 @@ package com.shinho.models
       import com.shinho.models.dto.SeriesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.StringUtils;
-      import com.shinho.views.pictureStripe.SeriesStripeView;
 
       import org.robotlegs.mvcs.Actor;
 
@@ -22,7 +21,6 @@ package com.shinho.models
             public var db:StampDatabase;
 
             public var _currentStamp:StampDTO;
-            public var selectedStripe: SeriesStripeView;
 
             private var _currentStampID:uint = 0;
             private var _hasStamps:Boolean = false;
@@ -38,6 +36,10 @@ package com.shinho.models
             {
             }
 
+
+            // .........................................................................................................
+            // Public Methods
+            // .........................................................................................................
 
             public function calculateTotalsForOwnedStamps():void
             {
@@ -92,6 +94,37 @@ package com.shinho.models
             }
 
 
+            public function addStamp( stampData:StampDTO ):void
+            {
+                  _stamps.push( stampData );
+                  refreshCollection();
+            }
+
+
+            public function deleteStamp( stampDetails:StampDTO ):void
+            {
+                  var foundIndex:int = -1;
+                  for ( var i:int = 0; i < _stamps.length; i++ )
+                  {
+                        var stampDTO:StampDTO = _stamps[i];
+                        if ( stampDTO.country == stampDetails.country && stampDTO.type == stampDetails.type && stampDTO.number == stampDetails.number )
+                        {
+                              trace( "found" );
+                              foundIndex = i;
+                        }
+                  }
+                  if ( foundIndex >= 0 )
+                  {
+                        _stamps.splice( foundIndex, 1 );
+                  }
+                  refreshCollection();
+            }
+
+
+            // .........................................................................................................
+            // Private Methods
+            // .........................................................................................................
+
             private static function stampsOrderCriteria( a:StampDTO, b:StampDTO ):Number
             {
                   if ( a.number < b.number )
@@ -105,6 +138,17 @@ package com.shinho.models
                   {
                         return 1;
                   }
+            }
+
+
+            private function refreshCollection():void
+            {
+                  _stamps = StringUtils.paddedNumberedArray( _stamps );
+                  _stamps.sort( stampsOrderCriteria );
+                  _stamps = StringUtils.stripPaddedArray( stamps );
+                  _numberOfStamps = _stamps.length;
+                  _stampSeries = getSeries();
+                  distributeInSeries();
             }
 
 
@@ -136,18 +180,6 @@ package com.shinho.models
             }
 
 
-            public function addStamp( stampData:StampDTO ):void
-            {
-                  _stamps.push(stampData);
-                  _stamps = StringUtils.paddedNumberedArray( _stamps );
-                  _stamps.sort( stampsOrderCriteria );
-                  _stamps = StringUtils.stripPaddedArray( stamps );
-                  _numberOfStamps = _stamps.length;
-                  _stampSeries = getSeries();
-                  distributeInSeries();
-            }
-
-
             private function distributeInSeries():void
             {
                   for ( var u:int = 0; u < _stamps.length; u++ )
@@ -165,6 +197,9 @@ package com.shinho.models
             }
 
 
+            // .........................................................................................................
+            // Getters and Setters
+            // .........................................................................................................
 
             public function get hasStamps():Boolean
             {
@@ -207,15 +242,18 @@ package com.shinho.models
                   return _totalCost;
             }
 
+
             public function get currentStamp():StampDTO
             {
                   return _currentStamp;
             }
 
-            public function set currentStamp(value:StampDTO):void
+
+            public function set currentStamp( value:StampDTO ):void
             {
                   _currentStamp = value;
             }
+
 
             public function get totalValue():Number
             {

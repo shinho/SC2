@@ -45,7 +45,7 @@ package com.shinho.commands {
 
             private function onResponse(response:String):void {
                   if (response == MessageBox.RESPONSE_YES) {
-                        db.updateOriginalStamp(_stampData);
+                        db.updateSelectedStamp(_stampData);
                   } else {
 
                   }

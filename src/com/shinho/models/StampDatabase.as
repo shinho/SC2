@@ -13,7 +13,6 @@ package com.shinho.models
       import com.shinho.models.dto.TypesDTO;
       import com.shinho.util.SQLhelper;
       import com.shinho.util.StringUtils;
-      import com.shinho.views.messageBox.MessageBox;
       import com.shinho.views.messageBox.MessageBoxEvent;
 
       import flash.data.SQLConnection;
@@ -36,48 +35,13 @@ package com.shinho.models
             public static const year:int = 2;
             // ------------------------------------------------------------------------------------- BOOLEAN
             public static const serie:int = 3;
-            public static const inscription:int = 4;
-            public static const perforation:int = 5;
-            public static const printer:int = 6;
-            public static const paper:int = 7;
-            public static const designer:int = 8;
-            public static const history:int = 9;
             public static const color:int = 10;
             public static const country:int = 11;
-            public static const denomination:int = 12;
-            public static const variety:int = 14;
-            public static const watermark:int = 15;
-            public static const main_catalog:int = 16;
-            public static const issue_date:int = 17;
-            public static const circulation:int = 18;
-            public static const amount:int = 19;
-            public static const owned:int = 20;
-            public static const format:int = 21;
-            public static const condition:int = 22;
-            public static const spares:int = 23;
-            public static const current_value:int = 24;
-            public static const date_purchased:int = 25;
-            public static const seller:int = 26;
-            public static const cost:int = 27;
-            public static const hinged:int = 28;
-            public static const centering:int = 29;
-            public static const gum:int = 30;
-            public static const cancel:int = 31;
-            public static const grade:int = 32;
-            public static const comments:int = 33;
             public static const used:int = 34;
-            public static const condition_value:int = 35;
-            public static const hinged_value:int = 36;
-            public static const centering_value:int = 37;
-            public static const gum_value:int = 38;
-            public static const faults:int = 39;
             public static const type:int = 40;
-            public static const purchase_year:int = 41;
             public static const FULL_IMPORT:int = 1;
             public static const STAMPDATA_IMPORT:int = 2;
-            public static const STAMPS_CHECKED:String = 'stamps_checked';
             public static const DECADE_UPDATED:String = 'decade_updated';
-            public static const STRIPE_UPDATED:String = 'Stripe_updated';
             public static const SERIE_UPDATED:String = 'Serie_updated';
             public static const NUMBER_UPDATED:String = 'number_updated';
             public static const TYPE_UPDATED:String = 'type_updated';
@@ -109,31 +73,24 @@ package com.shinho.models
             public var currentStripe:MovieClip;
             public var currentType:int = 0;
             public var currentYear:String;
-            public var databaseConnectedSignal:Signal = new Signal();
             public var decades:Array = [];
-            public var doAllCalculations:Boolean = false;
             public var importMethod:uint;
             public var oldCountries:Array = [];
-            public var ownedStamps:int;
             public var printTypes:Array = [];
             public var printers:Array = [];
             public var sellers:Array = [];
-            public var stampArray:Array = [];
             public var stampInfoChanged:Boolean;
-            public var stampUpdatedSignal:Signal = new Signal( StampDTO );
-            public var stampAddedSignal:Signal = new Signal();
             public var stampsInCurrentSerie:int;
             public var stamptypes:Array = [];
-            public var totalCost:Number;
-            public var totalStamps:int;
-            public var totalValue:Number;
             public var types:Array = [];
             private var SQLConn:SQLConnection = new SQLConnection();
             private var dbFile:File;
-            private var forwardDelete:Boolean = false;
-            private var stampExists:Boolean = false;
-            private var stampData:StampDTO;
             private var statement:SQLStatement = new SQLStatement();
+
+            public var databaseConnectedSignal:Signal = new Signal();
+            public var stampUpdatedSignal:Signal = new Signal( StampDTO );
+            public var stampAddedSignal:Signal = new Signal();
+            public var stampDeletedSignal:Signal = new Signal();
 
 
             public function StampDatabase()
@@ -170,47 +127,6 @@ package com.shinho.models
             }
 
 
-            //refactored
-
-            public function addImportedStamp( stamp:Array ):void
-            {
-            }
-
-
-            //refactored
-
-            public function changeCountry():void
-            {
-                  types = getStampTypesForCountry( "" );
-//		decades = getDecades("");
-                  existsCurrentDecade();
-                  stampArray = getStampsForCountryAndType( "", "" );
-                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
-            }
-
-
-            //refactored
-
-            public function changeDecade( newDecade:String ):void
-            {
-                  currentDecade = int( newDecade );
-                  stampArray = getStampsForCountryAndType( "", "" );
-                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
-            }
-
-
-            //refactored
-
-            public function changeType( newType:int ):void
-            {
-                  currentType = newType;
-//		decades = getDecades("");
-                  existsCurrentDecade();
-                  stampArray = getStampsForCountryAndType( "", "" );
-                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
-            }
-
-
             public function checkStampID( countryName:String, stampNumber:String, typeOf:String ):Boolean
             {
                   var checked:Boolean = false;
@@ -224,52 +140,6 @@ package com.shinho.models
                   return checked;
             }
 
-
-            public function defineUpdateState():void
-            {
-                  StampInfoUpdateState = StampDatabase.NONE_UPDATED;
-                  if ( checkChanges( StampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
-                  {
-                        StampInfoUpdateState = StampDatabase.NUMBER_UPDATED;
-                  }
-                  if ( checkChanges( StampInfoChangedState, StampDatabase.SERIE_CHANGED ) )
-                  {
-                        StampInfoUpdateState = StampDatabase.SERIE_UPDATED;
-                  }
-                  if ( checkChanges( StampInfoChangedState, StampDatabase.YEAR_CHANGED ) )
-                  {
-                        StampInfoUpdateState = StampDatabase.DECADE_UPDATED;
-                  }
-                  if ( checkChanges( StampInfoChangedState, StampDatabase.TYPE_CHANGED ) )
-                  {
-                        StampInfoUpdateState = StampDatabase.TYPE_UPDATED;
-                  }
-                  if ( checkChanges( StampInfoChangedState, StampDatabase.COUNTRY_CHANGED ) )
-                  {
-                        StampInfoUpdateState = StampDatabase.COUNTRY_UPDATED;
-                  }
-            }
-
-
-            public function deleteStamp( stampData:StampDTO, askConfirmation:Boolean = false ):void
-            {
-                  this.stampData = stampData;
-                  currentSerieName = stampData.serie;
-                  currentYear = stampData.year;
-                  if ( askConfirmation )
-                  {
-                        var title:String = "Delete Stamp?";
-                        var question:String = "This will delete stamp information from database and no recovery is possible. Are you sure you want to do this?";
-                        eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD,
-                            MessageBox.TYPE_YES_NO, title,
-                            question ) );
-                        eventMap.mapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, deleteAnswer );
-                  }
-                  else
-                  {
-                        deleteStep2();
-                  }
-            }
 
 
             public function getAllStampsFromCountry( currentCountryName:String, countryName:String = "" ):Array
@@ -329,38 +199,6 @@ package com.shinho.models
             }
 
 
-            public function getFullID():Object
-            {
-                  var item:Object = {number: currentStampID, country: oldCountries[currentCountry], type: types[currentType]};
-                  return item;
-            }
-
-
-            public function getID( $number:String, checkArray:Array = null ):int
-            {
-                  if ( checkArray == null )
-                  {
-                        checkArray = stampArray;
-                  }
-                  var found:int = -1;
-                  for ( var i:int = 0; i < checkArray.length; i++ )
-                  {
-                        if ( checkArray[i].number == $number )
-                        {
-                              found = i;
-                        }
-                  }
-                  return found;
-            }
-
-
-            public function getStampData():Object
-            {
-                  var index:int = getID( currentStampID );
-                  return stampArray[index];
-            }
-
-
             public function getStampTypesForCountry( currentCountryName:String ):Array
             {
                   statement.text = "SELECT DISTINCT type FROM stampDatabase WHERE country='" + currentCountryName + "' ORDER BY type asc";
@@ -379,21 +217,6 @@ package com.shinho.models
             }
 
 
-            public function getStampsOfSerie( serieName:String, year:String ):Array
-            {
-                  ///debugStampArray();
-                  var temp:Array = [];
-                  for ( var i:int = 0; i < stampArray.length; i++ )
-                  {
-                        if ( stampArray[i].serie == serieName && stampArray[i].year == year )
-                        {
-                              temp.push( stampArray[i] );
-                        }
-                  }
-                  return temp;
-            }
-
-
             public function importNewStamps( stampslist:XMLList, index:uint ):void
             {
                   var added:Boolean = false;
@@ -405,13 +228,13 @@ package com.shinho.models
                               // ------------------------------------------------------  same catalog ok to add
                               added = addXMLitem( stampslist[index] );
                               eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.XML_ITEM_ADDED,
-                                  added ) );
+                                      added ) );
                         }
                         else
                         {
                               added = addXMLitem( stampslist[index] );
                               eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.XML_ITEM_ADDED,
-                                  added ) );
+                                      added ) );
                         }
                   }
                   else
@@ -419,7 +242,7 @@ package com.shinho.models
                         // ------------------------------------------------------  full import
                         added = addXMLitem( stampslist[index] );
                         eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.XML_ITEM_ADDED,
-                            added ) );
+                                added ) );
                   }
                   if ( added )
                   {
@@ -483,86 +306,33 @@ package com.shinho.models
                   }
                   insertStampInDatabase( stampDetails );
 
-                  stampAddedSignal.dispatch(stampDetails);
+                  stampAddedSignal.dispatch( stampDetails );
 
                   var checkStatesFlag:uint = StampDatabase.COUNTRY_CHANGED | StampDatabase.TYPE_CHANGED;
                   if ( checkChanges( StampInfoChangedState, checkStatesFlag ) )
                   {
-                        createCountryImageDir(stampDetails.country, stampDetails.type);
+                        createCountryImageDir( stampDetails.country, stampDetails.type );
                   }
             }
 
 
-            public function loadStampInfo():void
+            public function updateSelectedStamp( stampDetails:StampDTO ):void
             {
-//		types = getStampTypesForCountry("");
-//		decades = getDecades("");
-                  stampArray = getStampsForCountryAndType( "", "" );
-                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
-            }
-
-
-            public function refreshStamps():void
-            {
-                  stampArray = getStampsForCountryAndType( "", "" );
-                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
-            }
-
-
-            public function startUpdateProcess( stampData:StampDTO ):void
-            {
-                  trace( "startUpdateProcess" );
-                  this.stampData = stampData;
-                  if ( StampInfoUpdateState != StampDatabase.NONE_UPDATED )
-                  {
-                        stampExists = checkStampID( stampData.country, stampData.number, types.currentType );
-                        if ( stampExists )
-                        {
-                              //ask confirmation from user for replacement
-                              if ( !checkChanges( StampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
-                              {
-                                    updateOriginalStamp( stampData );
-                              }
-                              else
-                              {
-                                    var title:String = "Overwrite Stamp Information?";
-                                    var question:String = "A stamp with that number already exists. Do you want to overwrite stamp data?";
-                                    eventDispatcher.dispatchEvent( new MessageBoxEvent( MessageBoxEvent.LOAD_BOARD,
-                                        MessageBox.TYPE_YES_NO,
-                                        title, question ) );
-                                    eventMap.mapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED,
-                                        overwriteAnswer );
-                              }
-                        }
-                        else
-                        {
-                              updateOriginalStamp( stampData );
-                        }
-                  }
-                  else
-                  {
-                        updateOriginalStamp( stampData );
-                  }
-            }
-
-
-            public function updateOriginalStamp( stampDetails:StampDTO ):void
-            {
-                  trace( "updateOriginalStamp" );
-                  stampInfoChanged = true;
-                  var sql:String = SQLhelper.UpdateStampSQL(stampDetails);
-                  var tempDecade:String = String( stampDetails.year );
-                  tempDecade = tempDecade.substr( 0, 3 ) + "0";
-                  currentDecade = int( tempDecade );
-                  currentStampID = stampDetails.number;
-                  currentSerieName = stampDetails.serie;
-                  currentYear = stampDetails.year;
-                  statement.text = sql;
+                  trace( "updateSelectedStamp" );
+                  statement.text = SQLhelper.UpdateStampSQL( stampDetails );
                   statement.itemClass = null;
                   statement.execute();
-                  stampUpdatedSignal.dispatch(stampDetails);
-//                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMPINFO_UPDATED,
-//                      stampDetails ) );
+                  stampUpdatedSignal.dispatch( stampDetails );
+            }
+
+
+            public function updateWithPreviousStampNumber( stampDetails:StampDTO, previousStampDetails:StampDTO ):void
+            {
+                  trace( "updateWithPreviousStampNumber" );
+                  statement.text = SQLhelper.UpdateWithPreviousNumberSQL( stampDetails, previousStampDetails );
+                  statement.itemClass = null;
+                  statement.execute();
+                  stampUpdatedSignal.dispatch( stampDetails );
             }
 
 
@@ -657,7 +427,7 @@ package com.shinho.models
             }
 
 
-            private function createCountryImageDir(coutry:String, type:String):void
+            private function createCountryImageDir( country:String, type:String ):void
             {
                   var fs:String = File.separator;
                   var dir:File = File.applicationStorageDirectory.resolvePath( "images" + fs + country + fs + type );
@@ -668,74 +438,58 @@ package com.shinho.models
             }
 
 
-            private function deleteStep2():void
+            public function deleteOnConfirmation( stampData:StampDTO ):void
             {
                   var sql:String = "DELETE FROM stampDatabase WHERE ";
-                  sql = sql + "country='" + stampData[country] + "' AND type='" + types[currentType] + "'";
-                  sql = sql + " AND number='" + stampData[number] + "'";
+                  sql = sql + "country='" + stampData.country + "' AND type='" + stampData.type + "'";
+                  sql = sql + " AND number='" + stampData.number + "'";
                   statement.text = sql;
                   statement.execute();
-                  if ( forwardDelete )
-                  {
-                        stampData[number] = stampData[id];
-                        updateOriginalStamp( stampData );
-                        forwardDelete = false;
-                  }
-                  else
-                  {
-                        /// decide what kind of update we will need
-                        stampArray = getStampsForCountryAndType( "", "" );
-                        var stampsInCurrentCountry:int = stampArray.length;
-                        if ( stampsInCurrentCountry > 0 )
-                        {
-                              /// ---------- if some stamps still exist, just delete stamp
-                              StampInfoUpdateState = DECADE_UPDATED;
-                              trace( "just delete stamp" );
-                        }
-                        else
-                        {
-                              /// ---------- no stamps exist check another type
-                              types = getStampTypesForCountry( "" );
-                              var numberTypes:int = types.length;
-                              currentType = 0;
-                              stampArray = getStampsForCountryAndType( "", "" );
-                              if ( stampArray.length > 0 )
-                              {
-                                    trace( "we need to update type" );
-                                    StampInfoUpdateState = TYPE_UPDATED;
-                                    eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
-                              }
-                              else
-                              {
-                                    trace( "we need to update country" );
-                                    StampInfoUpdateState = COUNTRY_UPDATED;
-                                    getCountriesList();
-                                    currentCountry = 0;
-                                    currentType = 0;
-                                    currentDecade = 0;
-                                    loadStampInfo();
-                              }
-                              ///eventDispatcher.dispatchEvent(new StampsDatabaseEvents(StampsDatabaseEvents.DECADE_READY));
-                        }
-                  }
-                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMP_DELETED ) );
-            }
-
-
-            private function existsCurrentDecade():void
-            {
-                  var existence:Boolean = false;
-                  for ( var i:int = 0; i < decades.length; i++ )
-                  {
-                        if ( int( decades[i] + "0" ) == currentDecade )
-                        {
-                              existence = true;
-                        }
-                  }
-                  if ( !existence )
-                  {
-                        currentDecade = 0;
-                  }
+                  stampDeletedSignal.dispatch( stampData );
+//                  if ( forwardDelete )
+//                  {
+////                        stampDatanumber] = stampData[id];
+//                        updateOriginalStamp( stampData );
+//                  }
+//                  else
+//                  {
+//                        /// decide what kind of update we will need
+//                        stampArray = getStampsForCountryAndType( "", "" );
+//                        var stampsInCurrentCountry:int = stampArray.length;
+//                        if ( stampsInCurrentCountry > 0 )
+//                        {
+//                              /// ---------- if some stamps still exist, just delete stamp
+//                              StampInfoUpdateState = DECADE_UPDATED;
+//                              trace( "just delete stamp" );
+//                        }
+//                        else
+//                        {
+                  // TODO :: Delete from stampsModel
+//                              /// ---------- no stamps exist check another type
+//                              types = getStampTypesForCountry( "" );
+//                              var numberTypes:int = types.length;
+//                              currentType = 0;
+//                              stampArray = getStampsForCountryAndType( "", "" );
+//                              if ( stampArray.length > 0 )
+//                              {
+//                                    trace( "we need to update type" );
+//                                    StampInfoUpdateState = TYPE_UPDATED;
+//                                    eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
+//                              }
+//                              else
+//                              {
+//                                    trace( "we need to update country" );
+//                                    StampInfoUpdateState = COUNTRY_UPDATED;
+//                                    getCountriesList();
+//                                    currentCountry = 0;
+//                                    currentType = 0;
+//                                    currentDecade = 0;
+//                                    loadStampInfo();
+//                              }
+//                              ///eventDispatcher.dispatchEvent(new StampsDatabaseEvents(StampsDatabaseEvents.DECADE_READY));
+//                        }
+//                  }
+//                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMP_DELETED ) );
             }
 
 
@@ -787,13 +541,6 @@ package com.shinho.models
             }
 
 
-            private function swapIDs():void
-            {
-                  var tempValue:String = stampData[id];
-                  stampData[id] = stampData[number];
-                  stampData[number] = tempValue;
-            }
-
 
             private function dbConnected( event:SQLEvent ):void
             {
@@ -801,47 +548,6 @@ package com.shinho.models
                   statement.text = "CREATE TABLE IF NOT EXISTS stampDatabase (id INTEGER PRIMARY KEY, number VARCHAR(15), main_catalog VARCHAR(20), type VARCHAR(70), country VARCHAR(80), year VARCHAR(4), issue_date DATE, serie VARCHAR(256), variety VARCHAR(100), perforation VARCHAR(20), printer VARCHAR(100), designer VARCHAR(150), circulation VARCHAR(50), amount VARCHAR(30), paper VARCHAR(30), denomination VARCHAR(20), color VARCHAR(30), watermark VARCHAR(15), inscription VARCHAR(150), history TEXT, format VARCHAR(40), condition VARCHAR(20), spares INTEGER, current_value FLOAT, date_purchased DATE, purchase_year INTEGER, seller VARCHAR(100), cost FLOAT, hinged VARCHAR(35), centering VARCHAR(35), gum VARCHAR(35), cancel VARCHAR(80), owned BOOLEAN, grade VARCHAR(100), comments TEXT, used BOOL, condition_value INTEGER, hinged_value INTEGER, centering_value INTEGER, gum_value INTEGER, faults VARCHAR(100))";
                   statement.execute();
                   databaseConnectedSignal.dispatch();
-
-//		if (_countries.numberOfCountries > 0) {
-//			// TODO : loadIndexes();
-//			loadStampInfo();
-//		}
-            }
-
-
-            private function overwriteAnswer( e:MessageBoxEvent ):void
-            {
-                  eventMap.unmapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, overwriteAnswer );
-                  switch ( e.typeBox )
-                  {
-                        case MessageBoxEvent.YES:
-                              swapIDs();
-                              forwardDelete = true;
-                              deleteStamp( stampData );
-                              break;
-                  }
-            }
-
-
-//    public function overwriteOnAdd():void
-//    {
-//        stampData[id] = stampData[number];
-//        updateOriginalStamp();
-//    }
-
-            private function deleteAnswer( e:MessageBoxEvent ):void
-            {
-                  eventMap.unmapListener( eventDispatcher, MessageBoxEvent.OPTION_SELECTED, overwriteAnswer );
-                  switch ( e.typeBox )
-                  {
-                        case MessageBoxEvent.YES:
-                              forwardDelete = false;
-                              deleteStep2();
-                              break;
-                        case MessageBoxEvent.NO:
-                              ///eventDispatcher.dispatchEvent(new StampBoardEvent(StampBoardEvent.CLOSE_BOARD));
-                              break;
-                  }
             }
       }
 }

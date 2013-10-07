@@ -5,7 +5,6 @@ package com.shinho.views.pictureStripe {
 		// events
 		public static const SHOW_STAMP:String = 'PictureStripeEvents_show_stamp';
 		public static const STAMPS_STRIPE_READY:String = 'PictureStripeEvents_stamps_stripe_ready';
-		public static const STAMP_SELECTED:String = 'PictureStripeEvents_stamp_selected';
 		private var _body:*;
 
 

@@ -7,7 +7,6 @@ import com.shinho.models.FlexLayout;
 	import com.shinho.models.StampDatabase;
 	import flash.events.MouseEvent;
 	import org.robotlegs.mvcs.Mediator;
-	import com.shinho.views.export.ExportXML;
 	
 	
 	

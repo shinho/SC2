@@ -2,12 +2,10 @@ package com.shinho.views.decades
 {
 
 	import com.shinho.controllers.StampsController;
-	import com.shinho.events.StampsDatabaseEvents;
 	import com.shinho.models.DecadeYearsModel;
 	import com.shinho.models.FlexLayout;
 	import com.shinho.models.StampDatabase;
 
-	import flash.events.MouseEvent;
 
 	import org.robotlegs.mvcs.Mediator;
 
@@ -57,12 +55,5 @@ package com.shinho.views.decades
 			decades.currentDecade = newDecade;
 
 		}
-
-
-//		private function refreshDecades(e:StampsDatabaseEvents):void
-//		{
-//			view.destroyDecades();
-////			view.displayDecades(stamps.getDecades(""));
-//		}
 	}
 }

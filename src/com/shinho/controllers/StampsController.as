@@ -28,7 +28,7 @@ package com.shinho.controllers
             public var types:TypesModel;
             // properties
             public var selectedSeriesStripe:SeriesStripeView;
-            public var originalStripeData:StampDTO;
+            public var previousStripeData:StampDTO;
             // signals
             private var _stampDataReadySignal:Signal = new Signal();
             private var _databaseIsEmptySignal:Signal = new Signal();
@@ -97,7 +97,9 @@ package com.shinho.controllers
             {
                   db.databaseConnectedSignal.add( onDatabaseConnect );
                   db.OpenDatabase();
-                  db.stampAddedSignal.add(onStampAdded);
+                  db.stampAddedSignal.add( onStampAdded );
+                  db.stampDeletedSignal.add( onStampDeleted );
+                  db.stampUpdatedSignal.add( onStampUpdated );
             }
 
 
@@ -157,9 +159,21 @@ package com.shinho.controllers
             }
 
 
-            private function onStampAdded( stampData:StampDTO ):void
+            private function onStampAdded( stampDetails:StampDTO ):void
             {
-                 stampsModel.addStamp(stampData);
+                  stampsModel.addStamp( stampDetails );
+            }
+
+
+            private function onStampDeleted( stampDetails:StampDTO ):void
+            {
+                  stampsModel.deleteStamp( stampDetails )
+            }
+
+
+            private function onStampUpdated( stampDetails:StampDTO ):void
+            {
+                  stampsModel.getStamps( stampDetails.country, stampDetails.type );
             }
 
 

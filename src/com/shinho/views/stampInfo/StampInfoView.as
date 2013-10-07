@@ -112,10 +112,13 @@ package com.shinho.views.stampInfo
             private var _tempXBig:Number;
             private var _tempY:Number;
             private var _tempYBig:Number;
+            // SIGNALS
             public var lockFieldsSignal:Signal = new Signal();
             public var unlockFieldsSignal:Signal = new Signal();
             public var resetFieldsSignal:Signal = new Signal();
             public var addStampClickedSignal:Signal = new Signal();
+            public var deleteStampClickedSignal:Signal = new Signal();
+            public var closeBoardSignal:Signal = new Signal();
 
 
             public function StampInfoView()
@@ -836,7 +839,7 @@ package com.shinho.views.stampInfo
 
             private function btCloseClicked(e:MouseEvent):void
             {
-                  dispatchEvent(new StampBoardEvent(StampBoardEvent.CLOSE_BOARD));
+                  closeBoardSignal.dispatch();
             }
 
 
@@ -866,7 +869,7 @@ package com.shinho.views.stampInfo
 
             private function btDeleteClicked(e:MouseEvent):void
             {
-                  dispatchEvent(new StampBoardEvent(StampBoardEvent.DELETE_CLICKED));
+                  deleteStampClickedSignal.dispatch();
             }
 
 

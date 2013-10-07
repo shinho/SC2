@@ -46,7 +46,6 @@ package com.shinho.views
             private static var barHeight:int = 50;
             private var exportBoard:ExportXML;
             /*		private var statsBoard:StatsBox;*/
-            private var importBoard:XMLimportView;
             private var useWheel:Boolean = false;
 
 
@@ -68,10 +67,9 @@ package com.shinho.views
                   controller.stampDataReadySignal.add( displayStamps );
                   addContextListener( StampsDatabaseEvents.STAMPSDATABASE_EMPTY, emptyDatabase );
 
-                  addContextListener( StampsDatabaseEvents.UPDATE_STRIPE, checkUpdateMethod );
-
-                  db.stampAddedSignal.add( refreshAddedStamp );
-                  addContextListener( StampsDatabaseEvents.STAMP_DELETED, refreshDeletedStamp );
+                  db.stampAddedSignal.add( updateSerie );
+                  db.stampDeletedSignal.add( updateSerie );
+                  db.stampUpdatedSignal.add( updateSerie );
 
                   addContextListener( TypesMenuEvents.TYPE_SELECTED, typeSelected );
 
@@ -101,37 +99,10 @@ package com.shinho.views
             }
 
 
-            private function refreshNewCountry():void
+            private function updateSerie( stampDetails:StampDTO ):void
             {
-//			view.clearDisplay();
-//			stamps.changeCountry();
-            }
-
-
-            private function refreshNewType():void
-            {
-//			view.clearDisplay();
-//			stamps.changeType(stamps.currentType);
-//			///view.moveStripeTop(stamps.currentSerieName);
-            }
-
-
-            private function updateSerie():void
-            {
-
                   trace( "update serie" );
-//			db.currentStripe.refreshStripe(data, db.currentStampID, false);
-                  view.seriesChanged( stamps.stampSeries, controller.selectedSeriesStripe, controller.originalStripeData );
-//			view.moveStripeTop(db.currentSerieName, db.currentYear);
-            }
-
-
-
-            private function updateStripe():void
-            {
-//			var data:Array = stamps.getStampsOfSerie(stamps.currentSerieName, stamps.currentYear);
-//			stamps.currentStripe.refreshStripe(data, stamps.currentStampID);
-//			view.moveStripeTop(stamps.currentSerieName, stamps.currentYear);
+                  view.seriesChanged( stamps.stampSeries, controller.selectedSeriesStripe, controller.previousStripeData );
             }
 
 
@@ -152,16 +123,6 @@ package com.shinho.views
             }
 
 
-            /*		private function typeSelected(e:MouseEvent):void
-             {
-             if (view.stampsDisplayed)
-             {
-             view.clearDisplay();
-             var newType:int = e.target.parent.parent.id;
-             stamps.changeType(newType);
-             }
-             }*/
-
             private function lockWheel( e:ApplicationEvent ):void
             {
                   useWheel = false;
@@ -181,12 +142,6 @@ package com.shinho.views
             }
 
 
-            private function addStamp( e:MouseEvent ):void
-            {
-                  eventDispatcher.dispatchEvent( new ApplicationEvent( ApplicationEvent.ADD_STAMP ) );
-            }
-
-
             private function typeSelected( e:TypesMenuEvents ):void
             {
                   if ( view.stampsDisplayed )
@@ -199,69 +154,6 @@ package com.shinho.views
             private function decadeSelected( e:DecadesEvents ):void
             {
                   view.moveToDecade( e.body );
-            }
-
-
-            private function refreshAddedStamp( stampData:StampDTO ):void
-            {
-                  updateSerie();
-            }
-
-
-            private function refreshDeletedStamp( e:StampsDatabaseEvents ):void
-            {
-//			view.serieChanged(stamps.stampArray, stamps.originalSerieName, stamps.originalYear, stamps.currentSerieName, stamps.currentYear);
-//			view.moveStripeTop(stamps.currentSerieName, stamps.currentYear);
-            }
-
-
-            private function checkUpdateMethod( e:StampsDatabaseEvents ):void
-            {
-//			switch (stamps.StampInfoUpdateState)
-//			{
-//				case StampDatabase.DECADE_UPDATED:
-//					trace("--> updating decade");
-//					updateSerie();
-//					///refreshAddedStamp();
-//					break;
-//				case StampDatabase.SERIE_UPDATED:
-//					trace("--> updating serie");
-//					updateSerie();
-//					break;
-//				case StampDatabase.STRIPE_UPDATED:
-//					trace("--> updating serie");
-//					updateSerie();
-//					break;
-//				case StampDatabase.NONE_UPDATED:
-//					trace("--> updating serie (nothing changed)");
-//					///updateStripe();
-//					updateSerie();
-//					break;
-//				case StampDatabase.NUMBER_UPDATED:
-//					trace("--> updating serie (number changed)");
-//					updateStripe();
-//					///refreshAddedStamp();
-//					break;
-//				case StampDatabase.COUNTRY_UPDATED:
-//					trace("--> updating country");
-//					refreshNewCountry();
-//					break;
-//				case StampDatabase.TYPE_UPDATED:
-//					trace("--> updating type");
-//					refreshNewType();
-//					break;
-//			}
-            }
-
-
-            // ------------------------------------------------------------------------  STATS BOX
-
-            private function showStats( e:MouseEvent ):void
-            {
-                  if ( view.stampsDisplayed )
-                  {
-                        eventDispatcher.dispatchEvent( new StatsBoxEvents( StatsBoxEvents.LOAD_BOARD ) );
-                  }
             }
 
 

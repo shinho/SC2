@@ -2,8 +2,6 @@ package com.shinho.views.bottomMenu {
 	import com.shinho.events.ApplicationEvent;
 	import com.shinho.models.FlexLayout;
 	import com.shinho.models.StampDatabase;
-	import com.shinho.views.bottomMenu.BottomMenu;
-	import com.shinho.views.bottomMenu.BottomMenuEvents;
 	import com.shinho.views.countrySelector.CountrySelectorEvents;
 	import com.shinho.views.statsBox.StatsBoxEvents;
 	import org.robotlegs.mvcs.Mediator;
@@ -50,15 +48,7 @@ package com.shinho.views.bottomMenu {
 		private function addStamp(e:BottomMenuEvents):void {
 			eventDispatcher.dispatchEvent(new ApplicationEvent(ApplicationEvent.ADD_STAMP));
 		}
-		
-		
-		
-		// ----------------------------------------------------------------------- On Stage Resize
-/*		private function onStageResize(e:Event):void {
-			page.setActualStage(view.stage.stageWidth, view.stage.stageHeight);
-			page.forceResize();
-			view.onResize();
-		}*/
+
 		
 		
 		

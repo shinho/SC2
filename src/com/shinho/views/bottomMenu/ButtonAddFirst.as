@@ -1,7 +1,6 @@
 package com.shinho.views.bottomMenu
 {
 	import flash.display.MovieClip;
-	import flash.display.Sprite;
 	import flash.events.MouseEvent;
 	import com.greensock.TweenMax;
 	
