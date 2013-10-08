@@ -5,7 +5,6 @@ package com.shinho.views.statsBox
 	public class StatsBoxEvents extends Event
 	{
 		public static const LOAD_BOARD:String = 'StatsBox_loadboard';
-		public static const STATS_BOARD_INIT_CALCULATION:String = 'StatsBox_init-stats-calculation';
 		
 		
 		private var _body:*;

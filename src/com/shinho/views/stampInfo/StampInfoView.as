@@ -61,29 +61,29 @@ package com.shinho.views.stampInfo
             public static const DISPLAY_ALL:int = 1;
             public static const COLOR_BLUE:Number = 0x25cdea;
             public static const COLOR_RED:Number = 0xff1111;
-            private  var backLeft:Sprite;
-            private  var image:Bitmap;
-            private  var boardWidth:int = 950;
-            private  var boardHeight:int = 450;
-            private  var stampFrame:int = 5;
-            private  var bigStampFrame:int = 60;
-            private  var topFrame:int = 60;
-            private  var conditionGroup:BlackCheckBoxGroup;
-            private  var conditionLegends:Array = new Array("poor", "average", "fine", "very fine", "extra fine");
-            private  var hingedGroup:BlackCheckBoxGroup;
-            private  var hingedLegends:Array = new Array("no hinge", "remnant", "light", "hinged", "heavy");
-            private  var centeringGroup:BlackCheckBoxGroup;
-            private  var centeringLegends:Array = new Array("average", "fine", "fine-vf", "very fine", "extra fine",
-                    "superb");
-            private  var gumGroup:BlackCheckBoxGroup;
-            private  var gumLegends:Array = new Array("original", "regummed", "no gum");
-            private  var ownedCheckBox:BlackCheckBoxGroup;
-            private  var mintCheckBox:BlackCheckBoxGroup;
-            private  var timer:Timer = new Timer(300);
-            private  var cli:CLibInit;
-            private  var loader:Loader = new Loader();
-            private  var fs:FileStream = new FileStream();
-            private  var clip:BitmapData ;
+            private var backLeft:Sprite;
+            private var image:Bitmap;
+            private var boardWidth:int = 950;
+            private var boardHeight:int = 450;
+            private var stampFrame:int = 5;
+            private var bigStampFrame:int = 60;
+            private var topFrame:int = 60;
+            private var conditionGroup:BlackCheckBoxGroup;
+            private var conditionLegends:Array = new Array( "poor", "average", "fine", "very fine", "extra fine" );
+            private var hingedGroup:BlackCheckBoxGroup;
+            private var hingedLegends:Array = new Array( "no hinge", "remnant", "light", "hinged", "heavy" );
+            private var centeringGroup:BlackCheckBoxGroup;
+            private var centeringLegends:Array = new Array( "average", "fine", "fine-vf", "very fine", "extra fine",
+                    "superb" );
+            private var gumGroup:BlackCheckBoxGroup;
+            private var gumLegends:Array = new Array( "original", "regummed", "no gum" );
+            private var ownedCheckBox:BlackCheckBoxGroup;
+            private var mintCheckBox:BlackCheckBoxGroup;
+            private var timer:Timer = new Timer( 300 );
+            private var cli:CLibInit;
+            private var loader:Loader = new Loader();
+            private var fs:FileStream = new FileStream();
+            private var clip:BitmapData;
             private var _stamp:StampDTO;
             private var _bigStampIsDisplayed:Boolean = false;
             private var _delay:Number = 0.6;
@@ -119,15 +119,18 @@ package com.shinho.views.stampInfo
             public var addStampClickedSignal:Signal = new Signal();
             public var deleteStampClickedSignal:Signal = new Signal();
             public var closeBoardSignal:Signal = new Signal();
+            public var editStampSignal:Signal = new Signal();
+            public var saveStampSignal:Signal = new Signal();
+
 
 
             public function StampInfoView()
             {
-                  this.addEventListener(Event.ADDED_TO_STAGE, init);
+                  this.addEventListener( Event.ADDED_TO_STAGE, init );
             }
 
 
-            public function changeLabels(item:XMLList):void
+            public function changeLabels( item:XMLList ):void
             {
                   /*			board.title.text = item[20].@label;
                    board.labelCountry.text = item[21].@label;
@@ -141,23 +144,23 @@ package com.shinho.views.stampInfo
             public function checkDataChanges():uint
             {
                   var changes:uint = StampDatabase.NONE_CHANGED;
-                  if (_originalID != board.id.text)
+                  if ( _originalID != board.id.text )
                   {
                         changes = changes | StampDatabase.NUMBER_CHANGED;
                   }
-                  if (_originalSerieName != board.serie.text)
+                  if ( _originalSerieName != board.serie.text )
                   {
                         changes = changes | StampDatabase.SERIE_CHANGED;
                   }
-                  if (_originalYear != board.ano.value)
+                  if ( _originalYear != board.ano.value )
                   {
                         changes = changes | StampDatabase.YEAR_CHANGED;
                   }
-                  if (_originalType != board.type.text)
+                  if ( _originalType != board.type.text )
                   {
                         changes = changes | StampDatabase.TYPE_CHANGED;
                   }
-                  if (_originalCountry != board.country.text)
+                  if ( _originalCountry != board.country.text )
                   {
                         changes = changes | StampDatabase.COUNTRY_CHANGED;
                   }
@@ -170,13 +173,13 @@ package com.shinho.views.stampInfo
                   resetFieldsSignal.dispatch();
                   board.id.text = "";
                   board.denomination.text = "";
-                  clearPhoto(null);
-                  ownedCheckBox.setSelected(0);
-                  mintCheckBox.setSelected(0);
-                  conditionGroup.setSelected(0);
-                  hingedGroup.setSelected(0);
-                  centeringGroup.setSelected(0);
-                  gumGroup.setSelected(0);
+                  clearPhoto( null );
+                  ownedCheckBox.setSelected( 0 );
+                  mintCheckBox.setSelected( 0 );
+                  conditionGroup.setSelected( 0 );
+                  hingedGroup.setSelected( 0 );
+                  centeringGroup.setSelected( 0 );
+                  gumGroup.setSelected( 0 );
                   board.faults.text = "";
                   board.cancel.text = "";
                   board.grade.value = 0;
@@ -188,40 +191,40 @@ package com.shinho.views.stampInfo
                   board.comments.text = "";
                   board.seller.text = "";
                   board.cost.restrict = StringUtils.RESTRICT_NUMBERS_AND_DOT;
-                  board.perc.text = NumberUtils.calculatePositivePercent(Number(board.cost.text),
-                          Number(board.currentvalue.text));
+                  board.perc.text = NumberUtils.calculatePositivePercent( Number( board.cost.text ),
+                          Number( board.currentvalue.text ) );
             }
 
 
             public function copyImage():void
             {
-                  Clipboard.generalClipboard.clearData(ClipboardFormats.BITMAP_FORMAT);
-                  Clipboard.generalClipboard.setData(ClipboardFormats.BITMAP_FORMAT, image.bitmapData);
-                  displayErrorMessage("Image copied to clipboard...", COLOR_BLUE);
+                  Clipboard.generalClipboard.clearData( ClipboardFormats.BITMAP_FORMAT );
+                  Clipboard.generalClipboard.setData( ClipboardFormats.BITMAP_FORMAT, image.bitmapData );
+                  displayErrorMessage( "Image copied to clipboard...", COLOR_BLUE );
             }
 
 
             public function deleteImage():void
             {
-                  if (!_isLocked)
+                  if ( !_isLocked )
                   {
-                        if (_stampHasImage)
+                        if ( _stampHasImage )
                         {
                               var slash:String = File.separator;
-                              var imageFile:File = File.documentsDirectory.resolvePath(StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg");
-                              if (imageFile.exists)
+                              var imageFile:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg" );
+                              if ( imageFile.exists )
                               {
-                                    clearPhoto(null);
+                                    clearPhoto( null );
                                     imageFile.deleteFile();
                                     _stampHasImage = false;
-                                    displayErrorMessage("Stamp Image Deleted...", COLOR_RED);
+                                    displayErrorMessage( "Stamp Image Deleted...", COLOR_RED );
                               }
                         }
                   }
             }
 
 
-            public function displayBoard(stamp:StampDTO, isNew:Boolean = false):void
+            public function displayBoard( stamp:StampDTO, isNew:Boolean = false ):void
             {
                   _stamp = stamp;
                   _tempData = new StampDTO();
@@ -230,29 +233,29 @@ package com.shinho.views.stampInfo
                   board.visible = true;
                   _isNewStamp = isNew;
                   _imageHolder.alpha = 1;
-                  TweenMax.to(backLeft, .2, {x: 0, alpha: 0.95, ease: Expo.easeOut});
-                  TweenMax.to(board, 0.4, {scaleX: 1, scaleY: 1, alpha: 1, ease: Quint.easeOut, onComplete: passData});
+                  TweenMax.to( backLeft, .2, {x: 0, alpha: 0.95, ease: Expo.easeOut} );
+                  TweenMax.to( board, 0.4, {scaleX: 1, scaleY: 1, alpha: 1, ease: Quint.easeOut, onComplete: passData} );
             }
 
 
-            public function displayErrorMessage(errorMessage:String, color:Number = 0xff0000):void
+            public function displayErrorMessage( errorMessage:String, color:Number = 0xff0000 ):void
             {
                   board.errorMsg.text = "";
                   board.errorMsg.alpha = 1;
                   board.errorMsg.textColor = color;
                   board.errorMsg.text = errorMessage + " ";
-                  TweenMax.to(board.errorMsg, 3, {delay: 1.5, alpha: 0});
+                  TweenMax.to( board.errorMsg, 3, {delay: 1.5, alpha: 0} );
             }
 
 
-            public function editStampInfo(editType:int = 0):void
+            public function editStampInfo( editType:int = 0 ):void
             {
-                  if (editType == DISPLAY_ALL)
+                  if ( editType == DISPLAY_ALL )
                   {
                         board.type.type = TextFieldType.INPUT;
                         board.country.type = TextFieldType.INPUT;
                   }
-                  TweenMax.to(board.backFields, 0.2, {alpha: 1});
+                  TweenMax.to( board.backFields, 0.2, {alpha: 1} );
                   unlockFieldsSignal.dispatch();
                   board.id.type = TextFieldType.INPUT;
                   board.color.type = TextFieldType.INPUT;
@@ -278,12 +281,12 @@ package com.shinho.views.stampInfo
                   board.purchaseYear.enabled = true;
                   board.grade.enabled = true;
                   board.spares.enabled = true;
-                  enableButton(board.btSave);
-                  disableButton(board.btDelete);
-                  disableButton(board.btAdd);
-                  disableButton(board.btEdit);
-                  enableButton(board.btPaste);
-                  enableButton(board.btClearImage);
+                  enableButton( board.btSave );
+                  disableButton( board.btDelete );
+                  disableButton( board.btAdd );
+                  disableButton( board.btEdit );
+                  enableButton( board.btPaste );
+                  enableButton( board.btClearImage );
                   centeringGroup.enable();
                   conditionGroup.enable();
                   gumGroup.enable();
@@ -302,7 +305,7 @@ package com.shinho.views.stampInfo
                   editedStamp.country = board.country.text;
                   editedStamp.type = board.type.text;
                   editedStamp.color = board.color.text;
-                  editedStamp.denomination = StringUtils.isNull(board.denomination.text);
+                  editedStamp.denomination = StringUtils.isNull( board.denomination.text );
                   editedStamp.designer = board.designer.text;
                   editedStamp.inscription = board.inscription.text;
                   editedStamp.history = board.history.text;
@@ -317,7 +320,7 @@ package com.shinho.views.stampInfo
                   editedStamp.current_value = board.currentvalue.text;
                   editedStamp.cost = board.cost.text;
                   editedStamp.seller = board.seller.text;
-                  editedStamp.purchase_year = StringUtils.stringToInt(board.purchaseYear.value);
+                  editedStamp.purchase_year = StringUtils.stringToInt( board.purchaseYear.value );
                   editedStamp.comments = board.comments.text;
                   editedStamp.cancel = board.cancel.text;
                   editedStamp.grade = board.grade.value;
@@ -336,22 +339,22 @@ package com.shinho.views.stampInfo
 
             public function hideStampBoard():void
             {
-                  if (_bigStampIsDisplayed)
+                  if ( _bigStampIsDisplayed )
                   {
                         _delay = 0;
-                        shrinkStamp(null);
+                        shrinkStamp( null );
                   }
                   /// when animation is completed remove the stamp board and the background
-                  TweenMax.to(_imageHolder, 0.1, {alpha: 0});
-                  TweenMax.to(board, 0.2, {scaleX: 0, scaleY: 0, alpha: 0, ease: Quint.easeIn, onComplete: removeStampBoard});
-                  TweenMax.to(backLeft, 0.3, {x: -page.wide, alpha: 0, ease: Expo.easeOut});
+                  TweenMax.to( _imageHolder, 0.1, {alpha: 0} );
+                  TweenMax.to( board, 0.2, {scaleX: 0, scaleY: 0, alpha: 0, ease: Quint.easeIn, onComplete: removeStampBoard} );
+                  TweenMax.to( backLeft, 0.3, {x: -page.wide, alpha: 0, ease: Expo.easeOut} );
             }
 
 
             public function checkNonOptionalData():Boolean
             {
                   var nullFields:Boolean = true;
-                  if (board.id.text == "" || board.serie.text == "")
+                  if ( board.id.text == "" || board.serie.text == "" )
                   {
                         nullFields = false;
                   }
@@ -363,13 +366,12 @@ package com.shinho.views.stampInfo
             {
                   var originalData:StampDTO = new StampDTO();
                   originalData.number = board.id.text;
-                  originalData.serie = StringUtils.isNull(board.serie.text);
+                  originalData.serie = StringUtils.isNull( board.serie.text );
                   originalData.year = board.ano.value;
-                  originalData.type = StringUtils.isNull(board.type.text);
-                  originalData.country =StringUtils.isNull(board.country.text);
+                  originalData.type = StringUtils.isNull( board.type.text );
+                  originalData.country = StringUtils.isNull( board.country.text );
                   return originalData;
             }
-
 
 
             public function lockFields():void
@@ -413,63 +415,63 @@ package com.shinho.views.stampInfo
 
             public function pasteImage():void
             {
-                  if (!_isLocked)
+                  if ( !_isLocked )
                   {
-                        disableButton(board.btPaste);
+                        disableButton( board.btPaste );
                         this.stage.focus = board.comments;
-                        clearPhoto(null);
-                        var clipImage:Bitmap = new Bitmap(Clipboard.generalClipboard.getData(ClipboardFormats.BITMAP_FORMAT) as BitmapData);
-                        if (clipImage.width > 0 && clipImage.height > 0)
+                        clearPhoto( null );
+                        var clipImage:Bitmap = new Bitmap( Clipboard.generalClipboard.getData( ClipboardFormats.BITMAP_FORMAT ) as BitmapData );
+                        if ( clipImage.width > 0 && clipImage.height > 0 )
                         {
                               clip = clipImage.bitmapData;
                               var baout:ByteArray = new ByteArray();
-                              var ba:ByteArray = clip.getPixels(clip.rect);
+                              var ba:ByteArray = clip.getPixels( clip.rect );
                               ba.position = 0;
                               var count:uint = 0;
                               var stop:Boolean = false;
-                              while (count <= 3)
+                              while ( count <= 3 )
                               {
                                     count++;
                                     try
                                     {
-                                          _jpegEncoder.encode(ba, baout, clip.width, clip.height, 90);
-                                          trace("trying to encode numbered : " + count);
+                                          _jpegEncoder.encode( ba, baout, clip.width, clip.height, 90 );
+                                          trace( "trying to encode numbered : " + count );
                                     }
-                                    catch (e:Error)
+                                    catch ( e:Error )
                                     {
-                                          displayErrorMessage("Error Encoding", COLOR_RED);
+                                          displayErrorMessage( "Error Encoding", COLOR_RED );
                                           stop = true;
-                                          enableButton(board.btPaste);
+                                          enableButton( board.btPaste );
                                     }
-                                    if (!stop)
+                                    if ( !stop )
                                     {
                                           count = 4;
                                     }
                               }
-                              if (!stop)
+                              if ( !stop )
                               {
                                     var slash:String = File.separator;
-                                    var savepath:File = File.documentsDirectory.resolvePath(StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg");
+                                    var savepath:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg" );
                                     fs = new FileStream();
-                                    fs.addEventListener(Event.CLOSE, fileSaved);
+                                    fs.addEventListener( Event.CLOSE, fileSaved );
                                     try
                                     {
-                                          trace("saving image to disk file:");
-                                          fs.openAsync(savepath, FileMode.WRITE);
-                                          fs.writeBytes(baout);
-                                          fs.addEventListener(Event.CLOSE, fileSaved);
+                                          trace( "saving image to disk file:" );
+                                          fs.openAsync( savepath, FileMode.WRITE );
+                                          fs.writeBytes( baout );
+                                          fs.addEventListener( Event.CLOSE, fileSaved );
                                           fs.close();
                                     }
-                                    catch (e:Error)
+                                    catch ( e:Error )
                                     {
-                                          displayErrorMessage(e.errorID + ":" + e.message, COLOR_RED);
+                                          displayErrorMessage( e.errorID + ":" + e.message, COLOR_RED );
                                     }
                               }
                         }
                         else
                         {
-                              displayErrorMessage("Clipboard is not an image, or its empty", COLOR_RED);
-                              enableButton(board.btPaste);
+                              displayErrorMessage( "Clipboard is not an image, or its empty", COLOR_RED );
+                              enableButton( board.btPaste );
                         }
                   }
             }
@@ -477,18 +479,18 @@ package com.shinho.views.stampInfo
 
             public function preventSave():void
             {
-                  disableButton(board.btSave);
+                  disableButton( board.btSave );
             }
 
 
             public function removeStampBoard():void
             {
-                  _imageHolder.removeEventListener(MouseEvent.CLICK, enlargeStamp);
-                  if (_stampHasImage)
+                  _imageHolder.removeEventListener( MouseEvent.CLICK, enlargeStamp );
+                  if ( _stampHasImage )
                   {
                         image.bitmapData.dispose();
                         image = null;
-                        SpriteUtils.removeAllChild(_imageHolder);
+                        SpriteUtils.removeAllChild( _imageHolder );
                         _stampHasImage = false;
                   }
                   board.visible = false;
@@ -498,16 +500,16 @@ package com.shinho.views.stampInfo
 
             public function resetButtons():void
             {
-                  enableButton(board.btDelete);
-                  disableButton(board.btSave);
-                  enableButton(board.btAdd);
-                  enableButton(board.btEdit);
-                  disableButton(board.btPaste);
-                  disableButton(board.btClearImage);
+                  enableButton( board.btDelete );
+                  disableButton( board.btSave );
+                  enableButton( board.btAdd );
+                  enableButton( board.btEdit );
+                  disableButton( board.btPaste );
+                  disableButton( board.btClearImage );
             }
 
 
-            private function disableButton(bt:Object):void
+            private function disableButton( bt:Object ):void
             {
                   bt.enabled = false;
                   bt.alpha = 0.15;
@@ -516,196 +518,193 @@ package com.shinho.views.stampInfo
 
             private function displayStampImage():void
             {
-                  if (!_isNewStamp)
+                  if ( !_isNewStamp )
                   {
-                        loadPhoto(_stamp);
+                        loadPhoto( _stamp );
                         lockFields();
                   }
                   else
                   {
-                        editStampInfo(DISPLAY_ALL);
+                        editStampInfo( DISPLAY_ALL );
                   }
             }
 
 
-            private function enableButton(bt:Object):void
+            private function enableButton( bt:Object ):void
             {
                   bt.enabled = true;
                   bt.alpha = 1;
             }
 
 
-            private function loadPhoto(data:Object):void
+            private function loadPhoto( data:Object ):void
             {
-                  if (_imageHolder.numChildren > 0)
+                  if ( _imageHolder.numChildren > 0 )
                   {
-                        SpriteUtils.removeAllChild(_imageHolder);
+                        SpriteUtils.removeAllChild( _imageHolder );
                         image = null;
                   }
                   var slash:String = File.separator;
-                  var path:File = File.documentsDirectory.resolvePath(StampDatabase.DIR_IMAGES + slash + data.country + slash + data.type + slash + data.number + ".jpg");
-                  trace(path.url);
+                  var path:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + data.country + slash + data.type + slash + data.number + ".jpg" );
+                  trace( path.url );
                   var pathUrl:String = path.url;
                   ///loader = new Loader();
-                  var urlRequest:URLRequest = new URLRequest(pathUrl);
-                  loader.load(urlRequest);
-                  loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
-                  loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onIOError);
+                  var urlRequest:URLRequest = new URLRequest( pathUrl );
+                  loader.load( urlRequest );
+                  loader.contentLoaderInfo.addEventListener( Event.COMPLETE, imageLoaded );
+                  loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError );
             }
 
 
             private function passData():void
             {
-                  board.country.text = StringUtils.isNull(_stamp.country);
-                  board.type.text = StringUtils.isNull(_stamp.type);
-                  var n = StringUtils.isNull(_stamp.number);
-                  board.id.text = n;
-                  board.color.text = StringUtils.isNull(_stamp.color);
-                  board.designer.text = StringUtils.isNull(_stamp.designer);
-                  board.history.text = StringUtils.isNull(_stamp.history);
-                  board.inscription.text = StringUtils.isNull(_stamp.inscription);
-                  board.paper.text = StringUtils.isNull(_stamp.paper);
-                  board.serie.text = StringUtils.isNull(_stamp.serie);
-                  board.printer.text = StringUtils.isNull(_stamp.printer);
-                  board.seller.text = StringUtils.isNull(_stamp.seller);
-                  board.perforation.text = StringUtils.isNull(_stamp.perforation);
-                  board.variety.text = StringUtils.isNull(_stamp.variety);
-                  board.watermark.text = StringUtils.isNull(_stamp.watermark);
-                  board.catalog.text = StringUtils.isNull(_stamp.main_catalog);
+                  board.country.text = StringUtils.isNull( _stamp.country );
+                  board.type.text = StringUtils.isNull( _stamp.type );
+                  board.id.text = StringUtils.isNull( _stamp.number );
+                  board.color.text = StringUtils.isNull( _stamp.color );
+                  board.designer.text = StringUtils.isNull( _stamp.designer );
+                  board.history.text = StringUtils.isNull( _stamp.history );
+                  board.inscription.text = StringUtils.isNull( _stamp.inscription );
+                  board.paper.text = StringUtils.isNull( _stamp.paper );
+                  board.serie.text = StringUtils.isNull( _stamp.serie );
+                  board.printer.text = StringUtils.isNull( _stamp.printer );
+                  board.seller.text = StringUtils.isNull( _stamp.seller );
+                  board.perforation.text = StringUtils.isNull( _stamp.perforation );
+                  board.variety.text = StringUtils.isNull( _stamp.variety );
+                  board.watermark.text = StringUtils.isNull( _stamp.watermark );
+                  board.catalog.text = StringUtils.isNull( _stamp.main_catalog );
                   board.ano.value = _stamp.year;
                   board.spares.value = _stamp.spares;
                   board.purchaseYear.value = _stamp.purchase_year;
-                  board.comments.text = StringUtils.isNull(_stamp.comments);
-                  board.cancel.text = StringUtils.isNull(_stamp.cancel);
-                  board.grade.value = StringUtils.isNull(_stamp.grade);
-                  board.faults.text = StringUtils.isNull(_stamp.faults);
-                  board.denomination.text = StringUtils.isNull(_stamp.denomination);
-                  board.currentvalue.text = _stamp.current_value == 0 ? "0.00" : Formatter.decimals(_stamp.current_value,
-                          2, true, ".");
-                  board.cost.text = _stamp.cost == 0 ? "0.000" : Formatter.decimals(_stamp.cost, 3, true, ".");
+                  board.comments.text = StringUtils.isNull( _stamp.comments );
+                  board.cancel.text = StringUtils.isNull( _stamp.cancel );
+                  board.grade.value = StringUtils.isNull( _stamp.grade );
+                  board.faults.text = StringUtils.isNull( _stamp.faults );
+                  board.denomination.text = StringUtils.isNull( _stamp.denomination );
+                  board.currentvalue.text = _stamp.current_value == 0 ? "0.00" : Formatter.decimals( _stamp.current_value,
+                          2, true, "." );
+                  board.cost.text = _stamp.cost == 0 ? "0.000" : Formatter.decimals( _stamp.cost, 3, true, "." );
 
                   var ownedValue:int = _stamp.owned == true ? 1 : 0;
-                  ownedCheckBox.setSelected(ownedValue);
+                  ownedCheckBox.setSelected( ownedValue );
                   var mintValue:int = _stamp.used == true ? 1 : 0;
-                  mintCheckBox.setSelected(mintValue);
-                  conditionGroup.setSelected(_stamp.condition_value);
-                  hingedGroup.setSelected(_stamp.hinged_value);
-                  centeringGroup.setSelected(_stamp.centering_value);
-                  gumGroup.setSelected(_stamp.gum_value);
+                  mintCheckBox.setSelected( mintValue );
+                  conditionGroup.setSelected( _stamp.condition_value );
+                  hingedGroup.setSelected( _stamp.hinged_value );
+                  centeringGroup.setSelected( _stamp.centering_value );
+                  gumGroup.setSelected( _stamp.gum_value );
 
-//                  keepOriginalData();
-
-                  board.perc.text = NumberUtils.calculatePositivePercent(Number(board.cost.text),
-                          Number(board.currentvalue.text));
+                  board.perc.text = NumberUtils.calculatePositivePercent( Number( board.cost.text ),
+                          Number( board.currentvalue.text ) );
                   displayStampImage();
-                  timer.addEventListener(TimerEvent.TIMER, suggestOnTimer);
+                  timer.addEventListener( TimerEvent.TIMER, suggestOnTimer );
             }
 
 
             private function relinkHolder():void
             {
-                  board.addChild(_imageHolder);
+                  board.addChild( _imageHolder );
                   _imageHolder.x = _tempX;
                   _imageHolder.y = _tempY;
                   _imageHolder.width = _tempWidth;
                   _imageHolder.height = _tempHeight;
-                  _imageHolder.addEventListener(MouseEvent.CLICK, enlargeStamp);
+                  _imageHolder.addEventListener( MouseEvent.CLICK, enlargeStamp );
             }
 
 
-            public function preventAnotherDecimalPoint(e:KeyboardEvent):void
+            public function preventAnotherDecimalPoint( e:KeyboardEvent ):void
             {
                   var temp:String = e.target.text;
                   var existsDecimal:Boolean = false;
-                  for (var i:int = 0; i < temp.length; i++)
+                  for ( var i:int = 0; i < temp.length; i++ )
                   {
-                        if (temp.charAt(i) == ".")
+                        if ( temp.charAt( i ) == "." )
                         {
                               existsDecimal = true;
                         }
                   }
-                  if (existsDecimal && (e.keyCode == 110 || e.keyCode == 190))
+                  if ( existsDecimal && (e.keyCode == 110 || e.keyCode == 190) )
                   {
                         e.preventDefault();
                   }
             }
 
 
-            private function init(e:Event):void
+            private function init( e:Event ):void
             {
-                  this.removeEventListener(Event.ADDED_TO_STAGE, init);
+                  this.removeEventListener( Event.ADDED_TO_STAGE, init );
 
-                  backLeft = SpriteUtils.drawQuad(0, 0, 1, 1);
-                  addChild(backLeft);
+                  backLeft = SpriteUtils.drawQuad( 0, 0, 1, 1 );
+                  addChild( backLeft );
 
-                  page.add(backLeft, page.LEFT, 0, page.NONE, 60, page.WIDE, 0, page.TALL, -60);
-                  TweenMax.to(backLeft, 0, {tint: 0x111111, x: -page.wide});
+                  page.add( backLeft, page.LEFT, 0, page.NONE, 60, page.WIDE, 0, page.TALL, -60 );
+                  TweenMax.to( backLeft, 0, {tint: 0x111111, x: -page.wide} );
                   backLeft.visible = false;
 
                   board = new StampInfoBoardSWC();
-                  addChild(board);
-                  page.add(board, page.CENTERX, 0, page.CENTERY, 0, page.NONE, 0, page.NONE, 0);
+                  addChild( board );
+                  page.add( board, page.CENTERX, 0, page.CENTERY, 0, page.NONE, 0, page.NONE, 0 );
                   page.forceResize();
                   backLeft.x = -page.wide;
                   backLeft.doubleClickEnabled = true;
-                  backLeft.addEventListener(MouseEvent.DOUBLE_CLICK, unlockFields);
-                  board.btClose.addEventListener(MouseEvent.CLICK, btCloseClicked);
-                  backLeft.addEventListener(MouseEvent.CLICK, btCloseClicked);
-                  board.btEdit.addEventListener(MouseEvent.CLICK, btEditClicked);
-                  board.btAdd.addEventListener(MouseEvent.CLICK, btAddClicked);
-                  board.btSave.addEventListener(MouseEvent.CLICK, btSaveClicked);
-                  board.btDelete.addEventListener(MouseEvent.CLICK, btDeleteClicked);
-                  board.btPaste.addEventListener(MouseEvent.CLICK, btPasteClicked);
-                  board.btCopy.addEventListener(MouseEvent.CLICK, btCopyClicked);
-                  board.btClearImage.addEventListener(MouseEvent.CLICK, btClearImageClicked);
+                  backLeft.addEventListener( MouseEvent.DOUBLE_CLICK, unlockFields );
+                  board.btClose.addEventListener( MouseEvent.CLICK, btCloseClicked );
+                  backLeft.addEventListener( MouseEvent.CLICK, btCloseClicked );
+                  board.btEdit.addEventListener( MouseEvent.CLICK, btEditClicked );
+                  board.btAdd.addEventListener( MouseEvent.CLICK, btAddClicked );
+                  board.btSave.addEventListener( MouseEvent.CLICK, btSaveClicked );
+                  board.btDelete.addEventListener( MouseEvent.CLICK, btDeleteClicked );
+                  board.btPaste.addEventListener( MouseEvent.CLICK, btPasteClicked );
+                  board.btCopy.addEventListener( MouseEvent.CLICK, btCopyClicked );
+                  board.btClearImage.addEventListener( MouseEvent.CLICK, btClearImageClicked );
 
                   board.country.restrict = "^'";
-                  board.country.addEventListener(FocusEvent.FOCUS_OUT, newPhoto);
-                  board.country.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.country.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
+                  board.country.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.type.restrict = "^'";
-                  board.type.addEventListener(FocusEvent.FOCUS_OUT, newPhoto);
-                  board.type.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.type.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
+                  board.type.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.id.restrict = "a-z0-9";
-                  board.id.addEventListener(FocusEvent.FOCUS_IN, clearPhoto);
-                  board.id.addEventListener(FocusEvent.FOCUS_OUT, newPhoto);
-                  board.id.addEventListener(KeyboardEvent.KEY_UP, preventMoreLetters);
+                  board.id.addEventListener( FocusEvent.FOCUS_IN, clearPhoto );
+                  board.id.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
+                  board.id.addEventListener( KeyboardEvent.KEY_UP, preventMoreLetters );
 
                   board.color.restrict = "^'";
-                  board.color.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.color.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.designer.restrict = "^'";
-                  board.designer.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.designer.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.history.restrict = "^'";
 
                   board.inscription.restrict = "^'";
 
                   board.paper.restrict = "^'";
-                  board.paper.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.paper.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.serie.restrict = "^'";
-                  board.serie.addEventListener(KeyboardEvent.KEY_UP, suggestions);
-                  board.paper.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.serie.addEventListener( KeyboardEvent.KEY_UP, suggestions );
+                  board.paper.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.printer.restrict = "^'";
-                  board.printer.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.printer.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.seller.restrict = "^'";
-                  board.seller.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.seller.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.perforation.restrict = "^'";
 
                   board.variety.restrict = "^'";
-                  board.variety.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.variety.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.watermark.restrict = "^'";
 
-                  board.catalog.addEventListener(KeyboardEvent.KEY_UP, suggestions);
+                  board.catalog.addEventListener( KeyboardEvent.KEY_UP, suggestions );
                   board.catalog.restrict = "^'";
 
-                  board.purchaseYear.addEventListener(FocusEvent.FOCUS_IN, zero2CurrentDate);
+                  board.purchaseYear.addEventListener( FocusEvent.FOCUS_IN, zero2CurrentDate );
 
                   board.comments.restrict = "^'";
 
@@ -714,49 +713,49 @@ package com.shinho.views.stampInfo
                   board.faults.restrict = "^'";
 
                   board.denomination.restrict = "^'";
-                  board.denomination.addEventListener(FocusEvent.FOCUS_IN, zero2Empty);
+                  board.denomination.addEventListener( FocusEvent.FOCUS_IN, zero2Empty );
 
                   board.currentvalue.restrict = StringUtils.RESTRICT_NUMBERS_AND_DOT;
-                  board.currentvalue.addEventListener(KeyboardEvent.KEY_DOWN, preventAnotherDecimalPoint);
-                  board.currentvalue.addEventListener(FocusEvent.FOCUS_OUT, preventNullNumber);
-                  board.currentvalue.addEventListener(FocusEvent.FOCUS_IN, zero2Empty);
+                  board.currentvalue.addEventListener( KeyboardEvent.KEY_DOWN, preventAnotherDecimalPoint );
+                  board.currentvalue.addEventListener( FocusEvent.FOCUS_OUT, preventNullNumber );
+                  board.currentvalue.addEventListener( FocusEvent.FOCUS_IN, zero2Empty );
 
                   board.cost.restrict = StringUtils.RESTRICT_NUMBERS_AND_DOT;
-                  board.cost.addEventListener(KeyboardEvent.KEY_DOWN, preventAnotherDecimalPoint);
-                  board.cost.addEventListener(FocusEvent.FOCUS_OUT, preventNullNumber);
-                  board.cost.addEventListener(FocusEvent.FOCUS_IN, zero2Empty);
+                  board.cost.addEventListener( KeyboardEvent.KEY_DOWN, preventAnotherDecimalPoint );
+                  board.cost.addEventListener( FocusEvent.FOCUS_OUT, preventNullNumber );
+                  board.cost.addEventListener( FocusEvent.FOCUS_IN, zero2Empty );
 
                   board.btClose.buttonMode = true;
-                  board.btClose.addEventListener(MouseEvent.MOUSE_OVER, btCloseOnOver);
-                  board.btClose.addEventListener(MouseEvent.MOUSE_OUT, btCloseOnOut);
+                  board.btClose.addEventListener( MouseEvent.MOUSE_OVER, btCloseOnOver );
+                  board.btClose.addEventListener( MouseEvent.MOUSE_OUT, btCloseOnOut );
 
-                  ownedCheckBox = new BlackCheckBoxGroup(new Array(board.owned), false);
+                  ownedCheckBox = new BlackCheckBoxGroup( new Array( board.owned ), false );
 
-                  mintCheckBox = new BlackCheckBoxGroup(new Array(board.mint), false);
+                  mintCheckBox = new BlackCheckBoxGroup( new Array( board.mint ), false );
 
-                  var conditionButtons:Array = new Array(board.condPoor, board.condAVG, board.condF, board.condVF,
-                          board.condXF);
-                  conditionGroup = new BlackCheckBoxGroup(conditionButtons, false);
-                  conditionGroup.setLegends(conditionLegends);
+                  var conditionButtons:Array = new Array( board.condPoor, board.condAVG, board.condF, board.condVF,
+                          board.condXF );
+                  conditionGroup = new BlackCheckBoxGroup( conditionButtons, false );
+                  conditionGroup.setLegends( conditionLegends );
 
-                  var hingedButtons:Array = new Array(board.hgNH, board.hgRM, board.hgLH, board.hgH, board.hgHH);
-                  hingedGroup = new BlackCheckBoxGroup(hingedButtons, false);
-                  hingedGroup.setLegends(hingedLegends);
+                  var hingedButtons:Array = new Array( board.hgNH, board.hgRM, board.hgLH, board.hgH, board.hgHH );
+                  hingedGroup = new BlackCheckBoxGroup( hingedButtons, false );
+                  hingedGroup.setLegends( hingedLegends );
 
-                  var centeringButtons:Array = new Array(board.centAVG, board.centFine, board.centFVF, board.centVF,
-                          board.centXF, board.centS);
-                  centeringGroup = new BlackCheckBoxGroup(centeringButtons, false);
-                  centeringGroup.setLegends(centeringLegends);
+                  var centeringButtons:Array = new Array( board.centAVG, board.centFine, board.centFVF, board.centVF,
+                          board.centXF, board.centS );
+                  centeringGroup = new BlackCheckBoxGroup( centeringButtons, false );
+                  centeringGroup.setLegends( centeringLegends );
 
-                  var gumButtons:Array = new Array(board.gumOG, board.gumRG, board.gumNG);
-                  gumGroup = new BlackCheckBoxGroup(gumButtons, false);
-                  gumGroup.setLegends(gumLegends);
+                  var gumButtons:Array = new Array( board.gumOG, board.gumRG, board.gumNG );
+                  gumGroup = new BlackCheckBoxGroup( gumButtons, false );
+                  gumGroup.setLegends( gumLegends );
 
                   lockFields();
                   board.visible = false;
-                  TweenMax.to(board, 0, {scaleX: 0, scaleY: 0, alpha: 0});
+                  TweenMax.to( board, 0, {scaleX: 0, scaleY: 0, alpha: 0} );
                   _imageHolder = new Sprite();
-                  board.addChild(_imageHolder);
+                  board.addChild( _imageHolder );
 
                   _stampHasImage = false;
                   cli = new CLibInit();
@@ -764,47 +763,47 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function preventNullNumber(e:FocusEvent):void
+            private function preventNullNumber( e:FocusEvent ):void
             {
                   var temp:Object = e.target;
                   var decimals:int = temp.name == "cost" ? 3 : 2;
-                  if (temp.text == "")
+                  if ( temp.text == "" )
                   {
                         temp.text = "0";
                   }
-                  if (temp.text.charAt(0) == ".")
+                  if ( temp.text.charAt( 0 ) == "." )
                   {
                         temp.text = "0" + temp.text;
                   }
-                  temp.text = Formatter.decimals(Number(temp.text), decimals, true, ".");
-                  board.perc.text = NumberUtils.calculatePositivePercent(Number(board.cost.text),
-                          Number(board.currentvalue.text));
+                  temp.text = Formatter.decimals( Number( temp.text ), decimals, true, "." );
+                  board.perc.text = NumberUtils.calculatePositivePercent( Number( board.cost.text ),
+                          Number( board.currentvalue.text ) );
             }
 
 
-            private function zero2Empty(e:FocusEvent):void
+            private function zero2Empty( e:FocusEvent ):void
             {
-                  if (e.target.text == "0" || e.target.text == "0.00" || e.target.text == "0.000")
+                  if ( e.target.text == "0" || e.target.text == "0.00" || e.target.text == "0.000" )
                   {
                         e.target.text = "";
                   }
             }
 
 
-            private function zero2CurrentDate(e:FocusEvent):void
+            private function zero2CurrentDate( e:FocusEvent ):void
             {
-                  if (e.currentTarget.value == 0)
+                  if ( e.currentTarget.value == 0 )
                   {
                         e.currentTarget.value = DateUtils.getCurrentYear();
                   }
             }
 
 
-            private function preventMoreLetters(e:KeyboardEvent):void
+            private function preventMoreLetters( e:KeyboardEvent ):void
             {
                   var searchLetters:RegExp = (/\w+/);
-                  var checkStr:String = e.target.text.match(searchLetters);
-                  if (isNaN(Number(checkStr)))
+                  var checkStr:String = e.target.text.match( searchLetters );
+                  if ( isNaN( Number( checkStr ) ) )
                   {
                         e.target.restrict = "";
                   }
@@ -812,101 +811,101 @@ package com.shinho.views.stampInfo
                   {
                         e.target.restrict = "a-z0-9";
                   }
-                  enableButton(board.btSave);
+                  enableButton( board.btSave );
             }
 
 
-            private function unlockFields(e:MouseEvent):void
+            private function unlockFields( e:MouseEvent ):void
             {
-                  trace("double clicked");
+                  trace( "double clicked" );
                   editStampInfo();
             }
 
 
-            private function btCloseOnOver(e:MouseEvent):void
+            private function btCloseOnOver( e:MouseEvent ):void
             {
-                  e.currentTarget.filters = [new GlowFilter(0x32ebfb, .75, 5, 5, 2, 3, false, false)];
+                  e.currentTarget.filters = [new GlowFilter( 0x32ebfb, .75, 5, 5, 2, 3, false, false )];
             }
 
 
             // ---------------------------------------------------------------    lock fields
 
-            private function btCloseOnOut(e:MouseEvent):void
+            private function btCloseOnOut( e:MouseEvent ):void
             {
                   e.currentTarget.filters = [];
             }
 
 
-            private function btCloseClicked(e:MouseEvent):void
+            private function btCloseClicked( e:MouseEvent ):void
             {
                   closeBoardSignal.dispatch();
             }
 
 
-            private function btEditClicked(e:MouseEvent):void
+            private function btEditClicked( e:MouseEvent ):void
             {
-                  dispatchEvent(new StampBoardEvent(StampBoardEvent.EDIT_CLICKED));
+                  editStampSignal.dispatch();
             }
 
 
-            private function btAddClicked(e:MouseEvent):void
+            private function btAddClicked( e:MouseEvent ):void
             {
                   addStampClickedSignal.dispatch();
             }
 
 
-            private function btSaveClicked(e:MouseEvent):void
+            private function btSaveClicked( e:MouseEvent ):void
             {
-                  if (!_isLocked)
+                  if ( !_isLocked )
                   {
                         this.stage.focus = board.comments;
                         board.btSave.enabled = false;
                         board.btSave.alpha = 0.15;
-                        dispatchEvent(new StampBoardEvent(StampBoardEvent.SAVE_CLICKED));
+                        saveStampSignal.dispatch();
                   }
             }
 
 
-            private function btDeleteClicked(e:MouseEvent):void
+            private function btDeleteClicked( e:MouseEvent ):void
             {
                   deleteStampClickedSignal.dispatch();
             }
 
 
-            private function btPasteClicked(e:MouseEvent):void
+            private function btPasteClicked( e:MouseEvent ):void
             {
-                  dispatchEvent(new StampBoardEvent(StampBoardEvent.PASTE_CLICKED));
+                 pasteImage();
             }
 
 
-            private function btClearImageClicked(e:MouseEvent):void
+            private function btClearImageClicked( e:MouseEvent ):void
             {
-                  dispatchEvent(new StampBoardEvent(StampBoardEvent.CLEAR_IMAGE));
+                  deleteImage();
             }
 
 
-            private function btCopyClicked(e:MouseEvent):void
+            private function btCopyClicked( e:MouseEvent ):void
             {
-                  dispatchEvent(new StampBoardEvent(StampBoardEvent.COPY_CLICKED));
+                  copyImage();
             }
 
 
-            private function onIOError(e:IOErrorEvent):void
+            private function onIOError( e:IOErrorEvent ):void
             {
-                  trace("image not found");
-                  loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, onIOError);
+                  trace( "image not found" );
+                  loader.contentLoaderInfo.removeEventListener( IOErrorEvent.IO_ERROR, onIOError );
                   _stampHasImage = false;
             }
 
 
-            private function imageLoaded(e:Event):void
+            private function imageLoaded( e:Event ):void
             {
                   _imageHolder.alpha = 0;
-                  loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
-                  image = (Bitmap)(e.target.content);
-                  _imageHolder.addChild(image);
+                  loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, imageLoaded );
+                  image = (Bitmap)( e.target.content );
+                  _imageHolder.addChild( image );
                   var ratio:Number = 1;
-                  if (image.width > image.height)
+                  if ( image.width > image.height )
                   { ///horizontal
                         ratio = image.width / _stampWidth;
                         _imageHolder.height = image.height / ratio;
@@ -922,28 +921,28 @@ package com.shinho.views.stampInfo
                   var difY:Number = _stampHeight - _imageHolder.height;
                   _imageHolder.x = _stampX + (difX / 2);
                   _imageHolder.y = _stampY + (difY / 2);
-                  TweenMax.to(_imageHolder, 0.3, {alpha: 1});
-                  _imageHolder.addEventListener(MouseEvent.CLICK, enlargeStamp);
+                  TweenMax.to( _imageHolder, 0.3, {alpha: 1} );
+                  _imageHolder.addEventListener( MouseEvent.CLICK, enlargeStamp );
                   _imageHolder.buttonMode = true;
-                  if (!_isLocked)
+                  if ( !_isLocked )
                   {
-                        enableButton(board.btPaste);
+                        enableButton( board.btPaste );
                   }
                   _stampHasImage = true;
             }
 
 
-            private function enlargeStamp(e:MouseEvent):void
+            private function enlargeStamp( e:MouseEvent ):void
             {
 
-                  _imageHolder.removeEventListener(MouseEvent.CLICK, enlargeStamp);
+                  _imageHolder.removeEventListener( MouseEvent.CLICK, enlargeStamp );
 
                   _tempX = _imageHolder.x;
                   _tempY = _imageHolder.y;
                   _tempWidth = _imageHolder.width;
                   _tempHeight = _imageHolder.height;
 
-                  this.addChild(_imageHolder);
+                  this.addChild( _imageHolder );
 
                   var difX:Number = _stampWidth - _imageHolder.width;
                   var difY:Number = _stampHeight - _imageHolder.height;
@@ -959,7 +958,7 @@ package com.shinho.views.stampInfo
                   var maxHeight:Number = page.tall - bigStampFrame;
                   var expandX:Number = page.wide - bigStampFrame;
                   var expandY:Number = maxHeight * ratio;
-                  if (expandY > maxHeight)
+                  if ( expandY > maxHeight )
                   {
                         expandY = maxHeight;
                         expandX = maxHeight / ratio;
@@ -967,66 +966,66 @@ package com.shinho.views.stampInfo
                   difX = page.wide - expandX;
                   difY = page.tall - expandY;
 
-                  TweenMax.to(_imageHolder, 0.6,
-                          {width: expandX, height: expandY, x: difX / 2, y: difY / 2, ease: Expo.easeOut});
+                  TweenMax.to( _imageHolder, 0.6,
+                          {width: expandX, height: expandY, x: difX / 2, y: difY / 2, ease: Expo.easeOut} );
 
                   _delay = 0.6;
-                  _imageHolder.addEventListener(MouseEvent.CLICK, shrinkStamp);
+                  _imageHolder.addEventListener( MouseEvent.CLICK, shrinkStamp );
                   _bigStampIsDisplayed = true;
             }
 
 
-            private function shrinkStamp(e:MouseEvent):void
+            private function shrinkStamp( e:MouseEvent ):void
             {
-                  _imageHolder.removeEventListener(MouseEvent.CLICK, shrinkStamp);
-                  TweenMax.to(_imageHolder, _delay,
-                          {width: _tempWidthBig, height: _tempHeightBig, x: _tempXBig, y: _tempYBig, ease: Expo.easeOut, onComplete: relinkHolder});
+                  _imageHolder.removeEventListener( MouseEvent.CLICK, shrinkStamp );
+                  TweenMax.to( _imageHolder, _delay,
+                          {width: _tempWidthBig, height: _tempHeightBig, x: _tempXBig, y: _tempYBig, ease: Expo.easeOut, onComplete: relinkHolder} );
             }
 
 
-            private function newPhoto(e:FocusEvent):void
+            private function newPhoto( e:FocusEvent ):void
             {
                   _tempData.number = board.id.text;
                   _tempData.country = board.country.text;
                   _tempData.type = board.type.text;
-                  loadPhoto(_tempData);
+                  loadPhoto( _tempData );
                   _tempData.number = _originalID;
             }
 
 
-            private function fileSaved(e:Event):void
+            private function fileSaved( e:Event ):void
             {
-                  fs.removeEventListener(Event.CLOSE, fileSaved);
-                  trace("image saved...destroying temp image");
+                  fs.removeEventListener( Event.CLOSE, fileSaved );
+                  trace( "image saved...destroying temp image" );
                   clip.dispose();
-                  displayErrorMessage("Stamp Image Pasted and Saved", COLOR_BLUE);
-                  newPhoto(null);
-                  enableButton(board.btPaste);
+                  displayErrorMessage( "Stamp Image Pasted and Saved", COLOR_BLUE );
+                  newPhoto( null );
+                  enableButton( board.btPaste );
             }
 
 
-            private function clearPhoto(e:FocusEvent):void
+            private function clearPhoto( e:FocusEvent ):void
             {
-                  if ((_stampHasImage || _imageHolder.numChildren > 0) && _isLocked == false)
+                  if ( (_stampHasImage || _imageHolder.numChildren > 0) && _isLocked == false )
                   {
                         image.bitmapData.dispose();
                         image = null;
-                        SpriteUtils.removeAllChild(_imageHolder);
+                        SpriteUtils.removeAllChild( _imageHolder );
                         _stampHasImage = false;
                   }
             }
 
 
-            private function suggestions(e:KeyboardEvent):void
+            private function suggestions( e:KeyboardEvent ):void
             {
 
-                  if (!e.shiftKey && !e.ctrlKey)
+                  if ( !e.shiftKey && !e.ctrlKey )
                   {
                         var field:String = e.target.name;
-                        _sugTextField = TextField(e.target);
-                        if (e.keyCode != 8 && e.keyCode != 46)
+                        _sugTextField = TextField( e.target );
+                        if ( e.keyCode != 8 && e.keyCode != 46 )
                         {
-                              switch (field)
+                              switch ( field )
                               {
                                     case "country":
                                           _suggestionsArray = countries;
@@ -1060,7 +1059,7 @@ package com.shinho.views.stampInfo
                                           break;
                               }
 
-                              if (timer.running)
+                              if ( timer.running )
                               {
                                     timer.reset();
                               }
@@ -1074,33 +1073,33 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function suggestOnTimer(e:TimerEvent):void
+            private function suggestOnTimer( e:TimerEvent ):void
             {
                   var temp:Array = new Array();
                   var initstr:String = _sugTextField.text;
                   var num:uint = initstr.length;
                   var sug:String = "";
-                  for (var i:int = 0; i < _suggestionsArray.length; i++)
+                  for ( var i:int = 0; i < _suggestionsArray.length; i++ )
                   {
                         sug = _suggestionsArray[i].name;
-                        if (sug != null)
+                        if ( sug != null )
                         {
-                              var suglow:String = sug.substring(0, num);
-                              if (suglow.toLowerCase() == initstr.toLowerCase())
+                              var suglow:String = sug.substring( 0, num );
+                              if ( suglow.toLowerCase() == initstr.toLowerCase() )
                               {
-                                    temp.push(sug);
+                                    temp.push( sug );
                               }
                         }
                   }
-                  if (temp.length > 0)
+                  if ( temp.length > 0 )
                   {
                         var str:String = temp[0];
-                        _sugTextField.text = initstr.substring(0, num) + str.substring(num, str.length);
-                        _sugTextField.setSelection(num, str.length);
+                        _sugTextField.text = initstr.substring( 0, num ) + str.substring( num, str.length );
+                        _sugTextField.setSelection( num, str.length );
                   }
-                  if (timer)
+                  if ( timer )
                   {
-                        if (timer.running)
+                        if ( timer.running )
                         {
                               timer.stop();
                         }

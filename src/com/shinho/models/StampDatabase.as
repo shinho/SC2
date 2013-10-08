@@ -13,7 +13,6 @@ package com.shinho.models
       import com.shinho.models.dto.TypesDTO;
       import com.shinho.util.SQLhelper;
       import com.shinho.util.StringUtils;
-      import com.shinho.views.messageBox.MessageBoxEvent;
 
       import flash.data.SQLConnection;
       import flash.data.SQLStatement;
@@ -29,15 +28,11 @@ package com.shinho.models
       public class StampDatabase extends Actor
       {
 
-            public static const id:int = 0;
-            // ------------------------------------------------------------------------------------- SQL
             public static const number:int = 1;
             public static const year:int = 2;
-            // ------------------------------------------------------------------------------------- BOOLEAN
             public static const serie:int = 3;
             public static const color:int = 10;
             public static const country:int = 11;
-            public static const used:int = 34;
             public static const type:int = 40;
             public static const FULL_IMPORT:int = 1;
             public static const STAMPDATA_IMPORT:int = 2;
@@ -84,7 +79,6 @@ package com.shinho.models
             public var stamptypes:Array = [];
             public var types:Array = [];
             private var SQLConn:SQLConnection = new SQLConnection();
-            private var dbFile:File;
             private var statement:SQLStatement = new SQLStatement();
 
             public var databaseConnectedSignal:Signal = new Signal();
@@ -102,7 +96,7 @@ package com.shinho.models
             {
                   SQLConn.addEventListener( SQLEvent.OPEN, dbConnected );
                   SQLConn.addEventListener( SQLErrorEvent.ERROR, getSQLError );
-                  dbFile = File.documentsDirectory.resolvePath( DIR_HOME );
+                  var dbFile = File.documentsDirectory.resolvePath( DIR_HOME );
                   if ( !dbFile.exists )
                   {
                         dbFile.createDirectory();
@@ -255,7 +249,6 @@ package com.shinho.models
                               }
                         }
                         StampInfoUpdateState = StampDatabase.COUNTRY_UPDATED;
-                        // TODO: loadIndexes();
                   }
             }
 

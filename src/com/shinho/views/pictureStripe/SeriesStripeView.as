@@ -38,10 +38,9 @@
 		private var _serieIndex:uint;
 		private var _serieName:String;
 		private var _serieYear:String;
-		private var _stamps:Vector.<StampDTO>;
 		private var _stripeAsset:PictureStripeSWC = new PictureStripeSWC();
-		private var _thumbs:Array = new Array();
-		private var _thumbsDisplayed:Boolean = false;
+		private var _thumbs:Array = [];
+
 
 
 		public function SeriesStripeView(serieName:String, year:String, index:uint):void
@@ -94,16 +93,12 @@
 			_thumbs = null;
 			thumbsHolder = null;
 			_holderMask = null;
-			_stamps = null;
 		}
 
 
 		public function displayStripe(serieStamps:Vector.<StampDTO> = null):void
 		{
-//			if (serieStamps != null)
-//			{
-//				_stamps = serieStamps;
-//			}
+
 			_numberSerieItems = serieStamps.length;
 			var isDisplayed:Boolean = false;
 			var stamp:StampDTO;
@@ -153,7 +148,6 @@
 
 		public function setData(serieStamps:Vector.<StampDTO>):void
 		{
-			_stamps = serieStamps;
 			_numberOfStamps = serieStamps.length;
 
 			/// add picture stripe background
@@ -243,7 +237,6 @@
 				xDisplace = xDisplace + padding;
 			}
 			checkWidth();
-			_thumbsDisplayed = true;
 			dispatchEvent(new PictureStripeEvents(PictureStripeEvents.STAMPS_STRIPE_READY));
 		}
 

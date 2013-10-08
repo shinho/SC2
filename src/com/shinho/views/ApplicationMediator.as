@@ -8,13 +8,10 @@ package com.shinho.views
       import com.shinho.models.FlexLayout;
       import com.shinho.models.StampDatabase;
       import com.shinho.models.StampsModel;
-      import com.shinho.models.dto.SeriesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.SpriteUtils;
       import com.shinho.views.decades.DecadesEvents;
       import com.shinho.views.export.ExportXML;
-      import com.shinho.views.importer.XMLimportView;
-      import com.shinho.views.statsBox.StatsBoxEvents;
       import com.shinho.views.types.TypesMenuEvents;
 
       import flash.events.Event;
@@ -51,8 +48,6 @@ package com.shinho.views
 
             public function ApplicationMediator()
             {
-                  /* Avoid doing work in your constructors!
-                   Mediators are only ready to be used when onRegister gets called*/
                   super();
             }
 

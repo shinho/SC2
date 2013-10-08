@@ -58,13 +58,10 @@ package com.shinho.views.stampInfo
                   updateIndexes( null );
                   addContextListener( PictureStripeEvents.SHOW_STAMP, displayStamp );
                   view.closeBoardSignal.add( closeBoard );
-                  addViewListener( StampBoardEvent.EDIT_CLICKED, editStampInfo );
-                  addViewListener( StampBoardEvent.SAVE_CLICKED, updateStampInfo );
+                  view.editStampSignal.add(editStampInfo);
+                  view.saveStampSignal.add(updateStampInfo);
                   view.addStampClickedSignal.add( onAddNewStamp );
                   view.deleteStampClickedSignal.add( deleteStamp );
-                  addViewListener( StampBoardEvent.PASTE_CLICKED, pasteImage );
-                  addViewListener( StampBoardEvent.COPY_CLICKED, copyImage );
-                  addViewListener( StampBoardEvent.CLEAR_IMAGE, clearImage );
                   db.stampUpdatedSignal.add( onStampUpdated );
                   db.stampAddedSignal.add( onStampUpdated );
                   addContextListener( StampsDatabaseEvents.INDEXES_UPDATED, updateIndexes );
@@ -109,7 +106,7 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function editStampInfo( e:StampBoardEvent ):void
+            private function editStampInfo( ):void
             {
                   controller.previousStripeData = view.keepOriginalData();
                   view.editStampInfo();
@@ -118,25 +115,7 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function pasteImage( e:StampBoardEvent ):void
-            {
-                  view.pasteImage();
-            }
-
-
-            private function copyImage( e:StampBoardEvent ):void
-            {
-                  view.copyImage();
-            }
-
-
-            private function clearImage( e:StampBoardEvent ):void
-            {
-                  view.deleteImage();
-            }
-
-
-            private function updateStampInfo( e:StampBoardEvent ):void
+            private function updateStampInfo( ):void
             {
                   trace( "Stamp Info View Mediator : update stamp in database" );
                   var stampData:StampDTO = view.getStampData();

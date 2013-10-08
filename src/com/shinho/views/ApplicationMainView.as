@@ -226,12 +226,11 @@ package com.shinho.views
             }
 
 
-
             public function seriesChanged( newSeries:Vector.<SeriesDTO>, selectedSerieName:SeriesStripeView, previousSeries:StampDTO ):void
             {
                   var diff:int = newSeries.length - _seriesStripes.length;
 
-                  for ( var i:int = 0; i <= newSeries.length - 1; i++ )
+                  for ( var i:int = 0; i < newSeries.length; i++ )
                   {
                         var added:Boolean = false;
                         var newData:SeriesDTO = newSeries[i];
@@ -247,7 +246,7 @@ package com.shinho.views
                                           added = true;
                                     }
                                     if ( diff <= -1 ) deleteSerie( i );
-                                    if ( diff == 0 )
+                                    if ( diff == 0 && i < newSeries.length-1 )
                                     {
                                           // --------------  check to insert
                                           if ( stripe.serieName == newSeries[i + 1].serieName && stripe.serieYear == newSeries[i + 1].serieYear )
@@ -276,6 +275,8 @@ package com.shinho.views
                                           _seriesStripes[i].refreshStripe( newData.serieStamps, i.toString() );
                                           added = false;
                                     }
+
+                                    // TODO : CHECK LAST ELEMENT FOR REFRESH
                               }
                         }
                         catch ( e:Error )
