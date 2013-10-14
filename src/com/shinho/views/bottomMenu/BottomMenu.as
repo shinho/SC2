@@ -9,6 +9,8 @@
       import flash.events.Event;
       import flash.events.MouseEvent;
 
+      import org.osflash.signals.Signal;
+
       /**
        * ...
        * @author Nelson Alexandre
@@ -17,11 +19,14 @@
       {
 
             // buttons
-            public var btChangeCountry:ButtonChangeCountry = new ButtonChangeCountry();
-            public var btStats:ButtonStatistics = new ButtonStatistics();
-            public var btAddStamp:ButtonAddFirst = new ButtonAddFirst();
+            public var btChangeCountry:ButtonMenuType = new ButtonMenuType(ButtonMenuType.CHANGE_COUNTRY);
+            public var btStats:ButtonMenuType = new ButtonMenuType(ButtonMenuType.STATISTICS);
+            public var btAddStamp:ButtonMenuType = new ButtonMenuType(ButtonMenuType.ADD_FIRST);
             public var page:FlexLayout;
             public var stampsDisplayed:Boolean;
+            public var showStatsSignal:Signal = new Signal();
+            public var addNewStampSignal:Signal = new Signal();
+            public var changeCountrySignal:Signal = new Signal();
 
 
             public function BottomMenu()
@@ -59,21 +64,21 @@
             //  -----------------------------------------------------------------------   btStatsClicked
             private function btStatsClicked( e:MouseEvent ):void
             {
-                  dispatchEvent( new BottomMenuEvents( BottomMenuEvents.SHOW_STATS ) );
+                  showStatsSignal.dispatch();
             }
 
 
             //  -----------------------------------------------------------------------   btStatsClicked
             private function btAddClicked( e:MouseEvent ):void
             {
-                  dispatchEvent( new BottomMenuEvents( BottomMenuEvents.ADD_FIRST_STAMP ) );
+                  addNewStampSignal.dispatch();
             }
 
 
             //  -----------------------------------------------------------------------   btStatsClicked
             private function btChangeCountryClicked( e:MouseEvent ):void
             {
-                  dispatchEvent( new BottomMenuEvents( BottomMenuEvents.CHANGE_COUNTRY ) );
+                  changeCountrySignal.dispatch();
             }
 
 

@@ -40,14 +40,10 @@ package com.shinho.views.stampInfo
 
             private var messageColor:uint;
 
-            private var _stampInfoChangedState:uint;
-            private var _stampInfoUpdateState:String;
 
 
             public function StampInfoViewMediator()
             {
-                  /* Avoid doing work in your constructors!
-                   // Mediators are only ready to be used when onRegister gets called */
                   super();
             }
 
@@ -121,8 +117,7 @@ package com.shinho.views.stampInfo
                   var stampData:StampDTO = view.getStampData();
                   if ( view.checkNonOptionalData() )
                   {
-                        _stampInfoChangedState = view.checkDataChanges();
-                        defineUpdateState();
+                        var _stampInfoChangedState = view.checkDataChanges();
                         if ( isEditing )
                         {
                               var stampExists:Boolean = db.checkStampID( stampData.country, stampData.number, stampData.type );
@@ -231,29 +226,5 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function defineUpdateState():void
-            {
-                  _stampInfoUpdateState = StampDatabase.NONE_UPDATED;
-                  if ( checkChanges( _stampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
-                  {
-                        _stampInfoUpdateState = StampDatabase.NUMBER_UPDATED;
-                  }
-                  if ( checkChanges( _stampInfoChangedState, StampDatabase.SERIE_CHANGED ) )
-                  {
-                        _stampInfoUpdateState = StampDatabase.SERIE_UPDATED;
-                  }
-                  if ( checkChanges( _stampInfoChangedState, StampDatabase.YEAR_CHANGED ) )
-                  {
-                        _stampInfoUpdateState = StampDatabase.DECADE_UPDATED;
-                  }
-                  if ( checkChanges( _stampInfoChangedState, StampDatabase.TYPE_CHANGED ) )
-                  {
-                        _stampInfoUpdateState = StampDatabase.TYPE_UPDATED;
-                  }
-                  if ( checkChanges( _stampInfoChangedState, StampDatabase.COUNTRY_CHANGED ) )
-                  {
-                        _stampInfoUpdateState = StampDatabase.COUNTRY_UPDATED;
-                  }
-            }
       }
 }

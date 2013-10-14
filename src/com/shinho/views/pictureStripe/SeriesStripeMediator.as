@@ -33,8 +33,7 @@ package com.shinho.views.pictureStripe
 
             override public function onRegister():void
             {
-                  eventMap.mapListener(view, PictureStripeEvents.STAMPS_STRIPE_READY, dispatch, PictureStripeEvents);
-                  addViewListener(PictureStripeEvents.STAMPS_STRIPE_READY, saveCurrentStripe);
+                  view.stripeIsReadySignal.add(saveCurrentStripe);
                   view.showSelectedStampSignal.add(stampClicked);
                   eventMap.mapListener(view.stage, Event.RESIZE, onStageResize);
                   view.page = page;
@@ -54,11 +53,12 @@ package com.shinho.views.pictureStripe
             }
 
 
-            private function saveCurrentStripe(e:PictureStripeEvents):void
+            private function saveCurrentStripe():void
             {
                   if (view.pictureStripeReference != null)
                   {
                         db.currentStripe = view.setCurrentStripe();
+                        eventDispatcher.dispatchEvent(new PictureStripeEvents(PictureStripeEvents.STAMPS_STRIPE_READY));
                   }
             }
 

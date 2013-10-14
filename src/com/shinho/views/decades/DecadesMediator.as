@@ -36,8 +36,6 @@ package com.shinho.views.decades
 			view.page = page;
 			view.init();
 			controller.stampDataReadySignal.add(display);
-//			addContextListener(StampsDatabaseEvents.STAMP_ADDED, refreshDecades);
-//			addContextListener(StampsDatabaseEvents.STAMP_DELETED, refreshDecades);
 		}
 
 

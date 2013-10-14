@@ -38,8 +38,6 @@ package com.shinho.views.countrySelector
 
 		public function CountrySelectMediator():void
 		{
-			// Avoid doing work in your constructors!
-			// Mediators are only ready to be used when onRegister gets called
 		}
 
 

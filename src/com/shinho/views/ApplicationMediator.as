@@ -10,7 +10,6 @@ package com.shinho.views
       import com.shinho.models.StampsModel;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.SpriteUtils;
-      import com.shinho.views.decades.DecadesEvents;
       import com.shinho.views.export.ExportXML;
       import com.shinho.views.types.TypesMenuEvents;
 
@@ -42,7 +41,6 @@ package com.shinho.views
             private static var minDisplayHeight:int = 600;
             private static var barHeight:int = 50;
             private var exportBoard:ExportXML;
-            /*		private var statsBoard:StatsBox;*/
             private var useWheel:Boolean = false;
 
 
@@ -67,8 +65,6 @@ package com.shinho.views
                   db.stampUpdatedSignal.add( updateSerie );
 
                   addContextListener( TypesMenuEvents.TYPE_SELECTED, typeSelected );
-
-                  addContextListener( DecadesEvents.DECADE_SELECTED, decadeSelected );
 
                   addContextListener( MenuEvents.EXPORT_XML, exportXML );
 
@@ -143,12 +139,6 @@ package com.shinho.views
                   {
                         view.clearDisplay();
                   }
-            }
-
-
-            private function decadeSelected( e:DecadesEvents ):void
-            {
-                  view.moveToDecade( e.body );
             }
 
 
