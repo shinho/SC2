@@ -41,7 +41,7 @@ package com.shinho.models
                               _currentCountryIndex = 0;
                         }
                         _numberOfCountries = _countriesList.length;
-                        _currentCountryName = getCurrentIndex().country;
+                        setCurrentCountryByName(_currentCountryName);
                         _hasCountries = true;
                   }
             }
@@ -50,13 +50,25 @@ package com.shinho.models
             public function setCurrentCountry( country:CountryDTO ):void
             {
                   _currentCountryName = country.country;
+                  setCurrentCountryByName( _currentCountryName );
             }
 
 
-            private function getCurrentIndex():CountryDTO
+            public function setCurrentCountryByName( countryName:String ):void
             {
-                  var country:CountryDTO = _countriesList[_currentCountryIndex] as CountryDTO;
-                  return country;
+                  for ( var i:int = 0; i < _countriesList.length; i++ )
+                  {
+                        if ( _countriesList[i].country == countryName )
+                        {
+                              _currentCountryIndex = i;
+                        }
+                  }
+            }
+
+
+            public function setCurrentCountryName( name:String ):void
+            {
+                  _currentCountryName = name;
             }
 
 

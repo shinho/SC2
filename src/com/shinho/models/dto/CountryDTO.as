@@ -6,6 +6,7 @@ package com.shinho.models.dto {
  */
 public class CountryDTO {
 
+        public var id:int;
 	public var country:String;
 
 
