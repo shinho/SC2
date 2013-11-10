@@ -36,12 +36,7 @@ package com.shinho.models
             public static const type:int = 40;
             public static const FULL_IMPORT:int = 1;
             public static const STAMPDATA_IMPORT:int = 2;
-            public static const DECADE_UPDATED:String = 'decade_updated';
-            public static const SERIE_UPDATED:String = 'Serie_updated';
-            public static const NUMBER_UPDATED:String = 'number_updated';
-            public static const TYPE_UPDATED:String = 'type_updated';
             public static const COUNTRY_UPDATED:String = 'country_updated';
-            public static const NONE_UPDATED:String = 'none_updated';
             public static const DIR_HOME:String = "StampCrawler";
             public static const DATABASE_NAME:String = "stampsDatabase.db";
             public static const DIR_IMAGES:String = DIR_HOME + File.separator + "Images";
@@ -68,7 +63,6 @@ package com.shinho.models
             public var currentStripe:MovieClip;
             public var currentType:int = 0;
             public var currentYear:String;
-            public var decades:Array = [];
             public var importMethod:uint;
             public var oldCountries:Array = [];
             public var printTypes:Array = [];
@@ -76,7 +70,7 @@ package com.shinho.models
             public var sellers:Array = [];
             public var stampInfoChanged:Boolean;
             public var stampsInCurrentSerie:int;
-            public var stamptypes:Array = [];
+            public var stampTypes:Array = [];
             public var types:Array = [];
             private var SQLConn:SQLConnection = new SQLConnection();
             private var statement:SQLStatement = new SQLStatement();

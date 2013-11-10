@@ -27,9 +27,12 @@ package com.shinho.models
             private var _numberOfStamps:uint = 0;
             private var _stampSeries:Vector.<SeriesDTO>;
             private var _stamps:Vector.<StampDTO>;
+            private var _decades:Vector.<String>;
             private var _stampsOwned:uint;
             private var _totalCost:Number;
             private var _totalValue:Number;
+
+            public var currentDecade:String;
 
 
             public function StampsModel()
@@ -182,17 +185,38 @@ package com.shinho.models
 
             private function distributeInSeries():void
             {
+                  _decades = new Vector.<String>();
                   for ( var u:int = 0; u < _stamps.length; u++ )
                   {
                         var stamp:StampDTO = _stamps[u];
                         for ( var i:int = 0; i < _stampSeries.length; i++ )
                         {
+                              // distribute in series
                               var series:SeriesDTO = _stampSeries[i];
                               if ( stamp.serie == series.serieName && stamp.year == series.serieYear )
                               {
                                     series.serieStamps.push( stamp );
                               }
                         }
+                        addYearToDecade( stamp.year );
+                  }
+            }
+
+
+            private function addYearToDecade( year:String ):void
+            {
+                  var decade:String = year.substr( 0, 3 ) + "0";
+                  var exists:Boolean = false;
+                  for ( var i:int = 0; i < _decades.length; i++ )
+                  {
+                        if ( decade == _decades[i] )
+                        {
+                              exists = true;
+                        }
+                  }
+                  if ( !exists )
+                  {
+                        _decades.push( decade );
                   }
             }
 
@@ -259,5 +283,12 @@ package com.shinho.models
             {
                   return _totalValue;
             }
+
+
+            public function getDecades(  ):Vector.<String>
+            {
+                 return _decades;
+            }
+
       }
 }

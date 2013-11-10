@@ -21,8 +21,6 @@ package com.shinho.controllers
             [Inject]
             public var db:StampDatabase;
             [Inject]
-            public var decadeYearsModel:DecadeYearsModel;
-            [Inject]
             public var fieldsModel:FieldEntriesModel;
             [Inject]
             public var types:TypesModel;
@@ -41,7 +39,12 @@ package com.shinho.controllers
 
             public function getCurrentDecade():String
             {
-                  return decadeYearsModel.currentDecade;
+                  return stampsModel.currentDecade;
+            }
+
+            public function setCurrentDecade( newDecade:String ):void
+            {
+                  stampsModel.currentDecade = newDecade;
             }
 
 
@@ -69,9 +72,9 @@ package com.shinho.controllers
             }
 
 
-            public function getDecades():Array
+            public function getDecades():Vector.<String>
             {
-                  return decadeYearsModel.decades;
+                  return stampsModel.getDecades();
             }
 
 
@@ -112,7 +115,7 @@ package com.shinho.controllers
 
             public function loadStampsType():void
             {
-                  decadeYearsModel.setDecadesForCountryType( currentCountryName, types.getCurrentTypeName() );
+//                  decadeYearsModel.setDecadesForCountryType( currentCountryName, types.getCurrentTypeName() );
                   stampsModel.getStamps( currentCountryName, types.getCurrentTypeName() );
                   checkData();
             }
@@ -162,18 +165,21 @@ package com.shinho.controllers
             private function onStampAdded( stampDetails:StampDTO ):void
             {
                   stampsModel.addStamp( stampDetails );
+                  _stampDataReadySignal.dispatch();
             }
 
 
             private function onStampDeleted( stampDetails:StampDTO ):void
             {
-                  stampsModel.deleteStamp( stampDetails )
+                  stampsModel.deleteStamp( stampDetails ) ;
+                  _stampDataReadySignal.dispatch();
             }
 
 
             private function onStampUpdated( stampDetails:StampDTO ):void
             {
                   stampsModel.getStamps( stampDetails.country, stampDetails.type );
+                  _stampDataReadySignal.dispatch();
             }
 
 

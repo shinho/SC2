@@ -85,7 +85,7 @@ package com.shinho.views.stampInfo
                   view.printType = db.printTypes;
                   view.catalogs = db.catalogs;
                   view.printers = db.printers;
-                  view.stamptypes = db.stamptypes;
+                  view.stamptypes = db.stampTypes;
                   view.countries = db.allCountries;
                   view.allseries = db.allSeries;
                   view.alldesigners = db.allDesigners;

@@ -19,7 +19,6 @@ package
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.CountriesModel;
       import com.shinho.models.StampsModel;
-      import com.shinho.models.DecadeYearsModel;
       import com.shinho.models.FieldEntriesModel;
       import com.shinho.models.FlexLayout;
       import com.shinho.models.LanguageModel;
@@ -107,7 +106,6 @@ package
                   injector.mapSingleton( CountriesModel );
                   injector.mapSingleton( FieldEntriesModel );
                   injector.mapSingleton( TypesModel );
-                  injector.mapSingleton( DecadeYearsModel );
                   injector.mapSingleton( StampsModel );
 //			viewMap.mapType(ApplicationMainView);
                   //commandMap.mapEvent(MenuEvents.IMPORT_XML, ImportXML);

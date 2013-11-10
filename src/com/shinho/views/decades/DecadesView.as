@@ -40,7 +40,7 @@ package com.shinho.views.decades
             }
 
 
-            public function displayDecades( decades:Array, currentDecade:String ):void
+            public function displayDecades( decades:Vector.<String>, currentDecade:String ):void
             {
                   if ( _isDisplayed )
                   {
