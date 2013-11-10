@@ -4,6 +4,7 @@ package com.shinho.views.decades
       import com.shinho.controllers.StampsController;
       import com.shinho.models.FlexLayout;
       import com.shinho.models.StampDatabase;
+      import com.shinho.models.dto.StampDTO;
 
       import org.robotlegs.mvcs.Mediator;
 
@@ -18,8 +19,6 @@ package com.shinho.views.decades
             public var stamps:StampDatabase;
             [Inject]
             public var view:DecadesView;
-            [Inject]
-            public var db:StampDatabase;
 
 
             public function DecadesMediator()
@@ -32,11 +31,20 @@ package com.shinho.views.decades
                   trace( "decades now mediating" );
                   view.page = page;
                   view.init();
-                  controller.stampDataReadySignal.add( display );
+                  controller.stampDataReadySignal.add( onStampsReady );
+                  controller.stampAddedSignal.add( display );
+                  controller.stampDeletedSignal.add( display );
+                  controller.stampUpdatedSignal.add( display );
             }
 
 
-            private function display():void
+            private function onStampsReady():void
+            {
+                  display( null );
+            }
+
+
+            private function display( stampDetails:StampDTO ):void
             {
                   view.displayDecades( controller.getDecades(), controller.getCurrentDecade() );
                   view.decadeSelectedSignal.add( decadeSelected );

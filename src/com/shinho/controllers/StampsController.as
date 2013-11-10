@@ -29,70 +29,14 @@ package com.shinho.controllers
             public var previousStripeData:StampDTO;
             // signals
             private var _stampDataReadySignal:Signal = new Signal();
+            private var _stampAddedSignal:Signal = new Signal();
+            private var _stampDeletedSignal:Signal = new Signal();
+            private var _stampUpdatedSignal:Signal = new Signal();
             private var _databaseIsEmptySignal:Signal = new Signal();
 
 
             public function StampsController()
             {
-            }
-
-
-            public function getCurrentDecade():String
-            {
-                  return stampsModel.currentDecade;
-            }
-
-            public function setCurrentDecade( newDecade:String ):void
-            {
-                  stampsModel.currentDecade = newDecade;
-            }
-
-
-            public function getCurrentStamp():StampDTO
-            {
-                  return stampsModel.getCurrentStamp();
-            }
-
-
-            public function getCurrentStampID():uint
-            {
-                  return stampsModel.currentStampID;
-            }
-
-
-            public function getCurrentStampsTypeIndex():int
-            {
-                  return types.currentTypeIndex;
-            }
-
-
-            public function getCurrentStampsTypeName():String
-            {
-                  return types.getCurrentTypeName();
-            }
-
-
-            public function getDecades():Vector.<String>
-            {
-                  return stampsModel.getDecades();
-            }
-
-
-            public function getSeries():Vector.<SeriesDTO>
-            {
-                  return stampsModel.stampSeries;
-            }
-
-
-            public function getStampTypes():Vector.<TypesDTO>
-            {
-                  return types.getStampTypes();
-            }
-
-
-            public function getStamps():Vector.<StampDTO>
-            {
-                  return stampsModel.stamps.concat();
             }
 
 
@@ -165,21 +109,21 @@ package com.shinho.controllers
             private function onStampAdded( stampDetails:StampDTO ):void
             {
                   stampsModel.addStamp( stampDetails );
-                  _stampDataReadySignal.dispatch();
+                  _stampAddedSignal.dispatch( stampDetails );
             }
 
 
             private function onStampDeleted( stampDetails:StampDTO ):void
             {
-                  stampsModel.deleteStamp( stampDetails ) ;
-                  _stampDataReadySignal.dispatch();
+                  stampsModel.deleteStamp( stampDetails );
+                  _stampDeletedSignal.dispatch( stampDetails );
             }
 
 
             private function onStampUpdated( stampDetails:StampDTO ):void
             {
                   stampsModel.getStamps( stampDetails.country, stampDetails.type );
-                  _stampDataReadySignal.dispatch();
+                  _stampUpdatedSignal.dispatch( stampDetails )
             }
 
 
@@ -190,6 +134,24 @@ package com.shinho.controllers
             public function get stampDataReadySignal():Signal
             {
                   return _stampDataReadySignal;
+            }
+
+
+            public function get stampAddedSignal():Signal
+            {
+                  return _stampAddedSignal;
+            }
+
+
+            public function get stampDeletedSignal():Signal
+            {
+                  return _stampDeletedSignal;
+            }
+
+
+            public function get stampUpdatedSignal():Signal
+            {
+                  return _stampUpdatedSignal;
             }
 
 
@@ -208,6 +170,66 @@ package com.shinho.controllers
             public function get currentCountryName():String
             {
                   return countries.currentCountryName;
+            }
+
+
+            public function getCurrentDecade():String
+            {
+                  return stampsModel.currentDecade;
+            }
+
+
+            public function setCurrentDecade( newDecade:String ):void
+            {
+                  stampsModel.currentDecade = newDecade;
+            }
+
+
+            public function getCurrentStamp():StampDTO
+            {
+                  return stampsModel.getCurrentStamp();
+            }
+
+
+            public function getCurrentStampID():uint
+            {
+                  return stampsModel.currentStampID;
+            }
+
+
+            public function getCurrentStampsTypeIndex():int
+            {
+                  return types.currentTypeIndex;
+            }
+
+
+            public function getCurrentStampsTypeName():String
+            {
+                  return types.getCurrentTypeName();
+            }
+
+
+            public function getDecades():Vector.<String>
+            {
+                  return stampsModel.getDecades();
+            }
+
+
+            public function getSeries():Vector.<SeriesDTO>
+            {
+                  return stampsModel.stampSeries;
+            }
+
+
+            public function getStampTypes():Vector.<TypesDTO>
+            {
+                  return types.getStampTypes();
+            }
+
+
+            public function getStamps():Vector.<StampDTO>
+            {
+                  return stampsModel.stamps.concat();
             }
       }
 }

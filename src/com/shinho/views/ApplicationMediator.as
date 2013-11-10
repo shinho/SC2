@@ -6,7 +6,6 @@ package com.shinho.views
       import com.shinho.events.MenuEvents;
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.FlexLayout;
-      import com.shinho.models.StampDatabase;
       import com.shinho.models.StampsModel;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.SpriteUtils;
@@ -25,8 +24,6 @@ package com.shinho.views
             public var controller:StampsController;
             [Inject]
             public var page:FlexLayout;
-            [Inject]
-            public var db:StampDatabase;
             [Inject]
             public var stamps:StampsModel;
             [Inject]
@@ -57,25 +54,22 @@ package com.shinho.views
                   eventMap.mapListener( view.stage, Event.RESIZE, onStageResize );
                   eventMap.mapListener( view.stage, MouseEvent.MOUSE_WHEEL, wheelMoved );
 
-                  controller.stampDataReadySignal.add( displayStamps );
                   addContextListener( StampsDatabaseEvents.STAMPSDATABASE_EMPTY, emptyDatabase );
-
-                  db.stampAddedSignal.add( updateSerie );
-                  db.stampDeletedSignal.add( updateSerie );
-                  db.stampUpdatedSignal.add( updateSerie );
-
-                  addContextListener( TypesMenuEvents.TYPE_SELECTED, typeSelected );
-
                   addContextListener( MenuEvents.EXPORT_XML, exportXML );
+                  addContextListener( TypesMenuEvents.TYPE_SELECTED, typeSelected );
+                  addContextListener( ApplicationEvent.EXPORT_XML_CLOSE, closeExportXML );
+                  addContextListener( ApplicationEvent.LOCK_WHEEL, lockWheel );
+                  addContextListener( ApplicationEvent.UNLOCK_WHEEL, unLockWheel );
+
+                  controller.stampDataReadySignal.add( displayStamps );
+                  controller.stampAddedSignal.add( updateSerie );
+                  controller.stampDeletedSignal.add( updateSerie );
+                  controller.stampUpdatedSignal.add( updateSerie );
 
                   page.defineStage( topMargin, baseMargin, marginLeft, marginRigth, minDisplayWidth, minDisplayHeight );
                   page.add( view.bar, page.LEFT, 0, page.TOP, topMargin - barHeight, page.WIDE, 0, page.NONE, 0 );
                   onStageResize( null );
                   view.page = page;
-
-                  addContextListener( ApplicationEvent.EXPORT_XML_CLOSE, closeExportXML );
-                  addContextListener( ApplicationEvent.LOCK_WHEEL, lockWheel );
-                  addContextListener( ApplicationEvent.UNLOCK_WHEEL, unLockWheel );
             }
 
 
