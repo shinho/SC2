@@ -96,7 +96,7 @@ package com.shinho.controllers
                   if ( countriesList )
                   {
                         countries.setCountriesList( countriesList );
-                        fieldsModel.createEntriesIndexes();
+                        stampsModel.createEntriesIndexes();
                         loadNewCountry();
                   } else
                   {

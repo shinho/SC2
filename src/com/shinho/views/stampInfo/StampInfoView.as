@@ -45,19 +45,20 @@ package com.shinho.views.stampInfo
        */
       public final class StampInfoView extends MovieClip
       {
-
-            public var allcolors:Array;
-            public var alldesigners:Array;
-            public var allpapers:Array;
-            public var allseries:Array;
+            // field entry suggestions
+            public var colorsEntries:Array;
+            public var designersEntries:Array;
+            public var papersEntries:Array;
+            public var seriesEntries:Array;
+            public var catalogsEntries:Array;
+            public var countriesEntries:Array;
+            public var varietyEntries:Array;
+            public var printersEntries:Array;
+            public var sellerEntries:Array;
+            public var typesEntries:Array;
+            //
             public var board:MovieClip;
-            public var catalogs:Array;
-            public var countries:Array;
             public var page:FlexLayout;
-            public var printType:Array;
-            public var printers:Array;
-            public var seller:Array;
-            public var stamptypes:Array;
             public static const DISPLAY_ALL:int = 1;
             public static const COLOR_BLUE:Number = 0x25cdea;
             public static const COLOR_RED:Number = 0xff1111;
@@ -112,7 +113,6 @@ package com.shinho.views.stampInfo
             public var closeBoardSignal:Signal = new Signal();
             public var editStampSignal:Signal = new Signal();
             public var saveStampSignal:Signal = new Signal();
-
 
 
             public function StampInfoView()
@@ -444,13 +444,13 @@ package com.shinho.views.stampInfo
                               if ( !stop )
                               {
                                     var slash:String = File.separator;
-                                    var savepath:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg" );
+                                    var savePath:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg" );
                                     fs = new FileStream();
                                     fs.addEventListener( Event.CLOSE, fileSaved );
                                     try
                                     {
                                           trace( "saving image to disk file:" );
-                                          fs.openAsync( savepath, FileMode.WRITE );
+                                          fs.openAsync( savePath, FileMode.WRITE );
                                           fs.writeBytes( baout );
                                           fs.addEventListener( Event.CLOSE, fileSaved );
                                           fs.close();
@@ -872,7 +872,7 @@ package com.shinho.views.stampInfo
 
             private function btPasteClicked( e:MouseEvent ):void
             {
-                 pasteImage();
+                  pasteImage();
             }
 
 
@@ -1026,34 +1026,34 @@ package com.shinho.views.stampInfo
                               switch ( field )
                               {
                                     case "country":
-                                          _suggestionsArray = countries;
+                                          _suggestionsArray = countriesEntries;
                                           break;
                                     case "serie":
-                                          _suggestionsArray = allseries;
+                                          _suggestionsArray = seriesEntries;
                                           break;
                                     case "type":
-                                          _suggestionsArray = stamptypes;
+                                          _suggestionsArray = typesEntries;
                                           break;
                                     case "catalog":
-                                          _suggestionsArray = catalogs;
+                                          _suggestionsArray = catalogsEntries;
                                           break;
                                     case "variety":
-                                          _suggestionsArray = printType;
+                                          _suggestionsArray = varietyEntries;
                                           break;
                                     case "printer":
-                                          _suggestionsArray = printers;
+                                          _suggestionsArray = printersEntries;
                                           break;
                                     case "color":
-                                          _suggestionsArray = allcolors;
+                                          _suggestionsArray = colorsEntries;
                                           break;
                                     case "designer":
-                                          _suggestionsArray = alldesigners;
+                                          _suggestionsArray = designersEntries;
                                           break;
                                     case "paper":
-                                          _suggestionsArray = allpapers;
+                                          _suggestionsArray = papersEntries;
                                           break;
                                     case "seller":
-                                          _suggestionsArray = seller;
+                                          _suggestionsArray = sellerEntries;
                                           break;
                               }
 
@@ -1073,33 +1073,36 @@ package com.shinho.views.stampInfo
 
             private function suggestOnTimer( e:TimerEvent ):void
             {
-                  var temp:Array = new Array();
-                  var initstr:String = _sugTextField.text;
-                  var num:uint = initstr.length;
-                  var sug:String = "";
-                  for ( var i:int = 0; i < _suggestionsArray.length; i++ )
+                  var initialString:String = _sugTextField.text;
+                  var num:uint = initialString.length;
+                  if ( num > 2 )
                   {
-                        sug = _suggestionsArray[i].name;
-                        if ( sug != null )
+                        var foundSuggestions:Array = [];
+                        var entry:String = "";
+                        for ( var i:int = 0; i < _suggestionsArray.length; i++ )
                         {
-                              var suglow:String = sug.substring( 0, num );
-                              if ( suglow.toLowerCase() == initstr.toLowerCase() )
+                              entry = _suggestionsArray[i].entry;
+                              if ( entry != null )
                               {
-                                    temp.push( sug );
+                                    var suggestionLowerCase:String = entry.substring( 0, num );
+                                    if ( suggestionLowerCase.toLowerCase() == initialString.toLowerCase() )
+                                    {
+                                          foundSuggestions.push( entry );
+                                    }
                               }
                         }
-                  }
-                  if ( temp.length > 0 )
-                  {
-                        var str:String = temp[0];
-                        _sugTextField.text = initstr.substring( 0, num ) + str.substring( num, str.length );
-                        _sugTextField.setSelection( num, str.length );
-                  }
-                  if ( timer )
-                  {
-                        if ( timer.running )
+                        if ( foundSuggestions.length > 0 )
                         {
-                              timer.stop();
+                              var str:String = foundSuggestions[0];
+                              _sugTextField.text = initialString.substring( 0, num ) + str.substring( num, str.length );
+                              _sugTextField.setSelection( num, str.length );
+                        }
+                        if ( timer )
+                        {
+                              if ( timer.running )
+                              {
+                                    timer.stop();
+                              }
                         }
                   }
             }

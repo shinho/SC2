@@ -179,7 +179,7 @@ package com.shinho.models
             public function getFieldsEntries( field:String ):Array
             {
                   statement.sqlConnection = SQLConn;
-                  statement.text = "SELECT DISTINCT " + field + " AS entry FROM stampDatabase ORDER BY " + field + " asc";
+                  statement.text = "SELECT DISTINCT " + field + " AS entry FROM stampDatabase WHERE "+ field +"<> '' ORDER BY " + field + " asc";
                   statement.itemClass = IndexesDTO;
                   statement.execute();
                   return statement.getResult().data;

@@ -11,7 +11,7 @@ package com.shinho.models
       import com.shinho.models.dto.SeriesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.StringUtils;
-
+      import flash.utils.Dictionary;
       import org.robotlegs.mvcs.Actor;
 
       public class StampsModel extends Actor
@@ -20,6 +20,18 @@ package com.shinho.models
             [Inject]
             public var db:StampDatabase;
 
+            public static const SELLER:String = "seller";
+            public static const VARIETY:String = "variety";
+            public static const MAIN_CATALOG:String = "main_catalog";
+            public static const PRINTER:String = "printer";
+            public static const TYPE:String = "type";
+            public static const COUNTRY:String = "country";
+            public static const SERIE:String = "serie";
+            public static const PAPER:String = "paper";
+            public static const COLOR:String = "color";
+            public static const DESIGNER:String = "designer";
+
+            public var currentDecade:String;
             public var _currentStamp:StampDTO;
 
             private var _currentStampID:uint = 0;
@@ -31,8 +43,7 @@ package com.shinho.models
             private var _stampsOwned:uint;
             private var _totalCost:Number;
             private var _totalValue:Number;
-
-            public var currentDecade:String;
+            private var _fieldsEntries:Dictionary = new Dictionary();
 
 
             public function StampsModel()
@@ -152,6 +163,7 @@ package com.shinho.models
                   _numberOfStamps = _stamps.length;
                   _stampSeries = getSeries();
                   distributeInSeries();
+                  createEntriesIndexes();
             }
 
 
@@ -218,6 +230,19 @@ package com.shinho.models
                   {
                         _decades.push( decade );
                   }
+            }
+
+            public function createEntriesIndexes():void {
+                  _fieldsEntries[SELLER] = db.getFieldsEntries(SELLER);
+                  _fieldsEntries[VARIETY] = db.getFieldsEntries(VARIETY);
+                  _fieldsEntries[MAIN_CATALOG] = db.getFieldsEntries(MAIN_CATALOG);
+                  _fieldsEntries[PRINTER] = db.getFieldsEntries(PRINTER);
+                  _fieldsEntries[TYPE] = db.getFieldsEntries(TYPE);
+                  _fieldsEntries[COUNTRY] = db.getFieldsEntries(COUNTRY);
+                  _fieldsEntries[SERIE] = db.getFieldsEntries(SERIE);
+                  _fieldsEntries[DESIGNER] = db.getFieldsEntries(DESIGNER);
+                  _fieldsEntries[PAPER] = db.getFieldsEntries(PAPER);
+                  _fieldsEntries[COLOR] = db.getFieldsEntries(COLOR);
             }
 
 
@@ -288,6 +313,10 @@ package com.shinho.models
             public function getDecades(  ):Vector.<String>
             {
                  return _decades;
+            }
+
+            public function getFieldEntries(field:String):Array {
+                  return _fieldsEntries[field];
             }
 
       }

@@ -35,11 +35,8 @@ package com.shinho.views.stampInfo
             private var currentBoardMessage:String;
             private var isAdding:Boolean = false;
             private var isEditing:Boolean = false;
-
             private var addedFromMain:Boolean = false;
-
             private var messageColor:uint;
-
 
 
             public function StampInfoViewMediator()
@@ -51,7 +48,7 @@ package com.shinho.views.stampInfo
             override public function onRegister():void
             {
                   view.page = page;
-                  updateIndexes( null );
+                  updateIndexes();
                   addContextListener( PictureStripeEvents.SHOW_STAMP, displayStamp );
                   view.closeBoardSignal.add( closeBoard );
                   view.editStampSignal.add(editStampInfo);
@@ -60,7 +57,7 @@ package com.shinho.views.stampInfo
                   view.deleteStampClickedSignal.add( deleteStampMessage );
                   controller.stampUpdatedSignal.add( onStampUpdated );
                   controller.stampAddedSignal.add( onStampUpdated );
-                  addContextListener( StampsDatabaseEvents.INDEXES_UPDATED, updateIndexes );
+                  controller.stampDataReadySignal.add(onStampsReady);
                   addContextListener( StampsDatabaseEvents.SHOW_BOARD_MESSAGE, showBoardMessage );
                   addContextListener( ApplicationEvent.ADD_STAMP, addStampFromMainView );
             }
@@ -75,23 +72,23 @@ package com.shinho.views.stampInfo
 
             private function displayStamp( e:PictureStripeEvents ):void
             {
+                  updateIndexes();
                   view.displayBoard( stamps.currentStamp );
             }
 
 
-            private function updateIndexes( e:StampsDatabaseEvents ):void
+            private function updateIndexes( ):void
             {
-                  // TODO : Move indexes to stampmodel
-                  view.seller = db.sellers;
-                  view.printType = db.printTypes;
-                  view.catalogs = db.catalogs;
-                  view.printers = db.printers;
-                  view.stamptypes = db.stampTypes;
-                  view.countries = db.allCountries;
-                  view.allseries = db.allSeries;
-                  view.alldesigners = db.allDesigners;
-                  view.allpapers = db.allPapers;
-                  view.allcolors = db.allColors;
+                  view.sellerEntries = stamps.getFieldEntries(StampsModel.SELLER) ;
+                  view.varietyEntries = stamps.getFieldEntries(StampsModel.VARIETY);
+                  view.catalogsEntries = stamps.getFieldEntries(StampsModel.MAIN_CATALOG);
+                  view.printersEntries = stamps.getFieldEntries(StampsModel.PRINTER);
+                  view.typesEntries = stamps.getFieldEntries(StampsModel.TYPE);
+                  view.countriesEntries = stamps.getFieldEntries(StampsModel.COUNTRY);
+                  view.seriesEntries = stamps.getFieldEntries(StampsModel.SERIE);
+                  view.designersEntries = stamps.getFieldEntries(StampsModel.DESIGNER);
+                  view.papersEntries = stamps.getFieldEntries(StampsModel.PAPER);
+                  view.colorsEntries = stamps.getFieldEntries(StampsModel.COLOR);
             }
 
 
@@ -100,6 +97,12 @@ package com.shinho.views.stampInfo
                   view.hideStampBoard();
                   addedFromMain = false;
                   eventDispatcher.dispatchEvent( new ApplicationEvent( ApplicationEvent.UNLOCK_WHEEL ) );
+            }
+
+
+            private function onStampsReady(  ):void
+            {
+               updateIndexes();
             }
 
 
