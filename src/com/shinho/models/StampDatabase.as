@@ -60,7 +60,6 @@ package com.shinho.models
             public var currentDecade:int = 0;
             public var currentSerieName:String;
             public var currentStampID:String;
-            public var currentStripe:MovieClip;
             public var currentType:int = 0;
             public var currentYear:String;
             public var importMethod:uint;
@@ -433,50 +432,6 @@ package com.shinho.models
                   statement.text = sql;
                   statement.execute();
                   stampDeletedSignal.dispatch( stampData );
-//                  if ( forwardDelete )
-//                  {
-////                        stampDatanumber] = stampData[id];
-//                        updateOriginalStamp( stampData );
-//                  }
-//                  else
-//                  {
-//                        /// decide what kind of update we will need
-//                        stampArray = getStampsForCountryAndType( "", "" );
-//                        var stampsInCurrentCountry:int = stampArray.length;
-//                        if ( stampsInCurrentCountry > 0 )
-//                        {
-//                              /// ---------- if some stamps still exist, just delete stamp
-//                              StampInfoUpdateState = DECADE_UPDATED;
-//                              trace( "just delete stamp" );
-//                        }
-//                        else
-//                        {
-                  // TODO :: Delete from stampsModel
-//                              /// ---------- no stamps exist check another type
-//                              types = getStampTypesForCountry( "" );
-//                              var numberTypes:int = types.length;
-//                              currentType = 0;
-//                              stampArray = getStampsForCountryAndType( "", "" );
-//                              if ( stampArray.length > 0 )
-//                              {
-//                                    trace( "we need to update type" );
-//                                    StampInfoUpdateState = TYPE_UPDATED;
-//                                    eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.DECADE_READY ) );
-//                              }
-//                              else
-//                              {
-//                                    trace( "we need to update country" );
-//                                    StampInfoUpdateState = COUNTRY_UPDATED;
-//                                    getCountriesList();
-//                                    currentCountry = 0;
-//                                    currentType = 0;
-//                                    currentDecade = 0;
-//                                    loadStampInfo();
-//                              }
-//                              ///eventDispatcher.dispatchEvent(new StampsDatabaseEvents(StampsDatabaseEvents.DECADE_READY));
-//                        }
-//                  }
-//                  eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMP_DELETED ) );
             }
 
 
@@ -487,43 +442,9 @@ package com.shinho.models
             }
 
 
-            private function insertStampInDatabase( stampDef:StampDTO ):void
+            private function insertStampInDatabase( stampDetails:StampDTO ):void
             {
-                  var sql:String = "INSERT INTO stampDatabase ";
-                  sql = sql + "(id, number, country, color, denomination, designer, inscription, paper, serie, printer, perforation, variety, watermark, year, type, history, current_value, cost, seller, comments, cancel, grade, owned, spares, used, condition_value, hinged_value, centering_value, gum_value, faults, purchase_year, main_catalog) VALUES (NULL, ";
-                  sql = sql + "'" + stampDef.number + "', ";
-                  sql = sql + "'" + stampDef.country + "', ";
-                  sql = sql + "'" + stampDef.color + "', ";
-                  sql = sql + "'" + stampDef.denomination + "', ";
-                  sql = sql + "'" + stampDef.designer + "', ";
-                  sql = sql + "'" + stampDef.inscription + "', ";
-                  sql = sql + "'" + stampDef.paper + "', ";
-                  sql = sql + "'" + stampDef.serie + "', ";
-                  sql = sql + "'" + stampDef.printer + "', ";
-                  sql = sql + "'" + stampDef.perforation + "', ";
-                  sql = sql + "'" + stampDef.variety + "', ";
-                  sql = sql + "'" + stampDef.watermark + "', ";
-                  sql = sql + "'" + stampDef.year + "', ";
-                  sql = sql + "'" + stampDef.type + "', ";
-                  sql = sql + "'" + stampDef.history + "', ";
-                  sql = sql + "'" + stampDef.current_value + "', ";
-                  sql = sql + "'" + stampDef.cost + "', ";
-                  sql = sql + "'" + stampDef.seller + "', ";
-                  sql = sql + "'" + stampDef.comments + "', ";
-                  sql = sql + "'" + stampDef.cancel + "', ";
-                  sql = sql + "'" + stampDef.grade + "', ";
-                  sql = sql + stampDef.owned + ", ";
-                  sql = sql + stampDef.spares + ", ";
-                  sql = sql + stampDef.used + ", ";
-                  sql = sql + stampDef.condition_value + ", ";
-                  sql = sql + stampDef.hinged_value + ", ";
-                  sql = sql + stampDef.centering_value + ", ";
-                  sql = sql + stampDef.gum_value + ", ";
-                  sql = sql + "'" + stampDef.faults + "', ";
-                  sql = sql + stampDef.purchase_year + ", ";
-                  sql = sql + "'" + stampDef.main_catalog + "' ";
-                  sql = sql + ")";
-                  statement.text = sql;
+                  statement.text = SQLhelper.getInsertString(stampDetails);
                   statement.execute();
             }
 

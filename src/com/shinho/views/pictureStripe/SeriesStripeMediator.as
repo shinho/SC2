@@ -57,7 +57,6 @@ package com.shinho.views.pictureStripe
             {
                   if (view.pictureStripeReference != null)
                   {
-                        db.currentStripe = view.setCurrentStripe();
                         eventDispatcher.dispatchEvent(new PictureStripeEvents(PictureStripeEvents.STAMPS_STRIPE_READY));
                   }
             }

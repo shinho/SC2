@@ -66,17 +66,11 @@ package com.shinho.views.stampInfo
             private var boardWidth:int = 950;
             private var boardHeight:int = 450;
             private var stampFrame:int = 5;
-            private var bigStampFrame:int = 60;
             private var topFrame:int = 60;
             private var conditionGroup:BlackCheckBoxGroup;
-            private var conditionLegends:Array = new Array( "poor", "average", "fine", "very fine", "extra fine" );
             private var hingedGroup:BlackCheckBoxGroup;
-            private var hingedLegends:Array = new Array( "no hinge", "remnant", "light", "hinged", "heavy" );
             private var centeringGroup:BlackCheckBoxGroup;
-            private var centeringLegends:Array = new Array( "average", "fine", "fine-vf", "very fine", "extra fine",
-                    "superb" );
             private var gumGroup:BlackCheckBoxGroup;
-            private var gumLegends:Array = new Array( "original", "regummed", "no gum" );
             private var ownedCheckBox:BlackCheckBoxGroup;
             private var mintCheckBox:BlackCheckBoxGroup;
             private var timer:Timer = new Timer( 300 );
@@ -91,11 +85,8 @@ package com.shinho.views.stampInfo
             private var _isLocked:Boolean;
             private var _isNewStamp:Boolean;
             private var _jpegEncoder:Object;
-            private var _originalCountry:String;
             private var _originalID:String;
-            private var _originalSerieName:String;
-            private var _originalType:String;
-            private var _originalYear:int;
+            private var originalData:StampDTO;
             private var _stampHasImage:Boolean;
             private var _stampHeight:int = (boardHeight - topFrame) - stampFrame * 2;
             private var _stampWidth:int = (boardWidth / 2) - stampFrame * 2;
@@ -132,6 +123,7 @@ package com.shinho.views.stampInfo
 
             public function changeLabels( item:XMLList ):void
             {
+                  // TODO : Localization function
                   /*			board.title.text = item[20].@label;
                    board.labelCountry.text = item[21].@label;
                    board.labelFilename.text = item[22].@label;
@@ -144,23 +136,23 @@ package com.shinho.views.stampInfo
             public function checkDataChanges():uint
             {
                   var changes:uint = StampDatabase.NONE_CHANGED;
-                  if ( _originalID != board.id.text )
+                  if ( originalData.number != board.id.text )
                   {
                         changes = changes | StampDatabase.NUMBER_CHANGED;
                   }
-                  if ( _originalSerieName != board.serie.text )
+                  if ( originalData.serie != board.serie.text )
                   {
                         changes = changes | StampDatabase.SERIE_CHANGED;
                   }
-                  if ( _originalYear != board.ano.value )
+                  if ( originalData.year != board.ano.value )
                   {
                         changes = changes | StampDatabase.YEAR_CHANGED;
                   }
-                  if ( _originalType != board.type.text )
+                  if ( originalData.type != board.type.text )
                   {
                         changes = changes | StampDatabase.TYPE_CHANGED;
                   }
-                  if ( _originalCountry != board.country.text )
+                  if ( originalData.country != board.country.text )
                   {
                         changes = changes | StampDatabase.COUNTRY_CHANGED;
                   }
@@ -210,6 +202,7 @@ package com.shinho.views.stampInfo
                   {
                         if ( _stampHasImage )
                         {
+                              // TODO : Move file related stuff to a helper class
                               var slash:String = File.separator;
                               var imageFile:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg" );
                               if ( imageFile.exists )
@@ -364,7 +357,7 @@ package com.shinho.views.stampInfo
 
             public function keepOriginalData():StampDTO
             {
-                  var originalData:StampDTO = new StampDTO();
+                  originalData = new StampDTO();
                   originalData.number = board.id.text;
                   originalData.serie = StringUtils.isNull( board.serie.text );
                   originalData.year = board.ano.value;
@@ -632,6 +625,11 @@ package com.shinho.views.stampInfo
 
             private function init( e:Event ):void
             {
+                  var conditionLegends:Array = [ "poor", "average", "fine", "very fine", "extra fine" ];
+                  var hingedLegends:Array = [ "no hinge", "remnant", "light", "hinged", "heavy" ];
+                  var centeringLegends:Array = [ "average", "fine", "fine-vf", "very fine", "extra fine", "superb" ];
+                  var gumLegends:Array = [ "original", "regummed", "no gum" ];
+
                   this.removeEventListener( Event.ADDED_TO_STAGE, init );
 
                   backLeft = SpriteUtils.drawQuad( 0, 0, 1, 1 );
@@ -934,7 +932,7 @@ package com.shinho.views.stampInfo
 
             private function enlargeStamp( e:MouseEvent ):void
             {
-
+                  var bigStampFrame:int = 60;
                   _imageHolder.removeEventListener( MouseEvent.CLICK, enlargeStamp );
 
                   _tempX = _imageHolder.x;

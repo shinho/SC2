@@ -79,7 +79,7 @@ package com.shinho.controllers
                   }
                   else
                   {
-                        // TODO :: TURN THIS INTO A SIGNAL COMMAND MAP
+                        // TODO :: TURN THIS INTO A SIGNAL, IMPLEMENT FUNCTIONALITY
                         eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMPSDATABASE_EMPTY ) );
                   }
             }

@@ -63,5 +63,44 @@ package com.shinho.util
                   sql = sql + "year=" + stampDetails.year + " ";
                   return sql;
             }
+
+            public static  function getInsertString(stampDetails:StampDTO):String
+            {
+                  var sql:String = "INSERT INTO stampDatabase ";
+                  sql = sql + "(id, number, country, color, denomination, designer, inscription, paper, serie, printer, perforation, variety, watermark, year, type, history, current_value, cost, seller, comments, cancel, grade, owned, spares, used, condition_value, hinged_value, centering_value, gum_value, faults, purchase_year, main_catalog) VALUES (NULL, ";
+                  sql = sql + "'" + stampDetails.number + "', ";
+                  sql = sql + "'" + stampDetails.country + "', ";
+                  sql = sql + "'" + stampDetails.color + "', ";
+                  sql = sql + "'" + stampDetails.denomination + "', ";
+                  sql = sql + "'" + stampDetails.designer + "', ";
+                  sql = sql + "'" + stampDetails.inscription + "', ";
+                  sql = sql + "'" + stampDetails.paper + "', ";
+                  sql = sql + "'" + stampDetails.serie + "', ";
+                  sql = sql + "'" + stampDetails.printer + "', ";
+                  sql = sql + "'" + stampDetails.perforation + "', ";
+                  sql = sql + "'" + stampDetails.variety + "', ";
+                  sql = sql + "'" + stampDetails.watermark + "', ";
+                  sql = sql + "'" + stampDetails.year + "', ";
+                  sql = sql + "'" + stampDetails.type + "', ";
+                  sql = sql + "'" + stampDetails.history + "', ";
+                  sql = sql + "'" + stampDetails.current_value + "', ";
+                  sql = sql + "'" + stampDetails.cost + "', ";
+                  sql = sql + "'" + stampDetails.seller + "', ";
+                  sql = sql + "'" + stampDetails.comments + "', ";
+                  sql = sql + "'" + stampDetails.cancel + "', ";
+                  sql = sql + "'" + stampDetails.grade + "', ";
+                  sql = sql + stampDetails.owned + ", ";
+                  sql = sql + stampDetails.spares + ", ";
+                  sql = sql + stampDetails.used + ", ";
+                  sql = sql + stampDetails.condition_value + ", ";
+                  sql = sql + stampDetails.hinged_value + ", ";
+                  sql = sql + stampDetails.centering_value + ", ";
+                  sql = sql + stampDetails.gum_value + ", ";
+                  sql = sql + "'" + stampDetails.faults + "', ";
+                  sql = sql + stampDetails.purchase_year + ", ";
+                  sql = sql + "'" + stampDetails.main_catalog + "' ";
+                  sql = sql + ")";
+                  return sql;
+            }
       }
 }

@@ -41,18 +41,18 @@ public class FieldEntriesModel extends Actor {
 
 
 	public function createEntriesIndexes():void {
-		trace("FieldEntriesModel: Loading database field entries")
-		_fieldsEntries[SELLER] = db.getFieldsEntries("seller");
-		_fieldsEntries[VARIETY] = db.getFieldsEntries("variety");
-		_fieldsEntries[MAIN_CATALOG] = db.getFieldsEntries("main_catalog");
-		_fieldsEntries[PRINTER] = db.getFieldsEntries("printer");
-		_fieldsEntries[TYPE] = db.getFieldsEntries("type");
-		_fieldsEntries[COUNTRY] = db.getFieldsEntries("country");
-		_fieldsEntries[SERIE] = db.getFieldsEntries("serie");
-		_fieldsEntries[DESIGNER] = db.getFieldsEntries("designer");
-		_fieldsEntries[PAPER] = db.getFieldsEntries("paper");
-		_fieldsEntries[COLOR] = db.getFieldsEntries("color");
-		// TODO : TURN THIS INTO A SIGNAL OR DISABLE IF NOT NEEDED
+              // TODO :Move this to stampmodel
+              trace("FieldEntriesModel: Loading database field entries")
+              _fieldsEntries[SELLER] = db.getFieldsEntries("seller");
+              _fieldsEntries[VARIETY] = db.getFieldsEntries("variety");
+              _fieldsEntries[MAIN_CATALOG] = db.getFieldsEntries("main_catalog");
+              _fieldsEntries[PRINTER] = db.getFieldsEntries("printer");
+              _fieldsEntries[TYPE] = db.getFieldsEntries("type");
+              _fieldsEntries[COUNTRY] = db.getFieldsEntries("country");
+              _fieldsEntries[SERIE] = db.getFieldsEntries("serie");
+              _fieldsEntries[DESIGNER] = db.getFieldsEntries("designer");
+              _fieldsEntries[PAPER] = db.getFieldsEntries("paper");
+              _fieldsEntries[COLOR] = db.getFieldsEntries("color");
 		eventDispatcher.dispatchEvent(new StampsDatabaseEvents(StampsDatabaseEvents.INDEXES_UPDATED));
 	}
 }

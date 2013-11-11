@@ -57,9 +57,9 @@ package com.shinho.views.stampInfo
                   view.editStampSignal.add(editStampInfo);
                   view.saveStampSignal.add(updateStampInfo);
                   view.addStampClickedSignal.add( onAddNewStamp );
-                  view.deleteStampClickedSignal.add( deleteStamp );
-                  db.stampUpdatedSignal.add( onStampUpdated );
-                  db.stampAddedSignal.add( onStampUpdated );
+                  view.deleteStampClickedSignal.add( deleteStampMessage );
+                  controller.stampUpdatedSignal.add( onStampUpdated );
+                  controller.stampAddedSignal.add( onStampUpdated );
                   addContextListener( StampsDatabaseEvents.INDEXES_UPDATED, updateIndexes );
                   addContextListener( StampsDatabaseEvents.SHOW_BOARD_MESSAGE, showBoardMessage );
                   addContextListener( ApplicationEvent.ADD_STAMP, addStampFromMainView );
@@ -81,6 +81,7 @@ package com.shinho.views.stampInfo
 
             private function updateIndexes( e:StampsDatabaseEvents ):void
             {
+                  // TODO : Move indexes to stampmodel
                   view.seller = db.sellers;
                   view.printType = db.printTypes;
                   view.catalogs = db.catalogs;
@@ -124,6 +125,8 @@ package com.shinho.views.stampInfo
                               if ( stampExists || checkChanges( _stampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
                               {
                                     db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
+                                    //TODO : ask for confirmation on overwrite
+                                    //TODO: rename image file
                               } else
                               {
                                     db.updateSelectedStamp( stampData );
@@ -199,18 +202,18 @@ package com.shinho.views.stampInfo
 
             //  -----------------------------------------------------------------------   BOARD MESSAGE
 
-            private function deleteStamp():void
+            private function deleteStampMessage():void
             {
                   var title:String = "Delete Stamp?";
                   var question:String = "This will delete stamp information from database and no recovery is possible. Are you sure you want to do this?";
                   var msgBox:MessageBox = new MessageBox( MessageBox.TYPE_YES_NO, title, question );
                   contextView.addChild( msgBox );
-                  msgBox.responseSignal.add( onResponse );
+                  msgBox.responseSignal.add( onDeleteResponse );
                   msgBox.display();
             }
 
 
-            private function onResponse( response:String ):void
+            private function onDeleteResponse( response:String ):void
             {
                   if ( response == MessageBox.RESPONSE_YES )
                   {
