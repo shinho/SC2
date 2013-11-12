@@ -26,7 +26,6 @@ package com.shinho.util
                   return sql;
             }
 
-
             private static function getUpdateString(stampDetails:StampDTO):String
             {
                   var sql:String = "UPDATE stampDatabase ";
@@ -100,6 +99,15 @@ package com.shinho.util
                   sql = sql + stampDetails.purchase_year + ", ";
                   sql = sql + "'" + stampDetails.main_catalog + "' ";
                   sql = sql + ")";
+                  return sql;
+            }
+
+
+            public static function getDeleteString(stampDetails:StampDTO):String
+            {
+                  var sql:String = "DELETE FROM stampDatabase WHERE ";
+                  sql = sql + "country='" + stampDetails.country + "' AND type='" + stampDetails.type + "'";
+                  sql = sql + " AND number='" + stampDetails.number + "'";
                   return sql;
             }
       }

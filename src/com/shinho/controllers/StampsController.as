@@ -21,8 +21,6 @@ package com.shinho.controllers
             [Inject]
             public var db:StampDatabase;
             [Inject]
-            public var fieldsModel:FieldEntriesModel;
-            [Inject]
             public var types:TypesModel;
             // properties
             public var selectedSeriesStripe:SeriesStripeView;

@@ -42,7 +42,6 @@ package com.shinho.views
             private var _btCountry:CountryNameView = new CountryNameView();
             private var _totalStripes:int;
             private var _currentStripeIndex:int;
-            private var _maxStripes:uint;
             private var _stripesTotalHeight:Number;
             private var _seriesStripes:Vector.<SeriesStripeView>;
             private var _numberOfStampSeries:uint = 0;
@@ -202,7 +201,6 @@ package com.shinho.views
 
             public function prepareSeriesStripes( stampList:Vector.<StampDTO> ):void
             {
-                  _maxStripes = MINIMUM_STRIPES;
                   stampsDisplayed = false;
                   _bottomMenu.stampsDisplayed = stampsDisplayed;
                   _seriesStripes = Vector.<SeriesStripeView>( [] );

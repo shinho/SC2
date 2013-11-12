@@ -37,6 +37,7 @@ package com.shinho.views.stampInfo
             private var isEditing:Boolean = false;
             private var addedFromMain:Boolean = false;
             private var messageColor:uint;
+            private var stampData:StampDTO;
 
 
             public function StampInfoViewMediator()
@@ -118,7 +119,7 @@ package com.shinho.views.stampInfo
             private function updateStampInfo( ):void
             {
                   trace( "Stamp Info View Mediator : update stamp in database" );
-                  var stampData:StampDTO = view.getStampData();
+                  stampData = view.getStampData();
                   if ( view.checkNonOptionalData() )
                   {
                         var _stampInfoChangedState = view.checkDataChanges();
@@ -127,9 +128,10 @@ package com.shinho.views.stampInfo
                               var stampExists:Boolean = db.checkStampID( stampData.country, stampData.number, stampData.type );
                               if ( stampExists || checkChanges( _stampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
                               {
-                                    db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
-                                    //TODO : ask for confirmation on overwrite
+//                                    db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
+                                    overwriteStampMessage();
                                     //TODO: rename image file
+                                    // TODO : Changing a serie name and year dont update stripe correctly
                               } else
                               {
                                     db.updateSelectedStamp( stampData );
@@ -203,7 +205,26 @@ package com.shinho.views.stampInfo
             }
 
 
-            //  -----------------------------------------------------------------------   BOARD MESSAGE
+            private function overwriteStampMessage():void
+            {
+                  var title:String = "Overwrite Stamp?";
+                  var question:String = "This will replace stamp information into database and no recovery is possible. Are you sure you want to do this?";
+                  var msgBox:MessageBox = new MessageBox( MessageBox.TYPE_YES_NO, title, question );
+                  contextView.addChild( msgBox );
+                  msgBox.responseSignal.add( onOverwriteResponse );
+                  msgBox.display();
+            }
+
+            private function onOverwriteResponse( response:String ):void
+            {
+                  if ( response == MessageBox.RESPONSE_YES )
+                  {
+                        db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
+                        closeBoard();
+                  }
+            }
+
+
 
             private function deleteStampMessage():void
             {

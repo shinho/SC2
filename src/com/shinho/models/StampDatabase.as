@@ -50,12 +50,6 @@ package com.shinho.models
             public static const COUNTRY_CHANGED:uint = 16;
             public var StampInfoChangedState:uint;
             public var StampInfoUpdateState:String;
-            public var allColors:Array = [];
-            public var allCountries:Array = [];
-            public var allDesigners:Array = [];
-            public var allPapers:Array = [];
-            public var allSeries:Array = [];
-            public var catalogs:Array = [];
             public var currentCountry:int = -1;
             public var currentDecade:int = 0;
             public var currentSerieName:String;
@@ -64,12 +58,8 @@ package com.shinho.models
             public var currentYear:String;
             public var importMethod:uint;
             public var oldCountries:Array = [];
-            public var printTypes:Array = [];
-            public var printers:Array = [];
-            public var sellers:Array = [];
             public var stampInfoChanged:Boolean;
             public var stampsInCurrentSerie:int;
-            public var stampTypes:Array = [];
             public var types:Array = [];
             private var SQLConn:SQLConnection = new SQLConnection();
             private var statement:SQLStatement = new SQLStatement();
@@ -84,12 +74,17 @@ package com.shinho.models
             {
             }
 
+            public function init():void
+            {
+                  OpenDatabase();
+            }
+
 
             public function OpenDatabase():void
             {
                   SQLConn.addEventListener( SQLEvent.OPEN, dbConnected );
                   SQLConn.addEventListener( SQLErrorEvent.ERROR, getSQLError );
-                  var dbFile = File.documentsDirectory.resolvePath( DIR_HOME );
+                  var dbFile:File = File.documentsDirectory.resolvePath( DIR_HOME );
                   if ( !dbFile.exists )
                   {
                         dbFile.createDirectory();
@@ -113,6 +108,14 @@ package com.shinho.models
                   SQLConn.open( dbFile );
             }
 
+            private function dbConnected( event:SQLEvent ):void
+            {
+                  statement.sqlConnection = SQLConn;
+                  statement.text = "CREATE TABLE IF NOT EXISTS stampDatabase (id INTEGER PRIMARY KEY, number VARCHAR(15), main_catalog VARCHAR(20), type VARCHAR(70), country VARCHAR(80), year VARCHAR(4), issue_date DATE, serie VARCHAR(256), variety VARCHAR(100), perforation VARCHAR(20), printer VARCHAR(100), designer VARCHAR(150), circulation VARCHAR(50), amount VARCHAR(30), paper VARCHAR(30), denomination VARCHAR(20), color VARCHAR(30), watermark VARCHAR(15), inscription VARCHAR(150), history TEXT, format VARCHAR(40), condition VARCHAR(20), spares INTEGER, current_value FLOAT, date_purchased DATE, purchase_year INTEGER, seller VARCHAR(100), cost FLOAT, hinged VARCHAR(35), centering VARCHAR(35), gum VARCHAR(35), cancel VARCHAR(80), owned BOOLEAN, grade VARCHAR(100), comments TEXT, used BOOL, condition_value INTEGER, hinged_value INTEGER, centering_value INTEGER, gum_value INTEGER, faults VARCHAR(100))";
+                  statement.execute();
+                  databaseConnectedSignal.dispatch();
+            }
+
 
             public function checkStampID( countryName:String, stampNumber:String, typeOf:String ):Boolean
             {
@@ -126,7 +129,6 @@ package com.shinho.models
                   }
                   return checked;
             }
-
 
 
             public function getAllStampsFromCountry( currentCountryName:String, countryName:String = "" ):Array
@@ -167,19 +169,10 @@ package com.shinho.models
             }
 
 
-            public function getDecadesForCountryAndType( currentCountryName:String, stampType:String ):Array
-            {
-                  statement.text = "SELECT DISTINCT year FROM stampDatabase WHERE country='" + currentCountryName + "' and type='" + stampType + "' ORDER BY year asc";
-                  statement.itemClass = DecadesDTO;
-                  statement.execute();
-                  return statement.getResult().data;
-            }
-
-
             public function getFieldsEntries( field:String ):Array
             {
                   statement.sqlConnection = SQLConn;
-                  statement.text = "SELECT DISTINCT " + field + " AS entry FROM stampDatabase WHERE "+ field +"<> '' ORDER BY " + field + " asc";
+                  statement.text = "SELECT DISTINCT " + field + " AS entry FROM stampDatabase WHERE " + field + "<> '' ORDER BY " + field + " asc";
                   statement.itemClass = IndexesDTO;
                   statement.execute();
                   return statement.getResult().data;
@@ -204,22 +197,22 @@ package com.shinho.models
             }
 
 
-            public function importNewStamps( stampslist:XMLList, index:uint ):void
+            public function importNewStamps( stampsList:XMLList, index:uint ):void
             {
                   var added:Boolean = false;
-                  var countryStamps:Array = getAllStampsFromCountry( stampslist[index].@country );
+                  var countryStamps:Array = getAllStampsFromCountry( stampsList[index].@country );
                   if ( countryStamps.length > 0 )
                   {
-                        if ( countryStamps[0].main_catalog == stampslist[index].@main_catalog )
+                        if ( countryStamps[0].main_catalog == stampsList[index].@main_catalog )
                         {
                               // ------------------------------------------------------  same catalog ok to add
-                              added = addXMLitem( stampslist[index] );
+                              added = addXMLitem( stampsList[index] );
                               eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.XML_ITEM_ADDED,
                                       added ) );
                         }
                         else
                         {
-                              added = addXMLitem( stampslist[index] );
+                              added = addXMLitem( stampsList[index] );
                               eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.XML_ITEM_ADDED,
                                       added ) );
                         }
@@ -227,7 +220,7 @@ package com.shinho.models
                   else
                   {
                         // ------------------------------------------------------  full import
-                        added = addXMLitem( stampslist[index] );
+                        added = addXMLitem( stampsList[index] );
                         eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.XML_ITEM_ADDED,
                                 added ) );
                   }
@@ -236,7 +229,7 @@ package com.shinho.models
                         getCountriesList();
                         for ( var j:int = 0; j < oldCountries.length; j++ )
                         {
-                              if ( oldCountries[j] == stampslist[index].@country )
+                              if ( oldCountries[j] == stampsList[index].@country )
                               {
                                     currentCountry = j;
                               }
@@ -245,11 +238,6 @@ package com.shinho.models
                   }
             }
 
-
-            public function init():void
-            {
-                  OpenDatabase();
-            }
 
 
             public function insertStampData( stampDetails:StampDTO ):void
@@ -424,14 +412,11 @@ package com.shinho.models
             }
 
 
-            public function deleteOnConfirmation( stampData:StampDTO ):void
+            public function deleteOnConfirmation( stampDetails:StampDTO ):void
             {
-                  var sql:String = "DELETE FROM stampDatabase WHERE ";
-                  sql = sql + "country='" + stampData.country + "' AND type='" + stampData.type + "'";
-                  sql = sql + " AND number='" + stampData.number + "'";
-                  statement.text = sql;
+                  statement.text = SQLhelper.getDeleteString( stampDetails );
                   statement.execute();
-                  stampDeletedSignal.dispatch( stampData );
+                  stampDeletedSignal.dispatch( stampDetails );
             }
 
 
@@ -444,18 +429,9 @@ package com.shinho.models
 
             private function insertStampInDatabase( stampDetails:StampDTO ):void
             {
-                  statement.text = SQLhelper.getInsertString(stampDetails);
+                  statement.text = SQLhelper.getInsertString( stampDetails );
                   statement.execute();
             }
 
-
-
-            private function dbConnected( event:SQLEvent ):void
-            {
-                  statement.sqlConnection = SQLConn;
-                  statement.text = "CREATE TABLE IF NOT EXISTS stampDatabase (id INTEGER PRIMARY KEY, number VARCHAR(15), main_catalog VARCHAR(20), type VARCHAR(70), country VARCHAR(80), year VARCHAR(4), issue_date DATE, serie VARCHAR(256), variety VARCHAR(100), perforation VARCHAR(20), printer VARCHAR(100), designer VARCHAR(150), circulation VARCHAR(50), amount VARCHAR(30), paper VARCHAR(30), denomination VARCHAR(20), color VARCHAR(30), watermark VARCHAR(15), inscription VARCHAR(150), history TEXT, format VARCHAR(40), condition VARCHAR(20), spares INTEGER, current_value FLOAT, date_purchased DATE, purchase_year INTEGER, seller VARCHAR(100), cost FLOAT, hinged VARCHAR(35), centering VARCHAR(35), gum VARCHAR(35), cancel VARCHAR(80), owned BOOLEAN, grade VARCHAR(100), comments TEXT, used BOOL, condition_value INTEGER, hinged_value INTEGER, centering_value INTEGER, gum_value INTEGER, faults VARCHAR(100))";
-                  statement.execute();
-                  databaseConnectedSignal.dispatch();
-            }
       }
 }
