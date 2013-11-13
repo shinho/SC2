@@ -7,20 +7,19 @@ package com.shinho.models
 
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.dto.CountryDTO;
-      import com.shinho.models.dto.DecadesDTO;
       import com.shinho.models.dto.IndexesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.models.dto.TypesDTO;
+      import com.shinho.util.FileHelper;
       import com.shinho.util.SQLhelper;
       import com.shinho.util.StringUtils;
-
       import flash.data.SQLConnection;
       import flash.data.SQLStatement;
-      import flash.display.MovieClip;
       import flash.errors.SQLError;
       import flash.events.SQLErrorEvent;
       import flash.events.SQLEvent;
       import flash.filesystem.File;
+
 
       import org.osflash.signals.Signal;
       import org.robotlegs.mvcs.Actor;
@@ -37,11 +36,6 @@ package com.shinho.models
             public static const FULL_IMPORT:int = 1;
             public static const STAMPDATA_IMPORT:int = 2;
             public static const COUNTRY_UPDATED:String = 'country_updated';
-            public static const DIR_HOME:String = "StampCrawler";
-            public static const DATABASE_NAME:String = "stampsDatabase.db";
-            public static const DIR_IMAGES:String = DIR_HOME + File.separator + "Images";
-            public static const DIR_EXPORT:String = DIR_HOME + File.separator + "Export";
-            public static const DIR_IMPORT:String = DIR_HOME + File.separator + "Import";
             public static const NONE_CHANGED:uint = 0;
             public static const NUMBER_CHANGED:uint = 1;
             public static const SERIE_CHANGED:uint = 2;
@@ -84,27 +78,27 @@ package com.shinho.models
             {
                   SQLConn.addEventListener( SQLEvent.OPEN, dbConnected );
                   SQLConn.addEventListener( SQLErrorEvent.ERROR, getSQLError );
-                  var dbFile:File = File.documentsDirectory.resolvePath( DIR_HOME );
+                  var dbFile:File = FileHelper.getRootDir();
                   if ( !dbFile.exists )
                   {
                         dbFile.createDirectory();
                   }
-                  dbFile = File.documentsDirectory.resolvePath( DIR_IMAGES );
+                  dbFile = FileHelper.getImagesDir();
                   if ( !dbFile.exists )
                   {
                         dbFile.createDirectory();
                   }
-                  dbFile = File.documentsDirectory.resolvePath( DIR_IMPORT );
+                  dbFile = FileHelper.getImportDir();
                   if ( !dbFile.exists )
                   {
                         dbFile.createDirectory();
                   }
-                  dbFile = File.documentsDirectory.resolvePath( DIR_EXPORT );
+                  dbFile = FileHelper.getExportDir();
                   if ( !dbFile.exists )
                   {
                         dbFile.createDirectory();
                   }
-                  dbFile = File.documentsDirectory.resolvePath( DIR_HOME + File.separator + DATABASE_NAME );
+                  dbFile = FileHelper.getDatabase();
                   SQLConn.open( dbFile );
             }
 

@@ -9,6 +9,7 @@ package com.shinho.views.stampInfo
       import com.shinho.models.StampDatabase;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.util.DateUtils;
+      import com.shinho.util.FileHelper;
       import com.shinho.util.Formatter;
       import com.shinho.util.NumberUtils;
       import com.shinho.util.SpriteUtils;
@@ -202,9 +203,7 @@ package com.shinho.views.stampInfo
                   {
                         if ( _stampHasImage )
                         {
-                              // TODO : Move file related stuff to a helper class
-                              var slash:String = File.separator;
-                              var imageFile:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg" );
+                              var imageFile:File =  FileHelper.getFile(board.country.tex, board.type.text, board.id.text);
                               if ( imageFile.exists )
                               {
                                     clearPhoto( null );
@@ -443,8 +442,7 @@ package com.shinho.views.stampInfo
                               }
                               if ( !stop )
                               {
-                                    var slash:String = File.separator;
-                                    var savePath:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + board.country.text + slash + board.type.text + slash + board.id.text + ".jpg" );
+                                    var savePath:File = FileHelper.getFile(board.country.text,board.type.text,board.id.text )
                                     fs = new FileStream();
                                     fs.addEventListener( Event.CLOSE, fileSaved );
                                     try
@@ -537,8 +535,7 @@ package com.shinho.views.stampInfo
                         SpriteUtils.removeAllChild( _imageHolder );
                         image = null;
                   }
-                  var slash:String = File.separator;
-                  var path:File = File.documentsDirectory.resolvePath( StampDatabase.DIR_IMAGES + slash + data.country + slash + data.type + slash + data.number + ".jpg" );
+                  var path:File = FileHelper.getFile(data.country,data.type,data.number );
                   trace( path.url );
                   var pathUrl:String = path.url;
                   ///loader = new Loader();

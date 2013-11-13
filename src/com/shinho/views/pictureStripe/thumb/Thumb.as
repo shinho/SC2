@@ -74,7 +74,7 @@
             public function loadThumbImage( path:String ):void
             {
                   var loader:Loader = new Loader();
-                  var urlRequest:URLRequest = new URLRequest( path + ".jpg" );
+                  var urlRequest:URLRequest = new URLRequest( path );
                   loader.load( urlRequest );
                   loader.contentLoaderInfo.addEventListener( Event.COMPLETE, imageLoaded, false, 0, false );
                   loader.contentLoaderInfo.addEventListener( IOErrorEvent.IO_ERROR, onIOError, false, 0, false );

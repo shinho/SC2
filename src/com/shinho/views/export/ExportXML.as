@@ -1,6 +1,9 @@
 package com.shinho.views.export
 {
-	import flash.display.MovieClip;
+
+      import com.shinho.util.FileHelper;
+
+      import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import com.shinho.models.FlexLayout;
 	import flash.events.Event;
@@ -66,7 +69,7 @@ package com.shinho.views.export
 			this.stamps = stamps;
 			board.countryName.text = countryName;
 			board.progress.text = "0 / " + stamps.length;
-			file = File.documentsDirectory.resolvePath(StampDatabase.DIR_EXPORT + File.separator + countryName + ".xml");
+			file = FileHelper.getCountryExportFile(countryName);
 			file.addEventListener(Event.SELECT, dirSelected);
 			file.addEventListener(Event.CANCEL, exportCanceled);
 			///file.browseForDirectory("Select a directory");

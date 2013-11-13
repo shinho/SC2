@@ -1,9 +1,9 @@
 package com.shinho.models.dto
 {
 
-	import com.shinho.models.StampDatabase;
+      import com.shinho.util.FileHelper;
 
-	import flash.filesystem.File;
+      import flash.filesystem.File;
 
 
 	/**
@@ -63,8 +63,7 @@ package com.shinho.models.dto
 
 		public function getPath():String
 		{
-			var slash:String = File.separator;
-			var path:File = File.documentsDirectory.resolvePath(StampDatabase.DIR_IMAGES + slash + country + slash + type + slash + number);
+			var path:File =  FileHelper.getFile(country,type,number);
 			return path.url;
 		}
 
