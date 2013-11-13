@@ -530,11 +530,6 @@ package com.shinho.views.stampInfo
 
             private function loadPhoto( data:Object ):void
             {
-                  if ( _imageHolder.numChildren > 0 )
-                  {
-                        SpriteUtils.removeAllChild( _imageHolder );
-                        image = null;
-                  }
                   var path:File = FileHelper.getFile(data.country,data.type,data.number );
                   trace( path.url );
                   var pathUrl:String = path.url;
@@ -662,7 +657,6 @@ package com.shinho.views.stampInfo
                   board.type.addEventListener( KeyboardEvent.KEY_UP, suggestions );
 
                   board.id.restrict = "a-z0-9";
-                  board.id.addEventListener( FocusEvent.FOCUS_IN, clearPhoto );
                   board.id.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
                   board.id.addEventListener( KeyboardEvent.KEY_UP, preventMoreLetters );
 
@@ -895,8 +889,13 @@ package com.shinho.views.stampInfo
 
             private function imageLoaded( e:Event ):void
             {
-                  _imageHolder.alpha = 0;
                   loader.contentLoaderInfo.removeEventListener( Event.COMPLETE, imageLoaded );
+                  if ( _imageHolder.numChildren > 0 )
+                  {
+                        SpriteUtils.removeAllChild( _imageHolder );
+                        image = null;
+                  }
+                  _imageHolder.alpha = 0;
                   image = (Bitmap)( e.target.content );
                   _imageHolder.addChild( image );
                   var ratio:Number = 1;

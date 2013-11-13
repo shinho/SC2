@@ -10,8 +10,11 @@ package com.shinho.views.stampInfo
       import com.shinho.models.LanguageModel;
       import com.shinho.models.StampDatabase;
       import com.shinho.models.dto.StampDTO;
+      import com.shinho.util.FileHelper;
       import com.shinho.views.messageBox.MessageBox;
       import com.shinho.views.pictureStripe.PictureStripeEvents;
+
+      import flash.filesystem.File;
 
       import org.robotlegs.mvcs.Mediator;
 
@@ -52,13 +55,13 @@ package com.shinho.views.stampInfo
                   updateIndexes();
                   addContextListener( PictureStripeEvents.SHOW_STAMP, displayStamp );
                   view.closeBoardSignal.add( closeBoard );
-                  view.editStampSignal.add(editStampInfo);
-                  view.saveStampSignal.add(updateStampInfo);
+                  view.editStampSignal.add( editStampInfo );
+                  view.saveStampSignal.add( updateStampInfo );
                   view.addStampClickedSignal.add( onAddNewStamp );
                   view.deleteStampClickedSignal.add( deleteStampMessage );
                   controller.stampUpdatedSignal.add( onStampUpdated );
                   controller.stampAddedSignal.add( onStampUpdated );
-                  controller.stampDataReadySignal.add(onStampsReady);
+                  controller.stampDataReadySignal.add( onStampsReady );
                   addContextListener( StampsDatabaseEvents.SHOW_BOARD_MESSAGE, showBoardMessage );
                   addContextListener( ApplicationEvent.ADD_STAMP, addStampFromMainView );
             }
@@ -78,18 +81,18 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function updateIndexes( ):void
+            private function updateIndexes():void
             {
-                  view.sellerEntries = stamps.getFieldEntries(StampsModel.SELLER) ;
-                  view.varietyEntries = stamps.getFieldEntries(StampsModel.VARIETY);
-                  view.catalogsEntries = stamps.getFieldEntries(StampsModel.MAIN_CATALOG);
-                  view.printersEntries = stamps.getFieldEntries(StampsModel.PRINTER);
-                  view.typesEntries = stamps.getFieldEntries(StampsModel.TYPE);
-                  view.countriesEntries = stamps.getFieldEntries(StampsModel.COUNTRY);
-                  view.seriesEntries = stamps.getFieldEntries(StampsModel.SERIE);
-                  view.designersEntries = stamps.getFieldEntries(StampsModel.DESIGNER);
-                  view.papersEntries = stamps.getFieldEntries(StampsModel.PAPER);
-                  view.colorsEntries = stamps.getFieldEntries(StampsModel.COLOR);
+                  view.sellerEntries = stamps.getFieldEntries( StampsModel.SELLER );
+                  view.varietyEntries = stamps.getFieldEntries( StampsModel.VARIETY );
+                  view.catalogsEntries = stamps.getFieldEntries( StampsModel.MAIN_CATALOG );
+                  view.printersEntries = stamps.getFieldEntries( StampsModel.PRINTER );
+                  view.typesEntries = stamps.getFieldEntries( StampsModel.TYPE );
+                  view.countriesEntries = stamps.getFieldEntries( StampsModel.COUNTRY );
+                  view.seriesEntries = stamps.getFieldEntries( StampsModel.SERIE );
+                  view.designersEntries = stamps.getFieldEntries( StampsModel.DESIGNER );
+                  view.papersEntries = stamps.getFieldEntries( StampsModel.PAPER );
+                  view.colorsEntries = stamps.getFieldEntries( StampsModel.COLOR );
             }
 
 
@@ -101,13 +104,13 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function onStampsReady(  ):void
+            private function onStampsReady():void
             {
-               updateIndexes();
+                  updateIndexes();
             }
 
 
-            private function editStampInfo( ):void
+            private function editStampInfo():void
             {
                   controller.previousStripeData = view.keepOriginalData();
                   view.editStampInfo();
@@ -116,7 +119,7 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function updateStampInfo( ):void
+            private function updateStampInfo():void
             {
                   trace( "Stamp Info View Mediator : update stamp in database" );
                   stampData = view.getStampData();
@@ -126,15 +129,23 @@ package com.shinho.views.stampInfo
                         if ( isEditing )
                         {
                               var stampExists:Boolean = db.checkStampID( stampData.country, stampData.number, stampData.type );
-                              if ( stampExists || checkChanges( _stampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
+                              if ( stampExists )
                               {
-//                                    db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
                                     overwriteStampMessage();
-                                    //TODO: rename image file
                                     // TODO : Changing a serie name and year dont update stripe correctly
                               } else
                               {
-                                    db.updateSelectedStamp( stampData );
+                                    if ( checkChanges( _stampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
+                                    {
+                                          db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
+                                          var imageOrigin:File = FileHelper.getFile( controller.previousStripeData.country, controller.previousStripeData.type, controller.previousStripeData.number );
+                                          var imageDestination:File = FileHelper.getFile( stampData.country, stampData.type, stampData.number );
+                                          imageOrigin.moveTo( imageDestination, true );
+                                    } else
+                                    {
+                                          db.updateSelectedStamp( stampData );
+                                    }
+
                               }
                               boardMessage( "Stamp Info Updated...", 0x25cdea );
                         }
@@ -215,15 +226,18 @@ package com.shinho.views.stampInfo
                   msgBox.display();
             }
 
+
             private function onOverwriteResponse( response:String ):void
             {
                   if ( response == MessageBox.RESPONSE_YES )
                   {
                         db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
+                        var imageOrigin:File = FileHelper.getFile( controller.previousStripeData.country, controller.previousStripeData.type, controller.previousStripeData.number );
+                        var imageDestination:File = FileHelper.getFile( stampData.country, stampData.type, stampData.number );
+                        imageOrigin.moveTo( imageDestination, true );
                         closeBoard();
                   }
             }
-
 
 
             private function deleteStampMessage():void
@@ -251,7 +265,6 @@ package com.shinho.views.stampInfo
             {
                   view.displayErrorMessage( currentBoardMessage, messageColor );
             }
-
 
       }
 }
