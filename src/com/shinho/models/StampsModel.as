@@ -55,14 +55,15 @@ package com.shinho.models
             // Public Methods
             // .........................................................................................................
 
-            public function calculateTotalsForOwnedStamps():void
+            public function calculateTotalsForOwnedStamps(countryName:String):void
             {
                   _stampsOwned = 0;
                   _totalCost = 0;
                   _totalValue = 0;
-                  for ( var i:int = 0; i < _stamps.length; i++ )
+                  var allStamps = Vector.<StampDTO>( db.getCountryStamps( countryName ) );
+                  for ( var i:int = 0; i < allStamps.length; i++ )
                   {
-                        var stamp:StampDTO = _stamps[i] as StampDTO;
+                        var stamp:StampDTO = allStamps[i] as StampDTO;
                         if ( stamp.owned )
                         {
                               _stampsOwned++;
@@ -104,7 +105,6 @@ package com.shinho.models
                         _stampSeries = getSeries();
                         distributeInSeries();
                   }
-                  calculateTotalsForOwnedStamps();
             }
 
 

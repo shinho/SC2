@@ -7,6 +7,7 @@ package com.shinho.models
 
       import com.shinho.events.StampsDatabaseEvents;
       import com.shinho.models.dto.CountryDTO;
+      import com.shinho.models.dto.GroupStampsDTO;
       import com.shinho.models.dto.IndexesDTO;
       import com.shinho.models.dto.StampDTO;
       import com.shinho.models.dto.TypesDTO;
@@ -177,6 +178,14 @@ package com.shinho.models
             {
                   statement.text = "SELECT DISTINCT type FROM stampDatabase WHERE country='" + currentCountryName + "' ORDER BY type asc";
                   statement.itemClass = TypesDTO;
+                  statement.execute();
+                       return statement.getResult().data;
+            }
+
+            public function getCountryStamps( currentCountryName:String ):Array
+            {
+                  statement.text = "SELECT * FROM stampDatabase WHERE country='" + currentCountryName + "' ORDER BY type, year, number, serie asc";
+                  statement.itemClass = StampDTO;
                   statement.execute();
                   return statement.getResult().data;
             }

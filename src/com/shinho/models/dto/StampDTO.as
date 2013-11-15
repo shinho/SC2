@@ -66,12 +66,6 @@ package com.shinho.models.dto
 			var path:File =  FileHelper.getFile(country,type,number);
 			return path.url;
 		}
-
-
-		public function getStampDecade():String
-		{
-			return year.substr(0, 3) + "0";
-		}
 	}
 
 }

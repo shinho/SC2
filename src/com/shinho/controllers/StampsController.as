@@ -69,6 +69,16 @@ package com.shinho.controllers
             }
 
 
+            public function calculateStatistics():void
+            {
+                  stampsModel.calculateTotalsForOwnedStamps(currentCountryName);
+            }
+
+
+            // .........................................................................................................
+            // on events
+            // .........................................................................................................
+
             private function checkData():void
             {
                   if ( stampsModel.hasStamps )
@@ -77,15 +87,10 @@ package com.shinho.controllers
                   }
                   else
                   {
-                        // TODO :: TURN THIS INTO A SIGNAL, IMPLEMENT FUNCTIONALITY
-                        eventDispatcher.dispatchEvent( new StampsDatabaseEvents( StampsDatabaseEvents.STAMPSDATABASE_EMPTY ) );
+                        // TODO :: IMPLEMENT FUNCTIONALITY
+                        _databaseIsEmptySignal.dispatch();
                   }
             }
-
-
-            // .........................................................................................................
-            // on events
-            // .........................................................................................................
 
             private function onDatabaseConnect():void
             {
@@ -95,10 +100,11 @@ package com.shinho.controllers
                   {
                         countries.setCountriesList( countriesList );
                         stampsModel.createEntriesIndexes();
+//                        stampsModel.init();
                         loadNewCountry();
                   } else
                   {
-                        dbIsEmptySignal.dispatch();
+                        _databaseIsEmptySignal.dispatch();
                         trace( "StampController: Database Is Empty" );
                   }
             }

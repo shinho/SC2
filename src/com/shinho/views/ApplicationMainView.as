@@ -99,58 +99,6 @@ package com.shinho.views
             }
 
 
-            private function displayVisibleStripes():void
-            {
-                  var initDisplay:int = _currentStripeIndex - (MINIMUM_STRIPES / 2) > 0 ? _currentStripeIndex - (MINIMUM_STRIPES / 2) : 0;
-                  var endDisplay:int = _currentStripeIndex + MINIMUM_STRIPES > _numberOfStampSeries ? _numberOfStampSeries : _currentStripeIndex + MINIMUM_STRIPES;
-                  for ( var i:int = initDisplay; i < endDisplay; i++ )
-                  {
-                        var stripeView:SeriesStripeView = _seriesStripes[i] as SeriesStripeView;
-                        if ( !stripeView.isDisplayed )
-                        {
-                              stripeView.setData( _stampSeries[i].serieStamps );
-                              _verticalSlider.visible = true;
-                              stampsDisplayed = true;
-                              _bottomMenu.stampsDisplayed = stampsDisplayed;
-                        }
-                  }
-            }
-
-
-            private function insertInStripePointer( index:int ):void
-            {
-                  _seriesStripes.splice( index, 0, null );
-            }
-
-
-            private function moveStripeToTop( series:SeriesStripeView ):void
-            {
-                  if ( _verticalSlider.slider.height < _allStripesMask.height )
-                  {
-                        var stripeY:Number = 0;
-                        for ( var i:int = 0; i < _seriesStripes.length; i++ )
-                        {
-                              if ( _seriesStripes[i].serieIndex == series.serieIndex )
-                              {
-                                    stripeY = _seriesStripes[i].y;
-                              }
-                        }
-                        var middlePart:int = _allStripesMask.height;
-                        var step:Number = _stripesTotalHeight / (middlePart - _verticalSlider.slider.height);
-                        var distance:Number = stripeY - page.header;
-                        _verticalSlider.slider.y = (distance / step) + page.header;
-                        if ( _verticalSlider.slider.y + _verticalSlider.slider.height > page.footer )
-                        {
-                              _verticalSlider.slider.y = page.footer - _verticalSlider.slider.height;
-                        }
-                        if ( _verticalSlider.slider.y < page.header )
-                        {
-                              _verticalSlider.slider.y = page.header;
-                        }
-                  }
-            }
-
-
             public function moveToDecade( decade:String ):void
             {
                   if ( stampsDisplayed )
@@ -226,39 +174,51 @@ package com.shinho.views
 
             public function seriesChanged( newSeries:Vector.<SeriesDTO>, selectedSerieName:SeriesStripeView, previousSeries:StampDTO ):void
             {
+                  trace( "newSerie: " + selectedSerieName + " | " + previousSeries );
                   var diff:int = newSeries.length - _seriesStripes.length;
 
                   for ( var i:int = 0; i < newSeries.length; i++ )
                   {
                         var added:Boolean = false;
-                        var newData:SeriesDTO = newSeries[i];
+                        var newSerie:SeriesDTO = newSeries[i];
 
                         try
                         {
                               var stripe:SeriesStripeView = _seriesStripes[i];
-                              if ( stripe.serieName != newData.serieName || stripe.serieYear != newData.serieYear && stripe.serieName != null )
+                              if ( stripe.serieName != newSerie.serieName || stripe.serieYear != newSerie.serieYear && stripe.serieName != null )
                               {
+                                    trace( "different stripes: " + diff );
                                     if ( diff >= 1 )
                                     {
-                                          insertNewStripe( newData, i );
+                                          trace( "insert stripe" );
+                                          insertNewStripe( newSerie, i );
                                           added = true;
                                     }
-                                    if ( diff <= -1 ) deleteSerie( i );
-                                    if ( diff == 0 && i < newSeries.length-1 )
+                                    if ( diff <= -1 )
                                     {
+                                          trace( "delete stripe" );
+                                          deleteSerie( i )
+                                    }
+                                    ;
+                                    if ( diff == 0 && i < newSeries.length - 1 )
+                                    {
+                                          trace( "same number of stripes" );
                                           // --------------  check to insert
                                           if ( stripe.serieName == newSeries[i + 1].serieName && stripe.serieYear == newSeries[i + 1].serieYear )
                                           {
-                                                insertNewStripe( newData, i );
+                                                trace( "insert new stripe" );
+                                                insertNewStripe( newSerie, i );
                                                 added = true;
                                                 diff = -1;
                                           }
                                           // --------------  check to delete
                                           if ( i + 1 <= _seriesStripes.length )
                                           {
+
                                                 var pointer:uint = i + 1;
-                                                if ( _seriesStripes[pointer].serieName == newData.serieName && _seriesStripes[pointer].serieYear == newData.serieYear )
+                                                if ( _seriesStripes[pointer].serieName == newSerie.serieName && _seriesStripes[pointer].serieYear == newSerie.serieYear )
                                                 {
+                                                      trace( "delete stripe" );
                                                       deleteSerie( i );
                                                       diff = 1;
                                                 }
@@ -270,11 +230,10 @@ package com.shinho.views
                               {
                                     if ( !added )
                                     {
-                                          _seriesStripes[i].refreshStripe( newData.serieStamps, i.toString() );
+                                          trace( "update previous stripe" );
+                                          _seriesStripes[i].refreshStripe( newSerie.serieStamps, i.toString() );
                                           added = false;
                                     }
-
-                                    // TODO : CHECK LAST ELEMENT FOR REFRESH
                               }
                         }
                         catch ( e:Error )
@@ -282,7 +241,8 @@ package com.shinho.views
                               /// if new series is bigger it's a new element at the end of existing stripes
                               if ( diff == 1 )
                               {
-                                    insertNewStripe( newData, i );
+                                    trace( "add last stripe" );
+                                    insertNewStripe( newSerie, i );
                                     added = true;
                               }
                         }
@@ -292,6 +252,7 @@ package com.shinho.views
                         deleteSerie( _seriesStripes.length - 1 );
                   }
                   _totalStripes = newSeries.length;
+                  trace("*******************************************************************************")
             }
 
 
@@ -317,9 +278,98 @@ package com.shinho.views
             }
 
 
-            // ----------------------------------------------------------------------------
-            // PRIVATE methods
-            // ----------------------------------------------------------------------------
+            // .........................................................................................................
+            // Private Methods
+            // .........................................................................................................
+
+            private function init( e:Event ):void
+            {
+                  this.removeEventListener( Event.ADDED_TO_STAGE, init );
+
+                  _allStripes = new Sprite();
+                  _allStripesMask = SpriteUtils.drawQuad( 0, 0, page.wide, page.tall );
+                  _allStripes.mask = _allStripesMask;
+
+                  _bottomMenu = new BottomMenu();
+                  _bottomMenu.stampsDisplayed = stampsDisplayed;
+
+                  decadeYears.decadeSelectedSignal.add( moveToDecade )
+
+                  _verticalSlider = new VerticalSlider();
+                  _verticalSlider.page = page;
+                  _verticalSlider.display();
+                  _verticalSlider.addEventListener( Event.ENTER_FRAME, scrollStripes, false, 0, false );
+
+                  addChild( _bottomMenu );
+                  addChild( _allStripes );
+                  addChild( _allStripesMask );
+                  addChild( _btCountry );
+                  addChild( typesMenu );
+                  addChild( decadeYears );
+                  addChild( _verticalSlider );
+
+                  page.add( _background, page.NONE, 0, page.NONE, 0, page.WIDE, 0, page.TALL, 0 );
+                  page.add( _selos, page.WIDE, 0, page.NONE, 0, page.NONE, 0, page.NONE, 0 );
+                  page.add( _allStripesMask, page.LEFT, 0, page.NONE, page.header + 1, page.WIDE, -AppDesign.SLIDER_WIDTH,
+                          page.TALL, -page.header - (page.tall - page.footer) );
+
+                  onResize();
+                  page.forceResize();
+            }
+
+
+            private function displayVisibleStripes():void
+            {
+                  // TODO : Changing a serie name and year dont update stripe correctly. Review stripes update
+                  var initDisplay:int = _currentStripeIndex - (MINIMUM_STRIPES / 2) > 0 ? _currentStripeIndex - (MINIMUM_STRIPES / 2) : 0;
+                  var endDisplay:int = _currentStripeIndex + MINIMUM_STRIPES > _numberOfStampSeries ? _numberOfStampSeries : _currentStripeIndex + MINIMUM_STRIPES;
+                  for ( var i:int = initDisplay; i < endDisplay; i++ )
+                  {
+                        var stripeView:SeriesStripeView = _seriesStripes[i] as SeriesStripeView;
+                        if ( !stripeView.isDisplayed )
+                        {
+                              stripeView.setData( _stampSeries[i].serieStamps );
+                              _verticalSlider.visible = true;
+                              stampsDisplayed = true;
+                              _bottomMenu.stampsDisplayed = stampsDisplayed;
+                        }
+                  }
+            }
+
+
+            private function insertInStripePointer( index:int ):void
+            {
+                  _seriesStripes.splice( index, 0, null );
+            }
+
+
+            private function moveStripeToTop( series:SeriesStripeView ):void
+            {
+                  if ( _verticalSlider.slider.height < _allStripesMask.height )
+                  {
+                        var stripeY:Number = 0;
+                        for ( var i:int = 0; i < _seriesStripes.length; i++ )
+                        {
+                              if ( _seriesStripes[i].serieIndex == series.serieIndex )
+                              {
+                                    stripeY = _seriesStripes[i].y;
+                              }
+                        }
+                        var middlePart:int = _allStripesMask.height;
+                        var step:Number = _stripesTotalHeight / (middlePart - _verticalSlider.slider.height);
+                        var distance:Number = stripeY - page.header;
+                        _verticalSlider.slider.y = (distance / step) + page.header;
+                        if ( _verticalSlider.slider.y + _verticalSlider.slider.height > page.footer )
+                        {
+                              _verticalSlider.slider.y = page.footer - _verticalSlider.slider.height;
+                        }
+                        if ( _verticalSlider.slider.y < page.header )
+                        {
+                              _verticalSlider.slider.y = page.header;
+                        }
+                  }
+            }
+
 
             private function changeBuild():void
             {
@@ -375,41 +425,6 @@ package com.shinho.views
                   displaceStripesDown( foundIndex );
                   insertInStripePointer( foundIndex );
                   insertNewSerie( newSeries.serieStamps, foundIndex, newSeries.serieName, newSeries.serieYear );
-            }
-
-
-            private function init( e:Event ):void
-            {
-                  this.removeEventListener( Event.ADDED_TO_STAGE, init );
-
-                  page.add( _background, page.NONE, 0, page.NONE, 0, page.WIDE, 0, page.TALL, 0 );
-                  page.add( _selos, page.WIDE, 0, page.NONE, 0, page.NONE, 0, page.NONE, 0 );
-
-                  _allStripes = new Sprite();
-                  _allStripesMask = SpriteUtils.drawQuad( 0, 0, page.wide, page.tall );
-                  addChild( _allStripes );
-                  addChild( _allStripesMask );
-                  _allStripes.mask = _allStripesMask;
-                  page.add( _allStripesMask, page.LEFT, 0, page.NONE, page.header + 1, page.WIDE, -AppDesign.SLIDER_WIDTH,
-                          page.TALL, -page.header - (page.tall - page.footer) );
-
-                  _bottomMenu = new BottomMenu();
-                  addChild( _bottomMenu );
-                  _bottomMenu.stampsDisplayed = stampsDisplayed;
-
-                  addChild( _btCountry );
-                  addChild( typesMenu );
-                  addChild( decadeYears );
-                  decadeYears.decadeSelectedSignal.add( moveToDecade )
-
-                  _verticalSlider = new VerticalSlider();
-                  _verticalSlider.page = page;
-                  _verticalSlider.display();
-                  addChild( _verticalSlider );
-                  _verticalSlider.addEventListener( Event.ENTER_FRAME, scrollStripes, false, 0, false );
-
-                  onResize();
-                  page.forceResize();
             }
 
 

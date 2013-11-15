@@ -129,10 +129,9 @@ package com.shinho.views.stampInfo
                         if ( isEditing )
                         {
                               var stampExists:Boolean = db.checkStampID( stampData.country, stampData.number, stampData.type );
-                              if ( stampExists )
+                              if ( stampExists && checkChanges( _stampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )
                               {
                                     overwriteStampMessage();
-                                    // TODO : Changing a serie name and year dont update stripe correctly
                               } else
                               {
                                     if ( checkChanges( _stampInfoChangedState, StampDatabase.NUMBER_CHANGED ) )

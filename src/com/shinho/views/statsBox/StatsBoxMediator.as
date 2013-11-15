@@ -1,7 +1,7 @@
 package com.shinho.views.statsBox
 {
 
-      import com.shinho.events.StampsDatabaseEvents;
+      import com.shinho.controllers.StampsController;
       import com.shinho.models.StampsModel;
       import com.shinho.models.FlexLayout;
       import com.shinho.models.LanguageModel;
@@ -15,15 +15,15 @@ package com.shinho.views.statsBox
       public class StatsBoxMediator extends Mediator
       {
             [Inject]
-            public var countryStamps:StampsModel;
+            public var stampsModel:StampsModel;
             [Inject]
             public var lang:LanguageModel;
             [Inject]
             public var page:FlexLayout;
             [Inject]
-            public var stamps:StampDatabase;
-            [Inject]
             public var view:StatsBox;
+            [Inject]
+            public var controller:StampsController;
 
 
             public function StatsBoxMediator()
@@ -49,8 +49,9 @@ package com.shinho.views.statsBox
             private function showResults():void
             {
                   eventMap.mapListener( view.board.btClose, MouseEvent.CLICK, closeBoard );
-                  view.showStats( countryStamps.stampsOwned, countryStamps.getBiggerStampNumber(), countryStamps.totalValue,
-                          countryStamps.totalCost );
+                  controller.calculateStatistics();
+                  view.showStats( stampsModel.stampsOwned, stampsModel.getBiggerStampNumber(), stampsModel.totalValue,
+                          stampsModel.totalCost );
             }
       }
 }
