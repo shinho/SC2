@@ -38,7 +38,12 @@ public class TypesModel extends Actor {
 
 	public function getCurrentTypeName():String
 	{
-		return _types[_currentTypeIndex].type;
+              var index:int = _currentTypeIndex;
+              if (_currentTypeIndex>_types.length-1)
+              {
+                  index = 0;
+              }
+		return _types[index].type;
 	}
 
 

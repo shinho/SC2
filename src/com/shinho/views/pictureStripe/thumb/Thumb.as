@@ -51,6 +51,7 @@
 
             public function destroy():void
             {
+                  trace("destry thumb");
                   if ( _hasImage )
                   {
                         _reScaledThumb.bitmapData.dispose();
@@ -188,9 +189,16 @@
 
             private function imageLoaded( e:Event ):void
             {
+                  trace("thumb image loaded");
                   var loadedBitmap:Bitmap = (Bitmap)( e.target.content );
 
-                  _imageHolder.removeChild( _noPic );
+                  if (_imageHolder)
+                  {
+                        _imageHolder.removeChild( _noPic );
+                  } else {
+                        trace("oppps image holder is null")
+                  }
+
 
                   var ratio:Number = loadedBitmap.width / loadedBitmap.height;
 

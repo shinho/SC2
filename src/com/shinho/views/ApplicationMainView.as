@@ -174,7 +174,7 @@ package com.shinho.views
 
             public function seriesChanged( newSeries:Vector.<SeriesDTO>, selectedSerieName:SeriesStripeView, previousSeries:StampDTO ):void
             {
-                  trace( "newSerie: " + selectedSerieName + " | " + previousSeries );
+                  trace( "newSerie: " + selectedSerieName.serieName +" ("+selectedSerieName.serieYear+ ") | " + previousSeries.serie +" ("+previousSeries.year+")");
                   var diff:int = newSeries.length - _seriesStripes.length;
 
                   for ( var i:int = 0; i < newSeries.length; i++ )
@@ -185,54 +185,29 @@ package com.shinho.views
                         try
                         {
                               var stripe:SeriesStripeView = _seriesStripes[i];
+                              // --------------  check to update previous stripe
+                              if ( newSerie.serieStamps.length !=stripe.stampsInSerie || (stripe.serieName == newSerie.serieName && stripe.serieYear==newSerie.serieYear))
+                              {
+                                    trace("refresh stripe : "+newSerie.serieName);
+                                    _seriesStripes[i].refreshStripe( newSerie.serieStamps, i.toString() );
+                              }
                               if ( stripe.serieName != newSerie.serieName || stripe.serieYear != newSerie.serieYear && stripe.serieName != null )
                               {
-                                    trace( "different stripes: " + diff );
-                                    if ( diff >= 1 )
+                                    trace("stripes are different");
+                                    switch ( diff )
                                     {
-                                          trace( "insert stripe" );
-                                          insertNewStripe( newSerie, i );
-                                          added = true;
-                                    }
-                                    if ( diff <= -1 )
-                                    {
-                                          trace( "delete stripe" );
-                                          deleteSerie( i )
-                                    }
-                                    ;
-                                    if ( diff == 0 && i < newSeries.length - 1 )
-                                    {
-                                          trace( "same number of stripes" );
-                                          // --------------  check to insert
-                                          if ( stripe.serieName == newSeries[i + 1].serieName && stripe.serieYear == newSeries[i + 1].serieYear )
-                                          {
-                                                trace( "insert new stripe" );
+                                          case  1:
+                                                trace("insert");
                                                 insertNewStripe( newSerie, i );
-                                                added = true;
-                                                diff = -1;
-                                          }
-                                          // --------------  check to delete
-                                          if ( i + 1 <= _seriesStripes.length )
-                                          {
-
-                                                var pointer:uint = i + 1;
-                                                if ( _seriesStripes[pointer].serieName == newSerie.serieName && _seriesStripes[pointer].serieYear == newSerie.serieYear )
-                                                {
-                                                      trace( "delete stripe" );
-                                                      deleteSerie( i );
-                                                      diff = 1;
-                                                }
-                                          }
-                                    }
-                              }
-                              // --------------  check to update previous stripe
-                              if ( (stripe.serieName == previousSeries.serie && stripe.serieYear == previousSeries.year) || (stripe.serieName == selectedSerieName.serieName && stripe.serieYear == selectedSerieName.serieYear) )
-                              {
-                                    if ( !added )
-                                    {
-                                          trace( "update previous stripe" );
-                                          _seriesStripes[i].refreshStripe( newSerie.serieStamps, i.toString() );
-                                          added = false;
+                                                break;
+                                          case -1:
+                                                trace("delete");
+                                                deleteSerie( i );
+                                                break;
+                                          case 0:
+                                                trace("refresh");
+                                                _seriesStripes[i].refreshStripe( newSerie.serieStamps, i.toString() );
+                                                break;
                                     }
                               }
                         }
@@ -252,9 +227,92 @@ package com.shinho.views
                         deleteSerie( _seriesStripes.length - 1 );
                   }
                   _totalStripes = newSeries.length;
-                  trace("*******************************************************************************")
+                  trace( "*******************************************************************************" )
             }
 
+
+//            public function seriesChanged( newSeries:Vector.<SeriesDTO>, selectedSerieName:SeriesStripeView, previousSeries:StampDTO ):void
+//            {
+//                  trace( "newSerie: " + selectedSerieName + " | " + previousSeries );
+//                  var diff:int = newSeries.length - _seriesStripes.length;
+//
+//                  for ( var i:int = 0; i < newSeries.length; i++ )
+//                  {
+//                        var added:Boolean = false;
+//                        var newSerie:SeriesDTO = newSeries[i];
+//
+//                        try
+//                        {
+//                              var stripe:SeriesStripeView = _seriesStripes[i];
+//                              if ( stripe.serieName != newSerie.serieName || stripe.serieYear != newSerie.serieYear && stripe.serieName != null )
+//                              {
+//                                    trace( "different stripes: " + diff );
+//                                    if ( diff >= 1 )
+//                                    {
+//                                          trace( "insert stripe" );
+//                                          insertNewStripe( newSerie, i );
+//                                          added = true;
+//                                    }
+//                                    if ( diff <= -1 )
+//                                    {
+//                                          trace( "delete stripe" );
+//                                          deleteSerie( i )
+//                                    }
+//                                    ;
+//                                    if ( diff == 0 && i < newSeries.length - 1 )
+//                                    {
+//                                          trace( "same number of stripes" );
+//                                          // --------------  check to insert
+//                                          if ( stripe.serieName == newSeries[i + 1].serieName && stripe.serieYear == newSeries[i + 1].serieYear )
+//                                          {
+//                                                trace( "insert new stripe" );
+//                                                insertNewStripe( newSerie, i );
+//                                                added = true;
+//                                                diff = -1;
+//                                          }
+//                                          // --------------  check to delete
+//                                          if ( i + 1 <= _seriesStripes.length )
+//                                          {
+//
+//                                                var pointer:uint = i + 1;
+//                                                if ( _seriesStripes[pointer].serieName == newSerie.serieName && _seriesStripes[pointer].serieYear == newSerie.serieYear )
+//                                                {
+//                                                      trace( "delete stripe" );
+//                                                      deleteSerie( i );
+//                                                      diff = 1;
+//                                                }
+//                                          }
+//                                    }
+//                              }
+//                              // --------------  check to update previous stripe
+//                              if ( (stripe.serieName == previousSeries.serie && stripe.serieYear == previousSeries.year) || (stripe.serieName == selectedSerieName.serieName && stripe.serieYear == selectedSerieName.serieYear) )
+//                              {
+//                                    if ( !added )
+//                                    {
+//                                          trace( "update previous stripe" );
+//                                          _seriesStripes[i].refreshStripe( newSerie.serieStamps, i.toString() );
+//                                          added = false;
+//                                    }
+//                              }
+//                        }
+//                        catch ( e:Error )
+//                        {
+//                              /// if new series is bigger it's a new element at the end of existing stripes
+//                              if ( diff == 1 )
+//                              {
+//                                    trace( "add last stripe" );
+//                                    insertNewStripe( newSerie, i );
+//                                    added = true;
+//                              }
+//                        }
+//                  }
+//                  while ( _seriesStripes.length > newSeries.length )
+//                  {
+//                        deleteSerie( _seriesStripes.length - 1 );
+//                  }
+//                  _totalStripes = newSeries.length;
+//                  trace("*******************************************************************************")
+//            }
 
             public function setStampSeries( value:Vector.<SeriesDTO> ):void
             {

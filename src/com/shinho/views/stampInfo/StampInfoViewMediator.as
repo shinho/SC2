@@ -139,6 +139,7 @@ package com.shinho.views.stampInfo
                                           db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
                                           var imageOrigin:File = FileHelper.getFile( controller.previousStripeData.country, controller.previousStripeData.type, controller.previousStripeData.number );
                                           var imageDestination:File = FileHelper.getFile( stampData.country, stampData.type, stampData.number );
+                                          trace(imageOrigin.nativePath,imageDestination.nativePath);
                                           imageOrigin.moveTo( imageDestination, true );
                                     } else
                                     {

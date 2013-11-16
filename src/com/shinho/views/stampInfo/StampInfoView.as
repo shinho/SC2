@@ -203,7 +203,8 @@ package com.shinho.views.stampInfo
                   {
                         if ( _stampHasImage )
                         {
-                              var imageFile:File =  FileHelper.getFile(board.country.tex, board.type.text, board.id.text);
+                              trace ()
+                              var imageFile:File =  FileHelper.getFile(board.country.text, board.type.text, board.id.text);
                               if ( imageFile.exists )
                               {
                                     clearPhoto( null );
