@@ -23,7 +23,7 @@ package com.shinho.controllers
             [Inject]
             public var types:TypesModel;
             // properties
-            public var selectedSeriesStripe:SeriesStripeView;
+            public var currentSeriesStripe:SeriesStripeView;
             public var previousStripeData:StampDTO;
             // signals
             private var _stampDataReadySignal:Signal = new Signal();

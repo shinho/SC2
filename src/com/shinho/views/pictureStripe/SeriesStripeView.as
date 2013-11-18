@@ -32,8 +32,7 @@
             private var _currentThumb:int = 0;
             private var _holderMask:Sprite;
             private var _isDisplayed:Boolean = false;
-            private var _numberOfStamps:int;
-            private var _numberSerieItems:int = 0;
+            private var _stampsInSerie:int;
             private var _serieDecade:String;
             private var _serieIndex:uint;
             private var _serieName:String;
@@ -97,10 +96,10 @@
 
             public function displayStripe( serieStamps:Vector.<StampDTO> = null ):void
             {
-                  _numberSerieItems = serieStamps.length;
+                  _stampsInSerie = serieStamps.length;
                   var isDisplayed:Boolean = false;
                   var stamp:StampDTO;
-                  for ( var i:int = 0; i < _numberSerieItems; i++ )
+                  for ( var i:int = 0; i < _stampsInSerie; i++ )
                   {
                         stamp = serieStamps[i] as StampDTO;
                         var thumb:Thumb = new Thumb( stamp, stamp.getPath() );
@@ -119,20 +118,24 @@
             }
 
 
-            public function refreshStripe( data:Vector.<StampDTO>, goDisplay:Boolean = true ):void
+            public function refreshStripe( data:Vector.<StampDTO> ):void
             {
-                  destroyThumbs();
-                  _thumbs = [];
-                  _currentThumb = 0;
-                  _serieName = data[0].serie;
-                  _serieYear = data[0].year;
-                  _stripeAsset.legenda.text = _serieName;
-                  _stripeAsset.ano.text = serieYear;
-                  if ( goDisplay )
+                  if ( _isDisplayed )
                   {
+                        destroyThumbs();
+                        _thumbs = [];
+                        _currentThumb = 0;
+                        _serieName = data[0].serie;
+                        _serieYear = data[0].year;
+                        _stripeAsset.legenda.text = _serieName;
+                        _stripeAsset.ano.text = serieYear;
+                        trace( "SerieStripesView : Destroy thumbs -> " + data[0].serie );
                         displayStripe( data );
+                        _stampsInSerie = data.length;
+                  } else
+                  {
+                        setData( data );
                   }
-                  _numberOfStamps = data.length;
             }
 
 
@@ -145,7 +148,7 @@
 
             public function setData( serieStamps:Vector.<StampDTO> ):void
             {
-                  _numberOfStamps = serieStamps.length;
+                  _stampsInSerie = serieStamps.length;
 
                   /// add picture stripe background
                   addChild( _stripeAsset );
@@ -158,7 +161,6 @@
                   _holderMask = SpriteUtils.drawQuad( 0, 0,
                           page.wide - AppDesign.X_START_DISPLAY_STAMPS - AppDesign.SLIDER_WIDTH - AppDesign.BUTTON_YEAR_DISPLACE - AppDesign.SLIDER_GAP,
                           AppDesign.STRIPE_HEIGTH * 6 );
-                  addChild( thumbsHolder );
                   addChild( _holderMask );
                   thumbsHolder.mask = _holderMask;
                   _holderMask.x = AppDesign.X_START_DISPLAY_STAMPS;
@@ -195,7 +197,7 @@
             {
                   thumb.addEventListener( MouseEvent.CLICK, imgSelected );
                   _currentThumb++;
-                  if ( _currentThumb == _numberSerieItems )
+                  if ( _currentThumb == _stampsInSerie )
                   {
                         displayThumbs( _thumbs );
                   }
@@ -210,9 +212,10 @@
                         for ( var i:int = 0; i < _thumbs.length; i++ )
                         {
                               var thumb:Thumb = _thumbs[i];
+                              thumb.removeEventListener( MouseEvent.MOUSE_OVER, onThumbOver );
+                              thumb.thumbLoadedSignal.remove( add2List );
                               thumb.removeEventListener( MouseEvent.CLICK, imgSelected );
                               thumb.destroy();
-                              thumb = null;
                         }
                   }
             }
@@ -286,7 +289,7 @@
 
             public function get stampsInSerie():int
             {
-                  return _numberSerieItems;
+                  return _stampsInSerie;
             }
 
 

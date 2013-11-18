@@ -116,6 +116,7 @@ package com.shinho.models
             {
                   var checked:Boolean = false;
                   statement.text = "SELECT * FROM stampDatabase WHERE country='" + countryName + "' and number='" + stampNumber + "' and type='" + typeOf + "' ORDER BY country asc";
+                  statement.itemClass = StampDTO;
                   statement.execute();
                   var data:Array = statement.getResult().data;
                   if ( data != null && data.length > 0 )
@@ -306,6 +307,7 @@ package com.shinho.models
             public function updateWithPreviousStampNumber( stampDetails:StampDTO, previousStampDetails:StampDTO ):void
             {
                   trace( "updateWithPreviousStampNumber" );
+                  silentDelete(stampDetails);
                   statement.text = SQLhelper.UpdateWithPreviousNumberSQL( stampDetails, previousStampDetails );
                   statement.itemClass = null;
                   statement.execute();
@@ -417,9 +419,15 @@ package com.shinho.models
 
             public function deleteOnConfirmation( stampDetails:StampDTO ):void
             {
+                  silentDelete(stampDetails);
+                  stampDeletedSignal.dispatch( stampDetails );
+            }
+
+
+            private function silentDelete(stampDetails:StampDTO  ):void
+            {
                   statement.text = SQLhelper.getDeleteString( stampDetails );
                   statement.execute();
-                  stampDeletedSignal.dispatch( stampDetails );
             }
 
 

@@ -77,6 +77,8 @@ package com.shinho.views.stampInfo
             private function displayStamp( e:PictureStripeEvents ):void
             {
                   updateIndexes();
+                  view.clearPhoto();
+                  view.clearFields();
                   view.displayBoard( stamps.currentStamp );
             }
 
@@ -139,8 +141,11 @@ package com.shinho.views.stampInfo
                                           db.updateWithPreviousStampNumber( stampData, controller.previousStripeData );
                                           var imageOrigin:File = FileHelper.getFile( controller.previousStripeData.country, controller.previousStripeData.type, controller.previousStripeData.number );
                                           var imageDestination:File = FileHelper.getFile( stampData.country, stampData.type, stampData.number );
-                                          trace(imageOrigin.nativePath,imageDestination.nativePath);
-                                          imageOrigin.moveTo( imageDestination, true );
+                                          trace( imageOrigin.nativePath, imageDestination.nativePath );
+                                          if (imageOrigin.exists)
+                                          {
+                                                imageOrigin.moveTo( imageDestination, true );
+                                          }
                                     } else
                                     {
                                           db.updateSelectedStamp( stampData );
@@ -202,6 +207,7 @@ package com.shinho.views.stampInfo
                   controller.previousStripeData = view.keepOriginalData();
                   view.clearFields();
                   view.editStampInfo();
+                  view.clearPhoto();
                   isEditing = false;
                   isAdding = true;
             }

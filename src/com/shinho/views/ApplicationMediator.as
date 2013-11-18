@@ -86,8 +86,8 @@ package com.shinho.views
 
             private function updateSerie( stampDetails:StampDTO ):void
             {
-                  trace( "update serie" );
-                  view.seriesChanged( stamps.stampSeries, controller.selectedSeriesStripe, controller.previousStripeData );
+                  trace( "Application Mediator : update serie" );
+                  view.seriesChanged( stamps.stampSeries, controller.currentSeriesStripe );
             }
 
 

@@ -45,7 +45,7 @@ package com.shinho.views.pictureStripe
                   countryStamps.currentStamp = stamp;
                   db.stampInfoChanged = false;
                   view.currentStampNumber = stamp.number;
-                  controller.selectedSeriesStripe = view.setCurrentStripe();
+                  controller.currentSeriesStripe = view.setCurrentStripe();
                   db.stampsInCurrentSerie = view.stampsInSerie;
                   db.currentSerieName = view.serieName;
                   eventDispatcher.dispatchEvent(new PictureStripeEvents(PictureStripeEvents.SHOW_STAMP, view));

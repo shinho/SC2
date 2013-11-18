@@ -51,16 +51,18 @@
 
             public function destroy():void
             {
-                  trace("destry thumb");
                   if ( _hasImage )
                   {
                         _reScaledThumb.bitmapData.dispose();
                   }
                   else
                   {
-                        SpriteUtils.removeAllChild( thumbID );
-                        removeChild( thumbID );
-                        thumbID = null;
+                        if (thumbID)
+                        {
+                              SpriteUtils.removeAllChild( thumbID );
+                              removeChild( thumbID );
+                              thumbID = null;
+                        }
                   }
 
                   _reScaledThumb = null;
@@ -189,7 +191,6 @@
 
             private function imageLoaded( e:Event ):void
             {
-                  trace("thumb image loaded");
                   var loadedBitmap:Bitmap = (Bitmap)( e.target.content );
 
                   if (_imageHolder)
@@ -197,6 +198,7 @@
                         _imageHolder.removeChild( _noPic );
                   } else {
                         trace("oppps image holder is null")
+                        _imageHolder = new Sprite();
                   }
 
 

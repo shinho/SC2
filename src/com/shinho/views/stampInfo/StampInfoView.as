@@ -32,7 +32,6 @@ package com.shinho.views.stampInfo
       import flash.filesystem.File;
       import flash.filesystem.FileMode;
       import flash.filesystem.FileStream;
-      import flash.filters.GlowFilter;
       import flash.net.URLRequest;
       import flash.text.TextField;
       import flash.text.TextFieldType;
@@ -75,7 +74,7 @@ package com.shinho.views.stampInfo
             private var gumGroup:BlackCheckBoxGroup;
             private var ownedCheckBox:BlackCheckBoxGroup;
             private var mintCheckBox:BlackCheckBoxGroup;
-            private var timer:Timer = new Timer( 300 );
+            private var timer:Timer = new Timer( 400 );
             private var cli:CLibInit;
             private var loader:Loader = new Loader();
             private var fs:FileStream = new FileStream();
@@ -166,7 +165,7 @@ package com.shinho.views.stampInfo
                   resetFieldsSignal.dispatch();
                   board.id.text = "";
                   board.denomination.text = "";
-                  clearPhoto( null );
+                  clearPhoto();
                   ownedCheckBox.setSelected( 0 );
                   mintCheckBox.setSelected( 0 );
                   conditionGroup.setSelected( 0 );
@@ -203,11 +202,10 @@ package com.shinho.views.stampInfo
                   {
                         if ( _stampHasImage )
                         {
-                              trace ()
-                              var imageFile:File =  FileHelper.getFile(board.country.text, board.type.text, board.id.text);
+                              var imageFile:File = FileHelper.getFile( board.country.text, board.type.text, board.id.text );
                               if ( imageFile.exists )
                               {
-                                    clearPhoto( null );
+                                    clearPhoto();
                                     imageFile.deleteFile();
                                     _stampHasImage = false;
                                     displayErrorMessage( "Stamp Image Deleted...", COLOR_RED );
@@ -221,7 +219,6 @@ package com.shinho.views.stampInfo
             {
                   _stamp = stamp;
                   _tempData = new StampDTO();
-                  clearFields();
                   backLeft.visible = true;
                   board.visible = true;
                   _isNewStamp = isNew;
@@ -412,7 +409,7 @@ package com.shinho.views.stampInfo
                   {
                         disableButton( board.btPaste );
                         this.stage.focus = board.comments;
-                        clearPhoto( null );
+                        clearPhoto();
                         var clipImage:Bitmap = new Bitmap( Clipboard.generalClipboard.getData( ClipboardFormats.BITMAP_FORMAT ) as BitmapData );
                         if ( clipImage.width > 0 && clipImage.height > 0 )
                         {
@@ -443,7 +440,7 @@ package com.shinho.views.stampInfo
                               }
                               if ( !stop )
                               {
-                                    var savePath:File = FileHelper.getFile(board.country.text,board.type.text,board.id.text )
+                                    var savePath:File = FileHelper.getFile( board.country.text, board.type.text, board.id.text )
                                     fs = new FileStream();
                                     fs.addEventListener( Event.CLOSE, fileSaved );
                                     try
@@ -501,6 +498,22 @@ package com.shinho.views.stampInfo
             }
 
 
+            public function clearPhoto():void
+            {
+                  if ( (_stampHasImage || _imageHolder.numChildren > 0) && _isLocked == false )
+                  {
+                        image.bitmapData.dispose();
+                        image = null;
+                        SpriteUtils.removeAllChild( _imageHolder );
+                        _stampHasImage = false;
+                  }
+            }
+
+
+            // .........................................................................................................
+            // Private Methods
+            // .........................................................................................................
+
             private function disableButton( bt:Object ):void
             {
                   bt.enabled = false;
@@ -531,7 +544,7 @@ package com.shinho.views.stampInfo
 
             private function loadPhoto( data:Object ):void
             {
-                  var path:File = FileHelper.getFile(data.country,data.type,data.number );
+                  var path:File = FileHelper.getFile( data.country, data.type, data.number );
                   trace( path.url );
                   var pathUrl:String = path.url;
                   ///loader = new Loader();
@@ -598,7 +611,7 @@ package com.shinho.views.stampInfo
             }
 
 
-            public function preventAnotherDecimalPoint( e:KeyboardEvent ):void
+            private function preventAnotherDecimalPoint( e:KeyboardEvent ):void
             {
                   var temp:String = e.target.text;
                   var existsDecimal:Boolean = false;
@@ -639,8 +652,7 @@ package com.shinho.views.stampInfo
                   backLeft.x = -page.wide;
                   backLeft.doubleClickEnabled = true;
                   backLeft.addEventListener( MouseEvent.DOUBLE_CLICK, unlockFields );
-                  board.btClose.addEventListener( MouseEvent.CLICK, btCloseClicked );
-                  backLeft.addEventListener( MouseEvent.CLICK, btCloseClicked );
+                  board.btClose.closeBoardSignal.add(btCloseClicked);
                   board.btEdit.addEventListener( MouseEvent.CLICK, btEditClicked );
                   board.btAdd.addEventListener( MouseEvent.CLICK, btAddClicked );
                   board.btSave.addEventListener( MouseEvent.CLICK, btSaveClicked );
@@ -715,9 +727,9 @@ package com.shinho.views.stampInfo
                   board.cost.addEventListener( FocusEvent.FOCUS_OUT, preventNullNumber );
                   board.cost.addEventListener( FocusEvent.FOCUS_IN, zero2Empty );
 
-                  board.btClose.buttonMode = true;
-                  board.btClose.addEventListener( MouseEvent.MOUSE_OVER, btCloseOnOver );
-                  board.btClose.addEventListener( MouseEvent.MOUSE_OUT, btCloseOnOut );
+//                  board.btClose.buttonMode = true;
+//                  board.btClose.addEventListener( MouseEvent.MOUSE_OVER, btCloseOnOver );
+//                  board.btClose.addEventListener( MouseEvent.MOUSE_OUT, btCloseOnOut );
 
                   ownedCheckBox = new BlackCheckBoxGroup( new Array( board.owned ), false );
 
@@ -812,21 +824,19 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function btCloseOnOver( e:MouseEvent ):void
-            {
-                  e.currentTarget.filters = [new GlowFilter( 0x32ebfb, .75, 5, 5, 2, 3, false, false )];
-            }
+//            private function btCloseOnOver( e:MouseEvent ):void
+//            {
+//                  e.currentTarget.filters = [new GlowFilter( 0x32ebfb, .75, 5, 5, 2, 3, false, false )];
+//            }
+//
+//
+//            private function btCloseOnOut( e:MouseEvent ):void
+//            {
+//                  e.currentTarget.filters = [];
+//            }
 
 
-            // ---------------------------------------------------------------    lock fields
-
-            private function btCloseOnOut( e:MouseEvent ):void
-            {
-                  e.currentTarget.filters = [];
-            }
-
-
-            private function btCloseClicked( e:MouseEvent ):void
+            private function btCloseClicked(  ):void
             {
                   closeBoardSignal.dispatch();
             }
@@ -999,18 +1009,6 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function clearPhoto( e:FocusEvent ):void
-            {
-                  if ( (_stampHasImage || _imageHolder.numChildren > 0) && _isLocked == false )
-                  {
-                        image.bitmapData.dispose();
-                        image = null;
-                        SpriteUtils.removeAllChild( _imageHolder );
-                        _stampHasImage = false;
-                  }
-            }
-
-
             private function suggestions( e:KeyboardEvent ):void
             {
 
@@ -1093,6 +1091,7 @@ package com.shinho.views.stampInfo
                               var str:String = foundSuggestions[0];
                               _sugTextField.text = initialString.substring( 0, num ) + str.substring( num, str.length );
                               _sugTextField.setSelection( num, str.length );
+//                              _sugTextField.caretIndex
                         }
                         if ( timer )
                         {
