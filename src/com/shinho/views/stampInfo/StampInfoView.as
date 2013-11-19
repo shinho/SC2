@@ -176,7 +176,7 @@ package com.shinho.views.stampInfo
                   board.cancel.text = "";
                   board.grade.value = 0;
                   board.spares.value = 0;
-                  board.currentvalue.text = "0";
+                  board.currentValue.text = "0";
                   board.purchaseYear.value = DateUtils.getCurrentYear();
                   board.cost.text = "0";
                   board.color.text = "";
@@ -184,7 +184,7 @@ package com.shinho.views.stampInfo
                   board.seller.text = "";
                   board.cost.restrict = StringUtils.RESTRICT_NUMBERS_AND_DOT;
                   board.perc.text = NumberUtils.calculatePositivePercent( Number( board.cost.text ),
-                          Number( board.currentvalue.text ) );
+                          Number( board.currentValue.text ) );
             }
 
 
@@ -261,7 +261,7 @@ package com.shinho.views.stampInfo
                   board.watermark.type = TextFieldType.INPUT;
                   board.watermark.type = TextFieldType.INPUT;
                   board.catalog.type = TextFieldType.INPUT;
-                  board.currentvalue.type = TextFieldType.INPUT;
+                  board.currentValue.type = TextFieldType.INPUT;
                   board.cost.type = TextFieldType.INPUT;
                   board.seller.type = TextFieldType.INPUT;
                   board.comments.type = TextFieldType.INPUT;
@@ -307,7 +307,7 @@ package com.shinho.views.stampInfo
                   editedStamp.watermark = board.watermark.text;
                   editedStamp.year = board.ano.value;
                   editedStamp.main_catalog = board.catalog.text;
-                  editedStamp.current_value = board.currentvalue.text;
+                  editedStamp.current_value = board.currentValue.text;
                   editedStamp.cost = board.cost.text;
                   editedStamp.seller = board.seller.text;
                   editedStamp.purchase_year = StringUtils.stringToInt( board.purchaseYear.value );
@@ -383,7 +383,7 @@ package com.shinho.views.stampInfo
                   board.variety.type = TextFieldType.DYNAMIC;
                   board.watermark.type = TextFieldType.DYNAMIC;
                   board.catalog.type = TextFieldType.DYNAMIC;
-                  board.currentvalue.type = TextFieldType.DYNAMIC;
+                  board.currentValue.type = TextFieldType.DYNAMIC;
                   board.cost.type = TextFieldType.DYNAMIC;
                   board.seller.type = TextFieldType.DYNAMIC;
                   board.comments.type = TextFieldType.DYNAMIC;
@@ -580,7 +580,7 @@ package com.shinho.views.stampInfo
                   board.grade.value = StringUtils.isNull( _stamp.grade );
                   board.faults.text = StringUtils.isNull( _stamp.faults );
                   board.denomination.text = StringUtils.isNull( _stamp.denomination );
-                  board.currentvalue.text = _stamp.current_value == 0 ? "0.00" : Formatter.decimals( _stamp.current_value,
+                  board.currentValue.text = _stamp.current_value == 0 ? "0.00" : Formatter.decimals( _stamp.current_value,
                           2, true, "." );
                   board.cost.text = _stamp.cost == 0 ? "0.000" : Formatter.decimals( _stamp.cost, 3, true, "." );
 
@@ -594,7 +594,7 @@ package com.shinho.views.stampInfo
                   gumGroup.setSelected( _stamp.gum_value );
 
                   board.perc.text = NumberUtils.calculatePositivePercent( Number( board.cost.text ),
-                          Number( board.currentvalue.text ) );
+                          Number( board.currentValue.text ) );
                   displayStampImage();
                   timer.addEventListener( TimerEvent.TIMER, suggestOnTimer );
             }
@@ -608,24 +608,6 @@ package com.shinho.views.stampInfo
                   _imageHolder.width = _tempWidth;
                   _imageHolder.height = _tempHeight;
                   _imageHolder.addEventListener( MouseEvent.CLICK, enlargeStamp );
-            }
-
-
-            private function preventAnotherDecimalPoint( e:KeyboardEvent ):void
-            {
-                  var temp:String = e.target.text;
-                  var existsDecimal:Boolean = false;
-                  for ( var i:int = 0; i < temp.length; i++ )
-                  {
-                        if ( temp.charAt( i ) == "." )
-                        {
-                              existsDecimal = true;
-                        }
-                  }
-                  if ( existsDecimal && (e.keyCode == 110 || e.keyCode == 190) )
-                  {
-                        e.preventDefault();
-                  }
             }
 
 
@@ -661,75 +643,26 @@ package com.shinho.views.stampInfo
                   board.btCopy.addEventListener( MouseEvent.CLICK, btCopyClicked );
                   board.btClearImage.addEventListener( MouseEvent.CLICK, btClearImageClicked );
 
-                  board.country.restrict = "^'";
                   board.country.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
-                  board.country.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.type.restrict = "^'";
-                  board.type.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
-                  board.type.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.id.restrict = "a-z0-9";
                   board.id.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
-                  board.id.addEventListener( KeyboardEvent.KEY_UP, preventMoreLetters );
+                  board.type.addEventListener( FocusEvent.FOCUS_OUT, newPhoto );
 
-                  board.color.restrict = "^'";
+                  board.country.addEventListener( KeyboardEvent.KEY_UP, suggestions );
+                  board.type.addEventListener( KeyboardEvent.KEY_UP, suggestions );
                   board.color.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.designer.restrict = "^'";
                   board.designer.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.history.restrict = "^'";
-
-                  board.inscription.restrict = "^'";
-
-                  board.paper.restrict = "^'";
                   board.paper.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.serie.restrict = "^'";
                   board.serie.addEventListener( KeyboardEvent.KEY_UP, suggestions );
                   board.paper.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.printer.restrict = "^'";
                   board.printer.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.seller.restrict = "^'";
                   board.seller.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.perforation.restrict = "^'";
-
-                  board.variety.restrict = "^'";
                   board.variety.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-
-                  board.watermark.restrict = "^'";
-
                   board.catalog.addEventListener( KeyboardEvent.KEY_UP, suggestions );
-                  board.catalog.restrict = "^'";
-
                   board.purchaseYear.addEventListener( FocusEvent.FOCUS_IN, zero2CurrentDate );
 
-                  board.comments.restrict = "^'";
 
-                  board.cancel.restrict = "^'";
-
-                  board.faults.restrict = "^'";
-
-                  board.denomination.restrict = "^'";
-                  board.denomination.addEventListener( FocusEvent.FOCUS_IN, zero2Empty );
-
-                  board.currentvalue.restrict = StringUtils.RESTRICT_NUMBERS_AND_DOT;
-                  board.currentvalue.addEventListener( KeyboardEvent.KEY_DOWN, preventAnotherDecimalPoint );
-                  board.currentvalue.addEventListener( FocusEvent.FOCUS_OUT, preventNullNumber );
-                  board.currentvalue.addEventListener( FocusEvent.FOCUS_IN, zero2Empty );
-
-                  board.cost.restrict = StringUtils.RESTRICT_NUMBERS_AND_DOT;
-                  board.cost.addEventListener( KeyboardEvent.KEY_DOWN, preventAnotherDecimalPoint );
+                  board.currentValue.addEventListener( FocusEvent.FOCUS_OUT, preventNullNumber );
                   board.cost.addEventListener( FocusEvent.FOCUS_OUT, preventNullNumber );
-                  board.cost.addEventListener( FocusEvent.FOCUS_IN, zero2Empty );
-
-//                  board.btClose.buttonMode = true;
-//                  board.btClose.addEventListener( MouseEvent.MOUSE_OVER, btCloseOnOver );
-//                  board.btClose.addEventListener( MouseEvent.MOUSE_OUT, btCloseOnOut );
 
                   ownedCheckBox = new BlackCheckBoxGroup( new Array( board.owned ), false );
 
@@ -779,17 +712,9 @@ package com.shinho.views.stampInfo
                   }
                   temp.text = Formatter.decimals( Number( temp.text ), decimals, true, "." );
                   board.perc.text = NumberUtils.calculatePositivePercent( Number( board.cost.text ),
-                          Number( board.currentvalue.text ) );
+                          Number( board.currentValue.text ) );
             }
 
-
-            private function zero2Empty( e:FocusEvent ):void
-            {
-                  if ( e.target.text == "0" || e.target.text == "0.00" || e.target.text == "0.000" )
-                  {
-                        e.target.text = "";
-                  }
-            }
 
 
             private function zero2CurrentDate( e:FocusEvent ):void
@@ -801,39 +726,12 @@ package com.shinho.views.stampInfo
             }
 
 
-            private function preventMoreLetters( e:KeyboardEvent ):void
-            {
-                  var searchLetters:RegExp = (/\w+/);
-                  var checkStr:String = e.target.text.match( searchLetters );
-                  if ( isNaN( Number( checkStr ) ) )
-                  {
-                        e.target.restrict = "";
-                  }
-                  else
-                  {
-                        e.target.restrict = "a-z0-9";
-                  }
-                  enableButton( board.btSave );
-            }
-
 
             private function unlockFields( e:MouseEvent ):void
             {
                   trace( "double clicked" );
                   editStampInfo();
             }
-
-
-//            private function btCloseOnOver( e:MouseEvent ):void
-//            {
-//                  e.currentTarget.filters = [new GlowFilter( 0x32ebfb, .75, 5, 5, 2, 3, false, false )];
-//            }
-//
-//
-//            private function btCloseOnOut( e:MouseEvent ):void
-//            {
-//                  e.currentTarget.filters = [];
-//            }
 
 
             private function btCloseClicked(  ):void

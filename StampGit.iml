@@ -23,7 +23,7 @@
             <entry library-id="f95b11df-6b02-4bda-8835-e1fcdce66e04">
               <dependency linkage="Merged" />
             </entry>
-            <entry library-id="b0ff910e-577b-4460-bcf7-9a8f475bdc17">
+            <entry library-id="50e09f38-1926-45c1-a0ab-fdda6256d682">
               <dependency linkage="Merged" />
             </entry>
           </entries>
@@ -106,9 +106,9 @@
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library type="flex">
-        <properties id="b0ff910e-577b-4460-bcf7-9a8f475bdc17" />
+        <properties id="50e09f38-1926-45c1-a0ab-fdda6256d682" />
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/stampcrawler_v0016.swc!/" />
+          <root url="jar://$MODULE_DIR$/lib/stampcrawler_v0017.swc!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
