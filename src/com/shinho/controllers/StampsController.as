@@ -52,6 +52,7 @@ package com.shinho.controllers
             {
                   types.getTypesForCountry( currentCountryName );
                   loadStampsType();
+
             }
 
 
