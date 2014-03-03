@@ -35,6 +35,7 @@ package com.shinho.models
             {
                   prefsFile = File.applicationStorageDirectory;
                   prefsFile = prefsFile.resolvePath( "preferences.xml" );
+                  trace("preferences:"+prefsFile.nativePath);
                   readXML();
             }
 

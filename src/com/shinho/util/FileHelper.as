@@ -13,7 +13,7 @@ package com.shinho.util
 
       public class FileHelper
       {
-            public static const DIR_HOME:String = "StampCrawler";
+            public static const DIR_HOME:String = "Stampit";
             public static const DIR_IMAGES:String = DIR_HOME + File.separator + "Images";
             public static const DIR_EXPORT:String = DIR_HOME + File.separator + "Export";
             public static const DIR_IMPORT:String = DIR_HOME + File.separator + "Import";

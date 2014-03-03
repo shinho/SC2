@@ -29,7 +29,8 @@ public class TypesModel extends Actor {
 	public function getTypesForCountry(countryName:String):void
 	{
 		trace("TypesModel: get types for country", countryName);
-		_types = Vector.<TypesDTO>(db.getStampTypesForCountry(countryName));
+                 var countryTypes = db.getStampTypesForCountry(countryName);
+		_types = Vector.<TypesDTO>(countryTypes);
 		if (_types.length > 0) {
 			_hasTypes = true;
 		}

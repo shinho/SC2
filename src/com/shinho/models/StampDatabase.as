@@ -80,6 +80,7 @@ package com.shinho.models
                   SQLConn.addEventListener( SQLEvent.OPEN, dbConnected );
                   SQLConn.addEventListener( SQLErrorEvent.ERROR, getSQLError );
                   var dbFile:File = FileHelper.getRootDir();
+                  trace("db:"+dbFile.nativePath);
                   if ( !dbFile.exists )
                   {
                         dbFile.createDirectory();

@@ -39,6 +39,7 @@ package com.shinho.models
                         if ( _currentCountryIndex == -1 )
                         {
                               _currentCountryIndex = 0;
+                              _currentCountryName = _countriesList[_currentCountryIndex].country;
                         }
                         _numberOfCountries = _countriesList.length;
                         setCurrentCountryByName(_currentCountryName);

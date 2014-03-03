@@ -38,7 +38,8 @@ package com.shinho.models
 
 		public function loadLanguage():void
 		{
-			var xmlFile:File = File.applicationDirectory.resolvePath(LANGUAGE_FILE + currentLang + ".xml");
+			var xmlFile:File = File.applicationStorageDirectory.resolvePath(LANGUAGE_FILE + currentLang + ".xml");
+                      trace("langfile:"+xmlFile.nativePath);
 			var stream:FileStream = new FileStream();
 			if (xmlFile.exists)
 			{
